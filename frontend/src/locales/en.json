@@ -1,0 +1,130 @@
+{
+  "nav.home": "Home",
+  "nav.services": "Services",
+  "nav.about": "About",
+  "nav.contact": "Contact",
+  "nav.login": "Login",
+  "nav.signup": "Sign Up",
+
+  "home.hero.title": "R.E.X",
+  "home.hero.description": "Experience the ultimate car care with REX CAR. Professional detailing services that bring out the best in your vehicle.",
+  "home.hero.cta": "Book Now",
+
+  "home.services.title": "Our Services",
+  "home.services.description": "Professional car care services designed to exceed your expectations",
+  "home.services.wash.title": "Wash",
+  "home.services.wash.description": "Complete exterior and interior cleaning with premium products and techniques.",
+  "home.services.dryclean.title": "Dry Clean",
+  "home.services.dryclean.description": "Professional dry cleaning for upholstery and interior fabrics.",
+  "home.services.polish.title": "Polish",
+  "home.services.polish.description": "Paint correction and polishing for a mirror-like finish.",
+  "home.services.nano.title": "Nano Ceramic & Graphene",
+  "home.services.nano.description": "Advanced protection coating for long-lasting shine and durability.",
+  "services.book_now": "Book Now",
+  "services.see_more": "See More",
+
+  "home.reviews.title": "What Our Customers Say",
+  "home.reviews.description": "See what our satisfied customers have to say about our premium car care services",
+
+  "about.hero.title": "About REX CAR",
+  "about.hero.subtitle": "Elite. Precision. Shine.",
+  "about.story.title": "Our Story",
+  "about.story.content": "REX CAR was founded with a simple mission: to provide the highest quality car care services with unmatched attention to detail. We believe every vehicle deserves royal treatment.",
+  "about.mission.title": "Our Mission",
+  "about.mission.content": "To deliver exceptional car care services that exceed expectations while building lasting relationships with our customers through trust, quality, and reliability.",
+  "about.values.title": "Our Values",
+  "about.values.description": "The principles that guide everything we do at REX CAR",
+  "about.values.quality": "Quality Excellence",
+  "about.values.quality.desc": "We never compromise on the quality of our services and products.",
+  "about.values.customer": "Customer First",
+  "about.values.customer.desc": "Your satisfaction is our top priority in everything we do.",
+  "about.values.innovation": "Innovation",
+  "about.values.innovation.desc": "We continuously adopt the latest techniques and technologies.",
+  "about.team.title": "Our Team",
+  "about.team.content": "Our success is built on the expertise and dedication of our professional team. Each member brings years of experience and a passion for automotive excellence.",
+  "about.team.content2": "From our skilled technicians to our customer service representatives, everyone at REX CAR is committed to delivering the royal treatment your vehicle deserves.",
+
+  "contact": {
+    "hero": {
+      "title": "Get in Touch",
+      "subtitle": "We're here to help with all your car care needs. Reach out to us with any questions or to schedule a service."
+    },
+    "form": {
+      "title": "Send us a Message",
+      "name": "Full Name",
+      "name.placeholder": "Your full name",
+      "email": "Email Address",
+      "email.placeholder": "Your email address",
+      "subject": "Subject",
+      "subject.placeholder": "What is this regarding?",
+      "message": "Message",
+      "message.placeholder": "Tell us how we can help you...",
+      "submit": "Send Message",
+      "success": {
+        "title": "Message Sent Successfully!",
+        "message": "We'll get back to you as soon as possible."
+      }
+    },
+    "info": {
+      "title": "Contact Information",
+      "description": "Our team is ready to assist you with premium car care services. Reach out through any of these channels.",
+      "phone": {
+        "title": "Phone",
+        "content": "+1 (555) 123-4567"
+      },
+      "email": {
+        "title": "Email",
+        "content": "info@rexcar.com"
+      }
+    },
+    "map": {
+      "placeholder": "Interactive Map will be displayed here"
+    },
+    "response": {
+      "title": "Quick Response Time",
+      "message": "We typically respond to all inquiries within 24 hours during business days."
+    },
+    "faq": {
+      "title": "Frequently Asked Questions",
+      "description": "Find quick answers to common questions about our services.",
+      "q1": {
+        "question": "How long does a typical wash service take?",
+        "answer": "Our standard wash takes about 30 minutes, while premium services like nano ceramic coating can take 2-3 hours."
+      },
+      "q2": {
+        "question": "Do I need to book an appointment?",
+        "answer": "Walk-ins are welcome, but we recommend booking an appointment to guarantee your preferred time slot."
+      },
+      "q3": {
+        "question": "What payment methods do you accept?",
+        "answer": "We accept cash, all major credit cards, and mobile payment options like Apple Pay and Google Pay."
+      }
+    }
+  },
+
+  "services.hero.title": "Our Premium Services",
+  "services.hero.subtitle": "Professional car care tailored to your needs",
+  "services.wash.title": "Premium Wash",
+  "services.wash.description": "Complete exterior and interior cleaning service using premium products and professional techniques. Includes hand wash, interior vacuuming, dashboard cleaning, and tire shine.",
+  "services.wash.features": "Hand wash, Interior cleaning, Dashboard care, Tire shine",
+  "services.dryclean.title": "Professional Dry Clean",
+  "services.dryclean.description": "Specialized dry cleaning service for upholstery, carpets, and interior fabrics. Removes stains, odors, and restores the original look of your car's interior.",
+  "services.dryclean.features": "Upholstery cleaning, Stain removal, Odor elimination, Fabric protection",
+  "services.polish.title": "Paint Polish & Correction",
+  "services.polish.description": "Professional paint correction and polishing service that removes scratches, swirl marks, and oxidation to restore your car's original shine and luster.",
+  "services.polish.features": "Scratch removal, Swirl mark correction, Paint restoration, Mirror finish",
+  "services.nano.title": "Nano Ceramic Coating",
+  "services.nano.description": "Advanced nano ceramic coating technology that creates a protective layer on your vehicle's paint. Provides excellent hydrophobic properties, UV protection, and chemical resistance.",
+  "services.nano.features": "Hydrophobic coating, UV protection, Chemical resistance, Enhanced gloss",
+  "services.graphene.title": "Graphene Coating",
+  "services.graphene.description": "Revolutionary graphene coating technology offering superior protection and performance. Provides exceptional durability, heat dissipation, and anti-static properties.",
+  "services.graphene.features": "Superior durability, Heat dissipation, Anti-static properties, Self-healing technology",
+  "services.back": "back to services",
+
+  "footer.company": "REX CAR",
+  "footer.tagline": "Elite. Precision. Shine.",
+  "footer.rights": "All rights reserved.",
+  "footer.services": "Services",
+  "footer.company_info": "Company",
+  "footer.contact": "Contact"
+}

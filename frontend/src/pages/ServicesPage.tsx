@@ -1,0 +1,174 @@
+import { Button } from "@/components/ui/button";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import { motion } from "framer-motion";
+import { Car, Sparkles, Shield, Zap, CheckCircle } from "lucide-react";
+import { useTranslation } from "react-i18next";
+import { Link } from "react-router-dom";
+
+export default function ServicesPage() {
+  const { t, i18n } = useTranslation();
+  const locale = i18n.language;
+
+  const services = [
+    {
+      icon: Car,
+      titleKey: "services.wash.title",
+      descriptionKey: "services.wash.description",
+      featuresKey: "services.wash.features",
+      href: "/services/wash",
+    },
+    {
+      icon: Sparkles,
+      titleKey: "services.dryclean.title",
+      descriptionKey: "services.dryclean.description",
+      featuresKey: "services.dryclean.features",
+      href: "/services/dryclean",
+    },
+    {
+      icon: Shield,
+      titleKey: "services.polish.title",
+      descriptionKey: "services.polish.description",
+      featuresKey: "services.polish.features",
+      href: "/services/polish",
+    },
+    {
+      icon: Zap,
+      titleKey: "services.nano.title",
+      descriptionKey: "services.nano.description",
+      featuresKey: "services.nano.features",
+      href: "/services/nano-ceramic",
+    },
+  ];
+
+  return (
+    <>
+      {/* Hero Section */}
+      <section className="relative py-20 bg-gradient-to-br from-background via-background to-muted/20">
+        <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6 }}
+            className="text-center max-w-4xl mx-auto"
+          >
+            <h1 className="text-4xl sm:text-5xl font-bold text-foreground mb-6">
+              {t("services.hero.title")}
+            </h1>
+            <p className="text-xl text-muted-foreground mb-8 leading-relaxed">
+              {t("services.hero.subtitle")}
+            </p>
+          </motion.div>
+        </div>
+      </section>
+
+      {/* Main Services */}
+      <section className="py-16 bg-background">
+        <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+            {services.map((service, index) => (
+              <motion.div
+                key={service.titleKey}
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.6, delay: index * 0.1 }}
+                viewport={{ once: true }}
+              >
+                <Card className="h-full hover:shadow-lg transition-shadow duration-300 relative">
+                  <CardHeader>
+                    <div
+                      className={`flex items-center ${
+                        locale === "ar"
+                          ? "space-x-reverse space-x-4"
+                          : "space-x-4"
+                      } mb-4`}
+                    >
+                      <div className="p-3 rounded-full bg-primary/10">
+                        <service.icon className="h-8 w-8 text-primary" />
+                      </div>
+                      <div>
+                        <CardTitle className="text-2xl">
+                          {t(service.titleKey)}
+                        </CardTitle>
+                      </div>
+                    </div>
+                    <CardDescription className="text-base">
+                      {t(service.descriptionKey)}
+                    </CardDescription>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="space-y-3 mb-6">
+                      {t(service.featuresKey)
+                        .split(", ")
+                        .map((feature: string, featureIndex: number) => (
+                          <div
+                            key={featureIndex}
+                            className={`flex items-center ${
+                              locale === "ar"
+                                ? "space-x-reverse space-x-2"
+                                : "space-x-2"
+                            }`}
+                          >
+                            <CheckCircle className="h-4 w-4 text-green-500 flex-shrink-0" />
+                            <span className="text-sm text-muted-foreground">
+                              {feature}
+                            </span>
+                          </div>
+                        ))}
+                    </div>
+                    <Link to={service.href}>
+                      <Button className="w-full bg-primary hover:bg-primary/90">
+                        {t("services.see_more")}
+                      </Button>
+                    </Link>
+                  </CardContent>
+                </Card>
+              </motion.div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* CTA Section */}
+      <section className="py-16 bg-primary text-primary-foreground">
+        <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6 }}
+            viewport={{ once: true }}
+            className="text-center"
+          >
+            <h2 className="text-3xl sm:text-4xl font-bold mb-4">
+              Ready to Give Your Car Royal Treatment?
+            </h2>
+            <p className="text-xl mb-8 opacity-90">
+              Book your service today and experience the REX CAR difference
+            </p>
+            <div className="flex flex-col sm:flex-row gap-4 justify-center">
+              <Button
+                size="lg"
+                variant="secondary"
+                className="bg-white text-primary hover:bg-white/90"
+              >
+                {t("home.hero.cta")}
+              </Button>
+              <Button
+                size="lg"
+                variant="outline"
+                className="border-white text-white hover:bg-white hover:text-primary bg-transparent"
+              >
+                {t("nav.contact")}
+              </Button>
+            </div>
+          </motion.div>
+        </div>
+      </section>
+    </>
+  );
+}
