@@ -196,7 +196,7 @@ export default function ContactPage() {
                           <Input
                             id="name"
                             type="text"
-                            placeholder={t("contact.form.name.placeholder")}
+                            placeholder={t("contact.form.name_placeholder")}
                             required
                             className="h-12"
                           />
@@ -212,7 +212,7 @@ export default function ContactPage() {
                           <Input
                             id="email"
                             type="email"
-                            placeholder={t("contact.form.email.placeholder")}
+                            placeholder={t("contact.form.email_placeholder")}
                             required
                             className="h-12"
                           />
@@ -226,7 +226,7 @@ export default function ContactPage() {
                         <Input
                           id="subject"
                           type="text"
-                          placeholder={t("contact.form.subject.placeholder")}
+                          placeholder={t("contact.form.subject_placeholder")}
                           required
                           className="h-12"
                         />
@@ -238,7 +238,7 @@ export default function ContactPage() {
                         </Label>
                         <Textarea
                           id="message"
-                          placeholder={t("contact.form.message.placeholder")}
+                          placeholder={t("contact.form.message_placeholder")}
                           rows={5}
                           required
                         />

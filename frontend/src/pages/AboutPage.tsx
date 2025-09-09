@@ -9,16 +9,16 @@ export default function AboutPage() {
 
   const values = [
     {
-      titleKey: "about.values.quality",
-      descriptionKey: "about.values.quality.desc",
+      titleKey: "about.values.items.quality.title",
+      descriptionKey: "about.values.items.quality.desc",
     },
     {
-      titleKey: "about.values.customer",
-      descriptionKey: "about.values.customer.desc",
+      titleKey: "about.values.items.customer.title",
+      descriptionKey: "about.values.items.customer.desc",
     },
     {
-      titleKey: "about.values.innovation",
-      descriptionKey: "about.values.innovation.desc",
+      titleKey: "about.values.items.innovation.title",
+      descriptionKey: "about.values.items.innovation.desc",
     },
   ];
 
@@ -157,7 +157,7 @@ export default function AboutPage() {
                 {t("about.team.title")}
               </h2>
               <p className="text-lg text-muted-foreground mb-6 leading-relaxed">
-                {t("about.team.content")}
+                {t("about.team.content1")}
               </p>
               <p className="text-lg text-muted-foreground mb-8 leading-relaxed">
                 {t("about.team.content2")}

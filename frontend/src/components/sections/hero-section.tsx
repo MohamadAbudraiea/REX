@@ -1,6 +1,6 @@
-import { Button } from "@/components/ui/button";
 import { motion } from "framer-motion";
 import { useTranslation } from "react-i18next";
+import { Link } from "react-router-dom";
 
 export function HeroSection() {
   const { t } = useTranslation();
@@ -36,12 +36,12 @@ export function HeroSection() {
               {t("home.hero.description")}
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center items-center pt-6">
-              <Button
-                size="lg"
-                className="bg-primary hover:bg-primary/90 text-primary-foreground px-8 py-3"
+              <Link
+                to="/booking"
+                className="bg-primary hover:bg-primary/90 text-primary-foreground px-8 py-3 rounded-full text-lg font-semibold transition-colors duration-300"
               >
                 {t("home.hero.cta")}
-              </Button>
+              </Link>
             </div>
           </motion.div>
         </div>

@@ -18,33 +18,44 @@ export default function ServicesPage() {
   const services = [
     {
       icon: Car,
-      titleKey: "services.wash.title",
-      descriptionKey: "services.wash.description",
-      featuresKey: "services.wash.features",
+      titleKey: "services.items.wash.title",
+      descriptionKey: "services.items.wash.description",
+      featuresKey: "services.items.wash.features",
       href: "/services/wash",
     },
     {
       icon: Sparkles,
-      titleKey: "services.dryclean.title",
-      descriptionKey: "services.dryclean.description",
-      featuresKey: "services.dryclean.features",
+      titleKey: "services.items.dryclean.title",
+      descriptionKey: "services.items.dryclean.description",
+      featuresKey: "services.items.dryclean.features",
       href: "/services/dryclean",
     },
     {
       icon: Shield,
-      titleKey: "services.polish.title",
-      descriptionKey: "services.polish.description",
-      featuresKey: "services.polish.features",
+      titleKey: "services.items.polish.title",
+      descriptionKey: "services.items.polish.description",
+      featuresKey: "services.items.polish.features",
       href: "/services/polish",
     },
     {
       icon: Zap,
-      titleKey: "services.nano.title",
-      descriptionKey: "services.nano.description",
-      featuresKey: "services.nano.features",
+      titleKey: "services.items.nano.title",
+      descriptionKey: "services.items.nano.description",
+      featuresKey: "services.items.nano.features",
       href: "/services/nano-ceramic",
     },
   ];
+
+  // Function to split features based on language
+  const splitFeatures = (featuresString: string) => {
+    if (locale === "ar") {
+      // For Arabic, split by Arabic comma (،) followed by optional space
+      return featuresString.split(/،\s*/);
+    } else {
+      // For English and other languages, split by comma followed by space
+      return featuresString.split(", ");
+    }
+  };
 
   return (
     <>
@@ -103,9 +114,8 @@ export default function ServicesPage() {
                   </CardHeader>
                   <CardContent>
                     <div className="space-y-3 mb-6">
-                      {t(service.featuresKey)
-                        .split(", ")
-                        .map((feature: string, featureIndex: number) => (
+                      {splitFeatures(t(service.featuresKey)).map(
+                        (feature: string, featureIndex: number) => (
                           <div
                             key={featureIndex}
                             className={`flex items-center ${
@@ -116,10 +126,11 @@ export default function ServicesPage() {
                           >
                             <CheckCircle className="h-4 w-4 text-green-500 flex-shrink-0" />
                             <span className="text-sm text-muted-foreground">
-                              {feature}
+                              {feature.trim()}
                             </span>
                           </div>
-                        ))}
+                        )
+                      )}
                     </div>
                     <Link to={service.href}>
                       <Button className="w-full bg-primary hover:bg-primary/90">

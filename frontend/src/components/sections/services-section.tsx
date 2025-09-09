@@ -17,26 +17,26 @@ export function ServicesSection() {
   const services = [
     {
       icon: Car,
-      titleKey: "home.services.wash.title",
-      descriptionKey: "home.services.wash.description",
+      titleKey: "home.services.items.wash.title",
+      descriptionKey: "home.services.items.wash.description",
       href: "/services/wash",
     },
     {
       icon: Sparkles,
-      titleKey: "home.services.dryclean.title",
-      descriptionKey: "home.services.dryclean.description",
+      titleKey: "home.services.items.dryclean.title",
+      descriptionKey: "home.services.items.dryclean.description",
       href: "/services/dryclean",
     },
     {
       icon: Shield,
-      titleKey: "home.services.polish.title",
-      descriptionKey: "home.services.polish.description",
+      titleKey: "home.services.items.polish.title",
+      descriptionKey: "home.services.items.polish.description",
       href: "/services/polish",
     },
     {
       icon: Zap,
-      titleKey: "home.services.nano.title",
-      descriptionKey: "home.services.nano.description",
+      titleKey: "home.services.items.nano.title",
+      descriptionKey: "home.services.items.nano.description",
       href: "/services/nano-ceramic",
     },
   ];
