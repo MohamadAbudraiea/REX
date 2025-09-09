@@ -1,7 +1,7 @@
 const express = require("express");
 const cookieParser = require("cookie-parser");
 const morgan = require("morgan");
-const cors = require(cors);
+const cors = require("cors");
 const app = express();
 //-----------------------------------------
 app.use(express.json());
@@ -14,10 +14,11 @@ app.use(
   })
 );
 // authentication // autharization
-
+const authenticateUser = require("./middlewares/authentication");
 // router imports
-const sharedRouter = require("./routers/shared");
-
+const authRouter = require("./routers/authRouter");
+const adminRouter = require("./routers/adminRouter");
 // routing
-app.use("/shared", sharedRouter);
+app.use("/auth", authRouter);
+app.use("/admin", authenticateUser, adminRouter);
 module.exports = app;
