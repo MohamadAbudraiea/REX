@@ -23,11 +23,12 @@ import {
 } from "@/components/ui/form";
 import { Link } from "react-router-dom";
 import { useTranslation } from "react-i18next";
+import { useLogin } from "@/hooks/useAuth";
 
 export function LoginForm() {
+  const { loginMutation, isPending } = useLogin();
   const { t } = useTranslation();
   const [showPassword, setShowPassword] = useState(false);
-  const [isLoading, setIsLoading] = useState(false);
   const [hasInteracted, setHasInteracted] = useState(false);
 
   // Create the schema using useMemo to regenerate it when t changes
@@ -64,12 +65,8 @@ export function LoginForm() {
     return () => subscription.unsubscribe();
   }, [form]);
 
-  const onSubmit = async (data: LoginFormData) => {
-    setIsLoading(true);
-    // Simulate API call
-    await new Promise((resolve) => setTimeout(resolve, 2000));
-    console.log("Login data:", data);
-    setIsLoading(false);
+  const onSubmit = (data: LoginFormData) => {
+    loginMutation(data);
   };
 
   return (
@@ -179,10 +176,10 @@ export function LoginForm() {
               {/* Login Button */}
               <Button
                 type="submit"
-                disabled={isLoading}
+                disabled={isPending}
                 className="w-full h-12 bg-primary hover:bg-primary/90 text-primary-foreground font-semibold transition-all duration-200 transform hover:scale-[1.02]"
               >
-                {isLoading ? (
+                {isPending ? (
                   <motion.div
                     animate={{ rotate: 360 }}
                     transition={{

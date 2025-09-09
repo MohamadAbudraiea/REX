@@ -24,3 +24,11 @@ export interface Rating {
   description: string;
   rating_number: number;
 }
+
+export type ErrorProps = {
+  response: {
+    data: {
+      message: string;
+    };
+  };
+};

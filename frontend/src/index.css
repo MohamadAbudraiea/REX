@@ -125,3 +125,37 @@
     @apply bg-background text-foreground;
   }
 }
+
+[data-sonner-toast] {
+  background: var(--background) !important;
+  color: var(--foreground) !important;
+  border: 1px solid var(--border) !important;
+}
+
+/* ✅ Success (Green) */
+[data-sonner-toast][data-type="success"] {
+  background: #22c55e !important; /* Tailwind green-500 */
+  color: #ffffff !important;
+  border-color: #22c55e !important;
+}
+
+/* ❌ Error (Red) */
+[data-sonner-toast][data-type="error"] {
+  background: #ef4444 !important; /* Tailwind red-500 */
+  color: #ffffff !important;
+  border-color: #ef4444 !important;
+}
+
+/* ⚠️ Warning (Yellow) */
+[data-sonner-toast][data-type="warning"] {
+  background: #facc15 !important; /* Tailwind yellow-400 */
+  color: #000000 !important; /* Black text for contrast */
+  border-color: #facc15 !important;
+}
+
+/* ℹ️ Info (Blue / neutral) */
+[data-sonner-toast][data-type="info"] {
+  background: #3b82f6 !important; /* Tailwind blue-500 */
+  color: #ffffff !important;
+  border-color: #3b82f6 !important;
+}
