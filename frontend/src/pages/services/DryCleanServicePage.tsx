@@ -1,4 +1,3 @@
-import { Button } from "@/components/ui/button";
 import { motion } from "framer-motion";
 import { Sparkles, ArrowLeft } from "lucide-react";
 import { Link } from "react-router-dom";
@@ -38,15 +37,18 @@ export default function DrycleanServicePage() {
               </div>
 
               <h1 className="text-4xl sm:text-5xl font-bold text-foreground">
-                {t("services.dryclean.title")}
+                {t("services.items.dryclean.title")}
               </h1>
             </div>
             <p className="text-xl text-muted-foreground mb-8 leading-relaxed">
-              {t("services.dryclean.description")}
+              {t("services.items.dryclean.description")}
             </p>
-            <Button size="lg" className="bg-primary hover:bg-primary/90">
-              {t("services.book_now")}
-            </Button>
+            <Link
+              to="/booking"
+              className="bg-primary hover:bg-primary/90 text-white py-3 px-6 rounded-full"
+            >
+              {t("services.book")}
+            </Link>
           </div>
           <div className="relative">
             <img

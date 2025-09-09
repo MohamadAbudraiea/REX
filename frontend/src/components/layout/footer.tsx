@@ -33,7 +33,7 @@ export default function Footer() {
                   to="/services/wash"
                   className="hover:text-foreground transition-colors"
                 >
-                  {t("home.services.wash.title")}
+                  {t("home.services.items.wash.title")}
                 </Link>
               </li>
               <li>
@@ -41,7 +41,7 @@ export default function Footer() {
                   to="/services/dryclean"
                   className="hover:text-foreground transition-colors"
                 >
-                  {t("home.services.dryclean.title")}
+                  {t("home.services.items.dryclean.title")}
                 </Link>
               </li>
               <li>
@@ -49,7 +49,7 @@ export default function Footer() {
                   to="/services/polish"
                   className="hover:text-foreground transition-colors"
                 >
-                  {t("home.services.polish.title")}
+                  {t("home.services.items.polish.title")}
                 </Link>
               </li>
               <li>
@@ -57,7 +57,7 @@ export default function Footer() {
                   to="/services/nano"
                   className="hover:text-foreground transition-colors"
                 >
-                  {t("home.services.nano.title")}
+                  {t("home.services.items.nano.title")}
                 </Link>
               </li>
             </ul>

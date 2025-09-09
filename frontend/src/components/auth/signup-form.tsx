@@ -130,7 +130,7 @@ export function SignupForm() {
                         <User className="absolute left-3 top-4 h-4 w-4 text-muted-foreground" />
                         <Input
                           {...field}
-                          placeholder={t("signup.name.placeholder")}
+                          placeholder={t("signup.name")}
                           className="pl-10 h-12 bg-input border-border focus:ring-2 focus:ring-ring"
                         />
                       </div>
@@ -155,7 +155,7 @@ export function SignupForm() {
                         <Input
                           {...field}
                           type="email"
-                          placeholder={t("signup.email.placeholder")}
+                          placeholder={t("signup.email")}
                           className="pl-10 h-12 bg-input border-border focus:ring-2 focus:ring-ring"
                         />
                       </div>
@@ -179,7 +179,7 @@ export function SignupForm() {
                         <User className="absolute left-3 top-4 h-4 w-4 text-muted-foreground" />
                         <Input
                           {...field}
-                          placeholder={t("signup.phone.placeholder")}
+                          placeholder={t("signup.phone")}
                           className="pl-10 h-12 bg-input border-border focus:ring-2 focus:ring-ring"
                         />
                       </div>
@@ -204,7 +204,7 @@ export function SignupForm() {
                         <Input
                           {...field}
                           type={showPassword ? "text" : "password"}
-                          placeholder={t("signup.password.placeholder")}
+                          placeholder={t("signup.password")}
                           className="pl-10 pr-10 h-12 bg-input border-border focus:ring-2 focus:ring-ring"
                           autoComplete="new-password"
                         />
@@ -241,7 +241,7 @@ export function SignupForm() {
                         <Input
                           {...field}
                           type={showConfirmPassword ? "text" : "password"}
-                          placeholder={t("signup.confirm_password.placeholder")}
+                          placeholder={t("signup.confirm_password")}
                           className="pl-10 pr-10 h-12 bg-input border-border focus:ring-2 focus:ring-ring"
                         />
                         <button

@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { motion } from "framer-motion";
-import { useForm } from "react-hook-form";
+import { useForm, Controller } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
 import { Button } from "@/components/ui/button";
@@ -25,34 +25,37 @@ import { CheckCircle, Car, MapPin } from "lucide-react";
 import { Link } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 
-const bookingSchema = z.object({
-  service: z.string().min(1, "Please select a service"),
-  address: z.string().min(5, "Please enter a valid address"),
-  notes: z.string().optional(),
-});
-
-type BookingFormData = z.infer<typeof bookingSchema>;
-
 export default function BookPage() {
   const { t } = useTranslation();
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
+  // define schema here (after t is available)
+  const bookingSchema = z.object({
+    service: z.string().min(1, t("errors.service_required")),
+    address: z.string().min(5, t("errors.address_required")),
+    notes: z.string().optional(),
+  });
+
+  type BookingFormData = z.infer<typeof bookingSchema>;
+
   const {
     register,
     handleSubmit,
-    setValue,
+    control,
     formState: { errors },
   } = useForm<BookingFormData>({
     resolver: zodResolver(bookingSchema),
+    defaultValues: {
+      service: "",
+      address: "",
+      notes: "",
+    },
   });
 
   const onSubmit = async (data: BookingFormData) => {
     setIsSubmitting(true);
-
-    // Simulate API call
     await new Promise((resolve) => setTimeout(resolve, 2000));
-
     console.log("[v0] Booking submitted:", data);
     setIsSubmitted(true);
     setIsSubmitting(false);
@@ -134,34 +137,39 @@ export default function BookPage() {
                   {/* Service Selection */}
                   <div className="space-y-2">
                     <Label htmlFor="service">{t("book.form.service")}</Label>
-                    <Select
-                      onValueChange={(value: string) =>
-                        setValue("service", value)
-                      }
-                    >
-                      <SelectTrigger>
-                        <SelectValue
-                          placeholder={t("book.form.service.placeholder")}
-                        />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="wash">
-                          {t("book.form.service.wash")}
-                        </SelectItem>
-                        <SelectItem value="dryclean">
-                          {t("book.form.service.dryclean")}
-                        </SelectItem>
-                        <SelectItem value="polish">
-                          {t("book.form.service.polish")}
-                        </SelectItem>
-                        <SelectItem value="nano">
-                          {t("book.form.service.nano")}
-                        </SelectItem>
-                        <SelectItem value="graphene">
-                          {t("book.form.service.graphene")}
-                        </SelectItem>
-                      </SelectContent>
-                    </Select>
+                    <Controller
+                      control={control}
+                      name="service"
+                      render={({ field }) => (
+                        <Select
+                          onValueChange={field.onChange}
+                          value={field.value}
+                        >
+                          <SelectTrigger>
+                            <SelectValue
+                              placeholder={t("book.form.service_placeholder")}
+                            />
+                          </SelectTrigger>
+                          <SelectContent>
+                            <SelectItem value="wash">
+                              {t("book.form.options.wash")}
+                            </SelectItem>
+                            <SelectItem value="dryclean">
+                              {t("book.form.options.dryclean")}
+                            </SelectItem>
+                            <SelectItem value="polish">
+                              {t("book.form.options.polish")}
+                            </SelectItem>
+                            <SelectItem value="nano">
+                              {t("book.form.options.nano")}
+                            </SelectItem>
+                            <SelectItem value="graphene">
+                              {t("book.form.options.graphene")}
+                            </SelectItem>
+                          </SelectContent>
+                        </Select>
+                      )}
+                    />
                     {errors.service && (
                       <p className="text-sm text-destructive">
                         {errors.service.message}
@@ -180,7 +188,7 @@ export default function BookPage() {
                     </Label>
                     <Input
                       id="address"
-                      placeholder={t("book.form.address.placeholder")}
+                      placeholder={t("book.form.address_placeholder")}
                       {...register("address")}
                     />
                     {errors.address && (
@@ -195,7 +203,7 @@ export default function BookPage() {
                     <Label htmlFor="notes">{t("book.form.notes")}</Label>
                     <Textarea
                       id="notes"
-                      placeholder={t("book.form.notes.placeholder")}
+                      placeholder={t("book.form.notes_placeholder")}
                       rows={3}
                       {...register("notes")}
                     />

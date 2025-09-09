@@ -1,4 +1,3 @@
-import { Button } from "@/components/ui/button";
 import { motion } from "framer-motion";
 import { Zap, Shield, ArrowLeft } from "lucide-react";
 import { useTranslation } from "react-i18next";
@@ -24,20 +23,6 @@ function NanoCeramicServicePage() {
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6 }}
-          className="text-center mb-16"
-        >
-          <h1 className="text-4xl sm:text-5xl font-bold text-foreground mb-6">
-            {t("services.coating.title")}
-          </h1>
-          <p className="text-xl text-muted-foreground leading-relaxed max-w-3xl mx-auto">
-            {t("services.coating.description")}
-          </p>
-        </motion.div>
-
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, delay: 0.2 }}
           className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center mb-20"
         >
@@ -51,15 +36,18 @@ function NanoCeramicServicePage() {
                 <Zap className="h-8 w-8 text-primary" />
               </div>
               <h2 className="text-3xl sm:text-4xl font-bold text-foreground">
-                {t("services.nano.title")}
+                {t("services.items.nano.title")}
               </h2>
             </div>
             <p className="text-xl text-muted-foreground mb-8 leading-relaxed">
-              {t("services.nano.description")}
+              {t("services.items.nano.description")}
             </p>
-            <Button size="lg" className="bg-primary hover:bg-primary/90">
-              {t("services.book_now")}
-            </Button>
+            <Link
+              to="/booking"
+              className="bg-primary hover:bg-primary/90 text-white py-3 px-6 rounded-full"
+            >
+              {t("services.book")}
+            </Link>
           </div>
           <div className="relative">
             <img
@@ -99,9 +87,12 @@ function NanoCeramicServicePage() {
             <p className="text-xl text-muted-foreground mb-8 leading-relaxed">
               {t("services.graphene.description")}
             </p>
-            <Button size="lg" className="bg-primary hover:bg-primary/90">
-              {t("services.book_now")}
-            </Button>
+            <Link
+              to="/booking"
+              className="bg-primary hover:bg-primary/90 text-white py-3 px-6 rounded-full"
+            >
+              {t("services.book")}
+            </Link>
           </div>
         </motion.div>
       </div>

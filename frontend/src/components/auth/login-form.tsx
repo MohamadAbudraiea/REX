@@ -118,7 +118,7 @@ export function LoginForm() {
                         <Input
                           {...field}
                           type="email"
-                          placeholder={t("login.email.placeholder")}
+                          placeholder={t("login.email")}
                           className="pl-10 h-12 bg-input border-border focus:ring-2 focus:ring-ring"
                           autoComplete="email webauthn"
                         />
@@ -144,7 +144,7 @@ export function LoginForm() {
                         <Input
                           {...field}
                           type={showPassword ? "text" : "password"}
-                          placeholder={t("login.password.placeholder")}
+                          placeholder={t("login.password")}
                           className="pl-10 pr-10 h-12 bg-input border-border focus:ring-2 focus:ring-ring"
                           autoComplete="current-password"
                         />
