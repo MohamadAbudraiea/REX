@@ -5,6 +5,7 @@ const { user, ticket } = models;
 const bcrypt = require("bcrypt");
 
 exports.testing = (req, res) => {
+  console.log(req.user);
   res.status(200).json({
     data: req.user,
   });

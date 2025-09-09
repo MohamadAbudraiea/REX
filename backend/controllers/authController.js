@@ -33,23 +33,32 @@ exports.userLogin = async (req, res) => {
           message: "wrong email or password",
         });
       }
-      console.log("before jwt");
       // sign jwt
       const token = jwt.sign(
         {
           id: findUser.id,
           role: findUser.type,
+          email: findUser.email,
+          phone: findUser.phone,
+          name: findUser.name,
         },
         process.env.JWT_SECRET
       );
-      console.log("after jwt");
       // cookie response
-      res.cookie("token", token, {
+      const cook = res.cookie("token", token, {
         httpOnly: true,
-        sameSite: "none",
-        secure: true,
+        sameSite: process.env.NODE_ENV === "development" ? "lax" : "none",
+        secure: process.env.NODE_ENV !== "development", // true in prod, false in dev
         maxAge: 1000 * 60 * 60 * 2, // 120 minutes
       });
+      //user data
+      req.user = {
+        id: findUser.id,
+        email: findUser.email,
+        phone: findUser.phone,
+      };
+      console.log(req.user);
+
       //response
       const userData = findUser.toJSON();
       delete userData.password; // to send the response without password:)
@@ -120,6 +129,26 @@ exports.logout = (req, res) => {
       status: "success",
       message: "Logged out successfully",
     });
+  } catch (error) {
+    res.send(500).json({
+      status: "failed",
+      message: "Internal server error",
+    });
+  }
+};
+
+exports.check = (req, res) => {
+  try {
+    if (!req.user)
+      return res.status(403).json({
+        status: "failed",
+        message: "unauthnticated",
+      });
+    else
+      return res.status(200).json({
+        status: "success",
+        data: req.user,
+      });
   } catch (error) {
     res.send(500).json({
       status: "failed",

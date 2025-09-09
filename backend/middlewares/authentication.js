@@ -6,18 +6,33 @@ const initModels = require("../models/init-models");
 const models = initModels(SQL);
 const { user } = models;
 //------------------------------------------
-const authenticateUser = async (req, res, next) => {
+
+const authenticateUser = (req, res, next) => {
   try {
-    const token = req.cookies.session;
-    console.log(token);
+    const token = req.cookies.token;
     if (!token) {
-      return res.status(200);
+      return res.status(403).json({
+        status: "failed",
+        message: "No token provided",
+      });
     }
+
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+
+    // Attach full user info from token
+    req.user = {
+      id: decoded.id,
+      role: decoded.role,
+      email: decoded.email,
+      phone: decoded.phone,
+      name: decoded.name,
+    };
+
     next();
   } catch (error) {
-    return res.status(404).json({
+    return res.status(401).json({
       status: "failed",
-      message: "user unauthinticated",
+      message: "Invalid or expired token",
     });
   }
 };
