@@ -11,7 +11,7 @@ const authenticateUser = (req, res, next) => {
   try {
     const token = req.cookies.token;
     if (!token) {
-      return res.status(401).json({
+      return res.status(403).json({
         status: "failed",
         message: "No token provided",
       });
