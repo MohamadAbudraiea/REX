@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useMemo, useEffect } from "react";
 import { motion } from "framer-motion";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -22,17 +22,23 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Link } from "react-router-dom";
-
-const loginSchema = z.object({
-  email: z.string().email("Please enter a valid email address"),
-  password: z.string().min(6, "Password must be at least 6 characters"),
-});
-
-type LoginFormData = z.infer<typeof loginSchema>;
+import { useTranslation } from "react-i18next";
 
 export function LoginForm() {
+  const { t } = useTranslation();
   const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const [hasInteracted, setHasInteracted] = useState(false);
+
+  // Create the schema using useMemo to regenerate it when t changes
+  const loginSchema = useMemo(() => {
+    return z.object({
+      email: z.string().email(t("validations.email")),
+      password: z.string().min(6, t("validations.password.min")),
+    });
+  }, [t]);
+
+  type LoginFormData = z.infer<typeof loginSchema>;
 
   const form = useForm<LoginFormData>({
     resolver: zodResolver(loginSchema),
@@ -40,7 +46,23 @@ export function LoginForm() {
       email: "",
       password: "",
     },
+    mode: "onChange",
   });
+
+  // Re-trigger validation when schema changes only if user has interacted
+  useEffect(() => {
+    if (hasInteracted) {
+      form.trigger();
+    }
+  }, [loginSchema, form, hasInteracted]);
+
+  // Track form interactions
+  useEffect(() => {
+    const subscription = form.watch(() => {
+      setHasInteracted(true);
+    });
+    return () => subscription.unsubscribe();
+  }, [form]);
 
   const onSubmit = async (data: LoginFormData) => {
     setIsLoading(true);
@@ -58,6 +80,7 @@ export function LoginForm() {
       className="w-full max-w-md mx-auto"
     >
       <Card className="shadow-lg border-0 bg-card">
+        {/* Header */}
         <CardHeader className="space-y-6 text-center">
           <motion.div
             initial={{ scale: 0.8 }}
@@ -69,32 +92,35 @@ export function LoginForm() {
           </motion.div>
           <div>
             <CardTitle className="text-2xl font-bold text-foreground">
-              Welcome Back
+              {t("login.title")}
             </CardTitle>
             <CardDescription className="text-muted-foreground mt-2">
-              Sign in to your REX CAR account
+              {t("login.description")}
             </CardDescription>
           </div>
         </CardHeader>
+        {/* Content */}
         <CardContent>
           <Form {...form}>
             <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+              {/* Email */}
               <FormField
                 control={form.control}
                 name="email"
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel className="text-foreground font-medium">
-                      Email
+                      {t("login.email")}
                     </FormLabel>
                     <FormControl>
                       <div className="relative">
-                        <Mail className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
+                        <Mail className="absolute left-3 top-4 h-4 w-4 text-muted-foreground" />
                         <Input
                           {...field}
                           type="email"
-                          placeholder="Enter your email"
+                          placeholder={t("login.email.placeholder")}
                           className="pl-10 h-12 bg-input border-border focus:ring-2 focus:ring-ring"
+                          autoComplete="email webauthn"
                         />
                       </div>
                     </FormControl>
@@ -103,32 +129,34 @@ export function LoginForm() {
                 )}
               />
 
+              {/* Password */}
               <FormField
                 control={form.control}
                 name="password"
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel className="text-foreground font-medium">
-                      Password
+                      {t("login.password")}
                     </FormLabel>
                     <FormControl>
                       <div className="relative">
-                        <Lock className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
+                        <Lock className="absolute left-3 top-4 h-4 w-4 text-muted-foreground" />
                         <Input
                           {...field}
                           type={showPassword ? "text" : "password"}
-                          placeholder="Enter your password"
+                          placeholder={t("login.password.placeholder")}
                           className="pl-10 pr-10 h-12 bg-input border-border focus:ring-2 focus:ring-ring"
+                          autoComplete="current-password"
                         />
                         <button
                           type="button"
                           onClick={() => setShowPassword(!showPassword)}
-                          className="absolute right-3 top-3 text-muted-foreground hover:text-foreground transition-colors"
+                          className="absolute right-3 top-4 text-muted-foreground hover:text-foreground transition-colors"
                         >
                           {showPassword ? (
-                            <EyeOff className="h-4 w-4" />
+                            <EyeOff className="size-4" />
                           ) : (
-                            <Eye className="h-4 w-4" />
+                            <Eye className="size-4" />
                           )}
                         </button>
                       </div>
@@ -138,15 +166,17 @@ export function LoginForm() {
                 )}
               />
 
+              {/* Forgot password */}
               <div className="flex items-center justify-between">
                 <Link
                   to="/forgot-password"
                   className="text-sm text-accent hover:text-accent/80 transition-colors underline-offset-4 hover:underline"
                 >
-                  Forgot password?
+                  {t("login.forgot_password")}
                 </Link>
               </div>
 
+              {/* Login Button */}
               <Button
                 type="submit"
                 disabled={isLoading}
@@ -163,18 +193,19 @@ export function LoginForm() {
                     className="w-5 h-5 border-2 border-primary-foreground border-t-transparent rounded-full"
                   />
                 ) : (
-                  "Sign In"
+                  t("login.login")
                 )}
               </Button>
 
+              {/* Create account */}
               <div className="text-center">
                 <p className="text-sm text-muted-foreground">
-                  Don't have an account?{" "}
+                  {t("login.create_account")}{" "}
                   <Link
                     to="/signup"
                     className="text-accent hover:text-accent/80 transition-colors underline-offset-4 hover:underline font-medium"
                   >
-                    Sign up
+                    {t("login.signup")}
                   </Link>
                 </p>
               </div>

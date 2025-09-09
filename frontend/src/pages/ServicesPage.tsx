@@ -46,6 +46,17 @@ export default function ServicesPage() {
     },
   ];
 
+  // Function to split features based on language
+  const splitFeatures = (featuresString: string) => {
+    if (locale === "ar") {
+      // For Arabic, split by Arabic comma (،) followed by optional space
+      return featuresString.split(/،\s*/);
+    } else {
+      // For English and other languages, split by comma followed by space
+      return featuresString.split(", ");
+    }
+  };
+
   return (
     <>
       {/* Hero Section */}
@@ -103,9 +114,8 @@ export default function ServicesPage() {
                   </CardHeader>
                   <CardContent>
                     <div className="space-y-3 mb-6">
-                      {t(service.featuresKey)
-                        .split(", ")
-                        .map((feature: string, featureIndex: number) => (
+                      {splitFeatures(t(service.featuresKey)).map(
+                        (feature: string, featureIndex: number) => (
                           <div
                             key={featureIndex}
                             className={`flex items-center ${
@@ -116,10 +126,11 @@ export default function ServicesPage() {
                           >
                             <CheckCircle className="h-4 w-4 text-green-500 flex-shrink-0" />
                             <span className="text-sm text-muted-foreground">
-                              {feature}
+                              {feature.trim()}
                             </span>
                           </div>
-                        ))}
+                        )
+                      )}
                     </div>
                     <Link to={service.href}>
                       <Button className="w-full bg-primary hover:bg-primary/90">

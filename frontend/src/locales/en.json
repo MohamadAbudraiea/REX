@@ -6,7 +6,48 @@
   "nav.login": "Login",
   "nav.signup": "Sign Up",
 
-  "home.hero.title": "R.E.X",
+  "signup.title": "Join REX CAR",
+  "signup.description": "Create your account for premium car wash services",
+  "signup.name": "Full Name",
+  "signup.name.placeholder": "Enter your full name",
+  "signup.email": "Email",
+  "signup.email.placeholder": "Enter your email",
+  "signup.phone": "Phone Number",
+  "signup.phone.placeholder": "Enter your phone number",
+  "signup.password": "Password",
+  "signup.password.placeholder": "Create a password",
+  "signup.confirm_password": "Confirm Password",
+  "signup.confirm_password.placeholder": "Confirm your password",
+  "signup.create_account": "Create Account",
+  "signup.already_have_account": "Already have an account?",
+  "signup.login": "Login",
+
+  "login.title": "Welcome Back",
+  "login.description": "Sign in to your REX CAR account",
+  "login.email": "Email",
+  "login.email.placeholder": "Enter your email",
+  "login.password": "Password",
+  "login.password.placeholder": "Enter your password",
+  "login.forgot_password": "Forgot Password?",
+  "login.login": "Login",
+  "login.create_account": "Don't have an account?",
+  "login.signup": "Sign Up",
+
+  "validations": {
+    "required": "This field is required",
+    "name": {
+      "min": "Name must be at least 2 characters"
+    },
+    "email": "Please enter a valid email address",
+    "phone": {
+      "min": "Phone number must be at least 10 characters long"
+    },
+    "password": {
+      "min": "Password must be at least 6 characters long",
+      "match": "Passwords do not match"
+    }
+  },
+
   "home.hero.description": "Experience the ultimate car care with REX CAR. Professional detailing services that bring out the best in your vehicle.",
   "home.hero.cta": "Book Now",
 
@@ -126,5 +167,63 @@
   "footer.rights": "All rights reserved.",
   "footer.services": "Services",
   "footer.company_info": "Company",
-  "footer.contact": "Contact"
+  "footer.contact": "Contact",
+
+  "book.hero.title": "Book Your Service",
+  "book.hero.subtitle": "Schedule your premium car care service with REX CAR",
+  "book.form.title": "Service Booking",
+  "book.form.service": "Select Service",
+  "book.form.service.placeholder": "Choose a service",
+  "book.form.service.wash": "Premium Wash",
+  "book.form.service.dryclean": "Professional Dry Clean",
+  "book.form.service.polish": "Paint Polish & Correction",
+  "book.form.service.nano": "Nano Ceramic Coating",
+  "book.form.service.graphene": "Graphene Coating",
+  "book.form.name": "Full Name",
+  "book.form.name.placeholder": "Enter your full name",
+  "book.form.email": "Email Address",
+  "book.form.email.placeholder": "Enter your email address",
+  "book.form.phone": "Phone Number",
+  "book.form.phone.placeholder": "Enter your phone number",
+  "book.form.address": "Vehicle Location",
+  "book.form.address.placeholder": "Enter pickup address",
+  "book.form.vehicle": "Vehicle Information",
+  "book.form.vehicle.placeholder": "Car make, model, year (e.g., Toyota Camry 2020)",
+  "book.form.notes": "Additional Notes",
+  "book.form.notes.placeholder": "Any special requests or notes",
+  "book.form.submit": "Book Service",
+  "book.form.submitting": "Booking...",
+  "book.success.title": "Booking Submitted!",
+  "book.success.message": "Your service request has been submitted successfully. Our team will contact you within 24 hours to confirm your appointment.",
+  "book.success.status": "Status: Requested",
+  "book.success.back": "Back to Home",
+
+  "book": {
+    "myBookings": {
+      "title": "My Bookings",
+      "subtitle": "View and manage your service appointments",
+      "noBookings": "You don't have any bookings yet.",
+      "bookNow": "Book a Service"
+    },
+    "status": {
+      "requested": "Requested",
+      "pending": "Pending",
+      "finished": "Finished",
+      "canceled": "Canceled"
+    },
+    "cancel": "Cancel",
+    "cancelTitle": "Cancel Booking",
+    "cancelDescription": "Are you sure you want to cancel this booking? Please provide a reason for cancellation.",
+    "cancelReason": "Cancellation Reason",
+    "cancelReasonPlaceholder": "Why are you canceling this service?",
+    "cancelNo": "No, Keep Booking",
+    "cancelYes": "Yes, Cancel Booking",
+    "rate": "Rate Service",
+    "rateTitle": "Rate Your Service",
+    "rateDescription": "How was your experience with this service?",
+    "rating": "Rating",
+    "comment": "Comment",
+    "commentPlaceholder": "Tell us about your experience...",
+    "submitRating": "Submit Rating"
+  }
 }

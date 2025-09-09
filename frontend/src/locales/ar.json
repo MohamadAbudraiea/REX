@@ -6,7 +6,48 @@
   "nav.login": "تسجيل الدخول",
   "nav.signup": "إنشاء حساب",
 
-  "home.hero.title": "ر.ي.كس",
+  "signup.title": "انضم الى REX CAR",
+  "signup.description": "قم بإنشاء حسابك لخدمات غسل السيارات الممتازة",
+  "signup.name": "الاسم بالكامل",
+  "signup.name.placeholder": "ادخل اسمك بالكامل",
+  "signup.email": "البريد الالكتروني",
+  "signup.email.placeholder": "ادخل بريدك الالكتروني",
+  "signup.phone": "رقم الهاتف",
+  "signup.phone.placeholder": "ادخل رقم هاتفك",
+  "signup.password": "كلمة المرور",
+  "signup.password.placeholder": "انشاء كلمة مرور",
+  "signup.confirm_password": "تاكيد كلمة المرور",
+  "signup.confirm_password.placeholder": "قم بتأكيد كلمة المرور الخاصة بك",
+  "signup.create_account": "انشاء حساب",
+  "signup.already_have_account": "لديك حساب بالفعل؟",
+  "signup.login": "تسجيل الدخول",
+
+  "login.title": "مرحبًا بعودتك",
+  "login.description": "تسجيل الدخول لحسابك في REX CAR",
+  "login.email": "البريد الالكتروني",
+  "login.email.placeholder": "ادخل بريدك الالكتروني",
+  "login.password": "كلمة المرور",
+  "login.password.placeholder": "ادخل كلمة المرور الخاصة بك",
+  "login.forgot_password": "نسيت كلمة المرور؟",
+  "login.login": "تسجيل الدخول",
+  "login.create_account": "ليس لديك حساب؟",
+  "login.signup": "انشاء حساب",
+
+  "validations": {
+    "required": "هذه الخانة مطلوبه",
+    "name": {
+      "min": "يجب أن يكون الاسم حرفين على الأقل"
+    },
+    "email": "يرجى إدخال عنوان بريد إلكتروني صالح",
+    "phone": {
+      "min": "يجب أن يكون رقم الهاتف على الأقل 10 ارقام"
+    },
+    "password": {
+      "min": "يجب أن يكون طول كلمة المرور 6 أحرف على الأقل",
+      "match": "كلمات المرور لا تتطابق"
+    }
+  },
+
   "home.hero.description": "اختبر العناية المثلى بالسيارات مع REX CAR. خدمات تفصيل احترافية تُظهر أفضل ما في سيارتك.",
   "home.hero.cta": "احجز الآن",
 
@@ -123,5 +164,63 @@
   "footer.rights": "جميع الحقوق محفوظة.",
   "footer.services": "الخدمات",
   "footer.company_info": "الشركة",
-  "footer.contact": "اتصل بنا"
+  "footer.contact": "اتصل بنا",
+
+  "book.hero.title": "احجز خدمتك",
+  "book.hero.subtitle": "جدول خدمة العناية المتميزة بسيارتك مع REX CAR",
+  "book.form.title": "حجز الخدمة",
+  "book.form.service": "اختر الخدمة",
+  "book.form.service.placeholder": "اختر خدمة",
+  "book.form.service.wash": "غسيل متميز",
+  "book.form.service.dryclean": "تنظيف جاف احترافي",
+  "book.form.service.polish": "تلميع وتصحيح الطلاء",
+  "book.form.service.nano": "طلاء نانو سيراميك",
+  "book.form.service.graphene": "طلاء جرافين",
+  "book.form.name": "الاسم الكامل",
+  "book.form.name.placeholder": "أدخل اسمك الكامل",
+  "book.form.email": "عنوان البريد الإلكتروني",
+  "book.form.email.placeholder": "أدخل عنوان بريدك الإلكتروني",
+  "book.form.phone": "رقم الهاتف",
+  "book.form.phone.placeholder": "أدخل رقم هاتفك",
+  "book.form.address": "موقع المركبة",
+  "book.form.address.placeholder": "أدخل عنوان الاستلام",
+  "book.form.vehicle": "معلومات المركبة",
+  "book.form.vehicle.placeholder": "صنع السيارة، الطراز، السنة (مثال: تويوتا كامري 2020)",
+  "book.form.notes": "ملاحظات إضافية",
+  "book.form.notes.placeholder": "أي طلبات خاصة أو ملاحظات",
+  "book.form.submit": "احجز الخدمة",
+  "book.form.submitting": "جاري الحجز...",
+  "book.success.title": "تم إرسال الحجز!",
+  "book.success.message": "تم إرسال طلب الخدمة بنجاح. سيتواصل معك فريقنا خلال 24 ساعة لتأكيد موعدك.",
+  "book.success.status": "الحالة: مطلوب",
+  "book.success.back": "العودة للرئيسية",
+
+  "book": {
+    "myBookings": {
+      "title": "حجوزاتي",
+      "subtitle": "عرض وإدارة مواعيد الخدمة الخاصة بك",
+      "noBookings": "ليس لديك أي حجوزات حتى الآن.",
+      "bookNow": "احجز خدمة"
+    },
+    "status": {
+      "requested": "مطلوب",
+      "pending": "قيد الانتظار",
+      "finished": "منتهي",
+      "canceled": "ملغي"
+    },
+    "cancel": "إلغاء",
+    "cancelTitle": "إلغاء الحجز",
+    "cancelDescription": "هل أنت متأكد أنك تريد إلغاء هذا الحجز؟ يرجى تقديم سبب الإلغاء.",
+    "cancelReason": "سبب الإلغاء",
+    "cancelReasonPlaceholder": "لماذا تقوم بإلغاء هذه الخدمة؟",
+    "cancelNo": "لا، احتفظ بالحجز",
+    "cancelYes": "نعم، إلغاء الحجز",
+    "rate": "تقييم الخدمة",
+    "rateTitle": "قيم خدمتك",
+    "rateDescription": "كيف كانت تجربتك مع هذه الخدمة؟",
+    "rating": "التقييم",
+    "comment": "تعليق",
+    "commentPlaceholder": "أخبرنا عن تجربتك...",
+    "submitRating": "إرسال التقييم"
+  }
 }

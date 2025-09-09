@@ -11,6 +11,8 @@ import WashServicePage from "@/pages/services/WashServicePage";
 import DryCleanServicePage from "@/pages/services/DryCleanServicePage";
 import PolishServicePage from "@/pages/services/PolishServicePage";
 import NanoCeramicServicePage from "@/pages/services/NanoCeramicServicePage";
+import BookingPage from "@/pages/user/BookingPage";
+import UserBookingsPage from "@/pages/user/UserBookingsPage";
 
 function App() {
   return (
@@ -29,6 +31,8 @@ function App() {
           path="/services/nano-ceramic"
           element={<NanoCeramicServicePage />}
         />
+        <Route path="/booking" element={<BookingPage />} />
+        <Route path="/my-booking" element={<UserBookingsPage />} />
       </Routes>
     </HomeLayout>
   );
