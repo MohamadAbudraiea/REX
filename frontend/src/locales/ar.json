@@ -238,6 +238,9 @@
       "title": "حجز الخدمة",
       "service": "اختر الخدمة",
       "service_placeholder": "اختر خدمة",
+      "copy_link": "نسخ الرابط",
+      "preferred_date": "التاريخ المفضل (اختياري)",
+      "date_placeholder": "اختر التاريخ",
       "options": {
         "wash": "غسيل متميز",
         "dryclean": "تنظيف جاف احترافي",
