@@ -15,10 +15,18 @@ app.use(
 );
 // authentication // autharization
 const authenticateUser = require("./middlewares/authentication");
+const autharizationMiddleware = require("./middlewares/authorization");
 // router imports
 const authRouter = require("./routers/authRouter");
 const adminRouter = require("./routers/adminRouter");
 // routing
 app.use("/auth", authRouter);
-app.use("/admin", authenticateUser, adminRouter);
+// authinticate then authorize then enter the router
+app.use(
+  "/admin",
+  authenticateUser,
+  autharizationMiddleware.authorizeAdmin,
+  adminRouter
+);
+
 module.exports = app;

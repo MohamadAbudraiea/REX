@@ -43,3 +43,25 @@ exports.addUser = async (req, res) => {
     });
   }
 };
+// review
+exports.getTickets = async (req, res) => {
+  try {
+    const tickets = await Ticket.findAll({
+      order: [["status", "ASC"]],
+      include: {
+        model: user,
+        attributes: ["name", "phone"],
+      },
+    });
+
+    res.status(200).json({
+      status: "success",
+      data: tickets,
+    });
+  } catch (error) {
+    res.status(500).json({
+      status: "error",
+      message: error.message || "Something went wrong",
+    });
+  }
+};
