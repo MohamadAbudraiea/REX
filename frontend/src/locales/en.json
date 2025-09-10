@@ -238,6 +238,9 @@
       "title": "Service Booking",
       "service": "Select Service",
       "service_placeholder": "Choose a service",
+      "copy_link": "Copy Link",
+      "preferred_date": "Preferred Date (optional)",
+      "date_placeholder": "Pick a date",
       "options": {
         "wash": "Premium Wash",
         "dryclean": "Professional Dry Clean",
