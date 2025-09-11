@@ -5,7 +5,10 @@
     "about": "About",
     "contact": "Contact",
     "login": "Login",
-    "signup": "Sign Up"
+    "signup": "Sign Up",
+    "my_bookings": "My Bookings",
+    "logout": "Logout",
+    "logging_out": "Logging Out..."
   },
 
   "signup": {
@@ -224,9 +227,14 @@
         "features": "Superior durability, Heat dissipation, Anti-static properties, Self-healing technology"
       }
     },
+    "cta": {
+      "title": "Ready to Give Your Car Royal Treatment?",
+      "subtitle": "Book your service today and experience the REX CAR difference"
+    },
     "book": "Book Now",
     "back": "back to services",
-    "see_more": "See More"
+    "see_more": "See More",
+    "contact": "Contact Us"
   },
 
   "book": {

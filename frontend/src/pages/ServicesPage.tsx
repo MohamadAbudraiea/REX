@@ -156,10 +156,10 @@ export default function ServicesPage() {
             className="text-center"
           >
             <h2 className="text-3xl sm:text-4xl font-bold mb-4">
-              Ready to Give Your Car Royal Treatment?
+              {t("services.cta.title")}
             </h2>
             <p className="text-xl mb-8 opacity-90">
-              Book your service today and experience the REX CAR difference
+              {t("services.cta.subtitle")}
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <Button
@@ -167,14 +167,14 @@ export default function ServicesPage() {
                 variant="secondary"
                 className="bg-white text-primary hover:bg-white/90"
               >
-                {t("home.hero.cta")}
+                <Link to="/booking">{t("services.book")}</Link>
               </Button>
               <Button
                 size="lg"
                 variant="outline"
                 className="border-white text-white hover:bg-white hover:text-primary bg-transparent"
               >
-                {t("nav.contact")}
+                <Link to="/contact">{t("services.contact")}</Link>
               </Button>
             </div>
           </motion.div>

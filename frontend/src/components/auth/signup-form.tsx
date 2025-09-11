@@ -1,9 +1,9 @@
-import { useState, useMemo, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
-import { Eye, EyeOff, Mail, Lock, User } from "lucide-react";
+import { Eye, EyeOff, Mail, Lock, User, Phone } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import {
@@ -19,9 +19,7 @@ import {
   FormField,
   FormItem,
   FormLabel,
-  FormMessage,
 } from "@/components/ui/form";
-
 import { Link } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { useSignUp } from "@/hooks/useAuth";
@@ -31,23 +29,19 @@ export function SignupForm() {
   const { t } = useTranslation();
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
-  const [hasInteracted, setHasInteracted] = useState(false);
 
-  // Create the schema using useMemo to regenerate it when t changes
-  const signupSchema = useMemo(() => {
-    return z
-      .object({
-        name: z.string().min(2, t("validations.name.min")),
-        email: z.string().email(t("validations.email")),
-        phone: z.string().min(10, t("validations.phone.min")),
-        password: z.string().min(6, t("validations.password.min")),
-        confirmPassword: z.string(),
-      })
-      .refine((data) => data.password === data.confirmPassword, {
-        message: t("validations.password.match"),
-        path: ["confirmPassword"],
-      });
-  }, [t]);
+  const signupSchema = z
+    .object({
+      name: z.string().min(2, t("validations.name.min")),
+      email: z.string().email(t("validations.email")),
+      phone: z.string().min(10, t("validations.phone.min")),
+      password: z.string().min(6, t("validations.password.min")),
+      confirmPassword: z.string(),
+    })
+    .refine((data) => data.password === data.confirmPassword, {
+      message: t("validations.password.match"),
+      path: ["confirmPassword"],
+    });
 
   type SignupFormData = z.infer<typeof signupSchema>;
 
@@ -63,20 +57,11 @@ export function SignupForm() {
     mode: "onSubmit",
   });
 
-  // Re-trigger validation when schema changes only if user has interacted
   useEffect(() => {
-    if (hasInteracted) {
+    if (Object.keys(form.formState.errors).length > 0) {
       form.trigger();
     }
-  }, [signupSchema, form, hasInteracted]);
-
-  // Track form interactions
-  useEffect(() => {
-    const subscription = form.watch(() => {
-      setHasInteracted(true);
-    });
-    return () => subscription.unsubscribe();
-  }, [form]);
+  }, [t, form]);
 
   const onSubmit = (data: SignupFormData) => {
     signUpMutation(data);
@@ -117,7 +102,7 @@ export function SignupForm() {
               <FormField
                 control={form.control}
                 name="name"
-                render={({ field }) => (
+                render={({ field, fieldState }) => (
                   <FormItem>
                     <FormLabel className="text-foreground font-medium">
                       {t("signup.name")}
@@ -132,7 +117,11 @@ export function SignupForm() {
                         />
                       </div>
                     </FormControl>
-                    <FormMessage className="text-destructive" />
+                    {fieldState.error && (
+                      <p className="text-sm font-medium text-destructive">
+                        {fieldState.error.message}
+                      </p>
+                    )}
                   </FormItem>
                 )}
               />
@@ -141,7 +130,7 @@ export function SignupForm() {
               <FormField
                 control={form.control}
                 name="email"
-                render={({ field }) => (
+                render={({ field, fieldState }) => (
                   <FormItem>
                     <FormLabel className="text-foreground font-medium">
                       {t("signup.email")}
@@ -157,7 +146,11 @@ export function SignupForm() {
                         />
                       </div>
                     </FormControl>
-                    <FormMessage className="text-destructive" />
+                    {fieldState.error && (
+                      <p className="text-sm font-medium text-destructive">
+                        {fieldState.error.message}
+                      </p>
+                    )}
                   </FormItem>
                 )}
               />
@@ -166,14 +159,14 @@ export function SignupForm() {
               <FormField
                 control={form.control}
                 name="phone"
-                render={({ field }) => (
+                render={({ field, fieldState }) => (
                   <FormItem>
                     <FormLabel className="text-foreground font-medium">
                       {t("signup.phone")}
                     </FormLabel>
                     <FormControl>
                       <div className="relative">
-                        <User className="absolute left-3 top-4 h-4 w-4 text-muted-foreground" />
+                        <Phone className="absolute left-3 top-4 h-4 w-4 text-muted-foreground" />
                         <Input
                           {...field}
                           placeholder={t("signup.phone")}
@@ -181,7 +174,11 @@ export function SignupForm() {
                         />
                       </div>
                     </FormControl>
-                    <FormMessage className="text-destructive" />
+                    {fieldState.error && (
+                      <p className="text-sm font-medium text-destructive">
+                        {fieldState.error.message}
+                      </p>
+                    )}
                   </FormItem>
                 )}
               />
@@ -190,7 +187,7 @@ export function SignupForm() {
               <FormField
                 control={form.control}
                 name="password"
-                render={({ field }) => (
+                render={({ field, fieldState }) => (
                   <FormItem>
                     <FormLabel className="text-foreground font-medium">
                       {t("signup.password")}
@@ -211,14 +208,18 @@ export function SignupForm() {
                           className="absolute right-3 top-4 text-muted-foreground hover:text-foreground transition-colors"
                         >
                           {showPassword ? (
-                            <EyeOff className="h-4 w-4" />
+                            <EyeOff className="size-4" />
                           ) : (
-                            <Eye className="h-4 w-4" />
+                            <Eye className="size-4" />
                           )}
                         </button>
                       </div>
                     </FormControl>
-                    <FormMessage className="text-destructive" />
+                    {fieldState.error && (
+                      <p className="text-sm font-medium text-destructive">
+                        {fieldState.error.message}
+                      </p>
+                    )}
                   </FormItem>
                 )}
               />
@@ -227,7 +228,7 @@ export function SignupForm() {
               <FormField
                 control={form.control}
                 name="confirmPassword"
-                render={({ field }) => (
+                render={({ field, fieldState }) => (
                   <FormItem>
                     <FormLabel className="text-foreground font-medium">
                       {t("signup.confirm_password")}
@@ -249,14 +250,18 @@ export function SignupForm() {
                           className="absolute right-3 top-4 text-muted-foreground hover:text-foreground transition-colors"
                         >
                           {showConfirmPassword ? (
-                            <EyeOff className="h-4 w-4" />
+                            <EyeOff className="size-4" />
                           ) : (
-                            <Eye className="h-4 w-4" />
+                            <Eye className="size-4" />
                           )}
                         </button>
                       </div>
                     </FormControl>
-                    <FormMessage className="text-destructive" />
+                    {fieldState.error && (
+                      <p className="text-sm font-medium text-destructive">
+                        {fieldState.error.message}
+                      </p>
+                    )}
                   </FormItem>
                 )}
               />

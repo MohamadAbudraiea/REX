@@ -35,3 +35,8 @@ export async function logout() {
   const res = await axiosInstance.post("/auth/logout");
   return res.data;
 }
+
+export async function checkAuth() {
+  const res = await axiosInstance.get("/auth/check");
+  return res.data;
+}

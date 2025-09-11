@@ -12,11 +12,19 @@ import {
 import { Menu } from "lucide-react";
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
+import { useCheckAuth, useLogout } from "@/hooks/useAuth";
 
 export default function Navbar() {
+  const { isAuthenticated } = useCheckAuth();
+  const { logoutMutation, isPending: isLoggingOut } = useLogout();
   const { t, i18n } = useTranslation();
   const [isOpen, setIsOpen] = useState(false);
   const isRTL = i18n.language === "ar";
+
+  const handdleLogout = () => {
+    logoutMutation();
+    setIsOpen(false);
+  };
 
   return (
     <nav className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
@@ -54,29 +62,58 @@ export default function Navbar() {
               >
                 {t("nav.contact")}
               </Link>
+              {isAuthenticated && (
+                <Link
+                  to="/my-bookings"
+                  className="text-sm font-medium text-foreground/80 hover:text-foreground transition-colors"
+                >
+                  {t("nav.my_bookings")}
+                </Link>
+              )}
             </div>
           </div>
 
-          {/* Right side controls */}
+          {/* side controls */}
           <div className="flex items-center space-x-2">
             <LanguageSwitcher />
             <ThemeSwitcher />
-            <div
-              className={`hidden sm:flex items-center ml-4 ${
-                isRTL ? "space-x-reverse space-x-2" : "space-x-2"
-              }`}
-            >
-              <Button variant="ghost" size="sm" asChild>
-                <Link to="/login">{t("nav.login")}</Link>
-              </Button>
-              <Button
-                size="sm"
-                asChild
-                className="bg-primary hover:bg-primary/90"
+            {isAuthenticated ? (
+              <div
+                className={`hidden md:flex items-center ml-4 ${
+                  isRTL ? "space-x-reverse space-x-2" : "space-x-2"
+                }`}
               >
-                <Link to="/signup">{t("nav.signup")}</Link>
-              </Button>
-            </div>
+                <Button
+                  onClick={handdleLogout}
+                  disabled={isLoggingOut}
+                  className="bg-destructive hover:bg-destructive/90"
+                  variant="destructive"
+                  size="sm"
+                  asChild
+                >
+                  <span>
+                    {isLoggingOut ? t("nav.logging_out") : t("nav.logout")}
+                  </span>
+                </Button>
+              </div>
+            ) : (
+              <div
+                className={`hidden md:flex items-center ml-4 ${
+                  isRTL ? "space-x-reverse space-x-2" : "space-x-2"
+                }`}
+              >
+                <Button variant="ghost" size="sm" asChild>
+                  <Link to="/login">{t("nav.login")}</Link>
+                </Button>
+                <Button
+                  size="sm"
+                  asChild
+                  className="bg-primary hover:bg-primary/90"
+                >
+                  <Link to="/signup">{t("nav.signup")}</Link>
+                </Button>
+              </div>
+            )}
 
             <Sheet open={isOpen} onOpenChange={setIsOpen}>
               <SheetTrigger asChild>
@@ -136,21 +173,49 @@ export default function Navbar() {
                     {t("nav.contact")}
                   </Link>
 
-                  <div className="flex flex-col space-y-3 pt-4 border-t">
-                    <Button variant="ghost" asChild className="justify-start">
-                      <Link to="/login" onClick={() => setIsOpen(false)}>
-                        {t("nav.login")}
-                      </Link>
-                    </Button>
-                    <Button
-                      asChild
-                      className="bg-primary hover:bg-primary/90 justify-start"
+                  {isAuthenticated && (
+                    <Link
+                      to="/my-bookings"
+                      className={`text-lg font-medium text-foreground/80 hover:text-foreground transition-colors ${
+                        isRTL ? "text-right" : "text-left"
+                      }`}
+                      onClick={() => setIsOpen(false)}
                     >
-                      <Link to="/signup" onClick={() => setIsOpen(false)}>
-                        {t("nav.signup")}
-                      </Link>
-                    </Button>
-                  </div>
+                      {t("nav.my_bookings")}
+                    </Link>
+                  )}
+
+                  {isAuthenticated ? (
+                    <div className="flex flex-col space-y-3 pt-4 border-t">
+                      <Button
+                        variant="destructive"
+                        asChild
+                        className="justify-start hover:bg-destructive"
+                      >
+                        <span>
+                          {isLoggingOut
+                            ? t("nav.logging_out")
+                            : t("nav.logout")}
+                        </span>
+                      </Button>
+                    </div>
+                  ) : (
+                    <div className="flex flex-col space-y-3 pt-4 border-t">
+                      <Button variant="ghost" asChild className="justify-start">
+                        <Link to="/login" onClick={() => setIsOpen(false)}>
+                          {t("nav.login")}
+                        </Link>
+                      </Button>
+                      <Button
+                        asChild
+                        className="bg-primary hover:bg-primary/90 justify-start"
+                      >
+                        <Link to="/signup" onClick={() => setIsOpen(false)}>
+                          {t("nav.signup")}
+                        </Link>
+                      </Button>
+                    </div>
+                  )}
                 </div>
               </SheetContent>
             </Sheet>

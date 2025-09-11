@@ -1,4 +1,4 @@
-import { useState, useMemo, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -19,7 +19,6 @@ import {
   FormField,
   FormItem,
   FormLabel,
-  FormMessage,
 } from "@/components/ui/form";
 import { Link } from "react-router-dom";
 import { useTranslation } from "react-i18next";
@@ -29,15 +28,11 @@ export function LoginForm() {
   const { loginMutation, isPending } = useLogin();
   const { t } = useTranslation();
   const [showPassword, setShowPassword] = useState(false);
-  const [hasInteracted, setHasInteracted] = useState(false);
 
-  // Create the schema using useMemo to regenerate it when t changes
-  const loginSchema = useMemo(() => {
-    return z.object({
-      email: z.string().email(t("validations.email")),
-      password: z.string().min(6, t("validations.password.min")),
-    });
-  }, [t]);
+  const loginSchema = z.object({
+    email: z.string().email(t("validations.email")),
+    password: z.string().min(6, t("validations.password.min")),
+  });
 
   type LoginFormData = z.infer<typeof loginSchema>;
 
@@ -47,23 +42,14 @@ export function LoginForm() {
       email: "",
       password: "",
     },
-    mode: "onChange",
+    mode: "onSubmit",
   });
 
-  // Re-trigger validation when schema changes only if user has interacted
   useEffect(() => {
-    if (hasInteracted) {
+    if (Object.keys(form.formState.errors).length > 0) {
       form.trigger();
     }
-  }, [loginSchema, form, hasInteracted]);
-
-  // Track form interactions
-  useEffect(() => {
-    const subscription = form.watch(() => {
-      setHasInteracted(true);
-    });
-    return () => subscription.unsubscribe();
-  }, [form]);
+  }, [t, form]);
 
   const onSubmit = (data: LoginFormData) => {
     loginMutation(data);
@@ -104,7 +90,7 @@ export function LoginForm() {
               <FormField
                 control={form.control}
                 name="email"
-                render={({ field }) => (
+                render={({ field, fieldState }) => (
                   <FormItem>
                     <FormLabel className="text-foreground font-medium">
                       {t("login.email")}
@@ -121,7 +107,11 @@ export function LoginForm() {
                         />
                       </div>
                     </FormControl>
-                    <FormMessage className="text-destructive" />
+                    {fieldState.error && (
+                      <p className="text-sm font-medium text-destructive">
+                        {fieldState.error.message}
+                      </p>
+                    )}
                   </FormItem>
                 )}
               />
@@ -130,7 +120,7 @@ export function LoginForm() {
               <FormField
                 control={form.control}
                 name="password"
-                render={({ field }) => (
+                render={({ field, fieldState }) => (
                   <FormItem>
                     <FormLabel className="text-foreground font-medium">
                       {t("login.password")}
@@ -158,7 +148,11 @@ export function LoginForm() {
                         </button>
                       </div>
                     </FormControl>
-                    <FormMessage className="text-destructive" />
+                    {fieldState.error && (
+                      <p className="text-sm font-medium text-destructive">
+                        {fieldState.error.message}
+                      </p>
+                    )}
                   </FormItem>
                 )}
               />

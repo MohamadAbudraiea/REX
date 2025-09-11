@@ -1,4 +1,4 @@
-import { Routes, Route } from "react-router-dom";
+import { Routes, Route, Navigate } from "react-router-dom";
 import HomePage from "@/pages/HomePage";
 import HomeLayout from "@/layout/homeLayout";
 import SignupPage from "@/pages/SignUpPage";
@@ -14,17 +14,34 @@ import NanoCeramicServicePage from "@/pages/services/NanoCeramicServicePage";
 import BookingPage from "@/pages/user/BookingPage";
 import UserBookingsPage from "@/pages/user/UserBookingsPage";
 import { Toaster } from "./components/ui/sonner";
+import ProtectedRoute from "./components/auth/ProtectedRoute";
+import { useCheckAuth } from "./hooks/useAuth";
+import ScrollToTop from "./components/ui/ScrollToTop";
 
 function App() {
+  const { isAuthenticated } = useCheckAuth();
   return (
     <>
+      <ScrollToTop />
       <HomeLayout>
         <Routes>
+          <Route
+            path="/signup"
+            element={
+              isAuthenticated ? <Navigate to="/" replace /> : <SignupPage />
+            }
+          />
+          <Route
+            path="/login"
+            element={
+              isAuthenticated ? <Navigate to="/" replace /> : <LoginPage />
+            }
+          />
+
           <Route path="/" element={<HomePage />} />
-          <Route path="/signup" element={<SignupPage />} />
-          <Route path="/login" element={<LoginPage />} />
           <Route path="/about" element={<AboutPage />} />
           <Route path="/contact" element={<ContactPage />} />
+
           <Route path="/services" element={<ServicesPage />} />
           <Route path="/services/wash" element={<WashServicePage />} />
           <Route path="/services/dryclean" element={<DryCleanServicePage />} />
@@ -33,8 +50,23 @@ function App() {
             path="/services/nano-ceramic"
             element={<NanoCeramicServicePage />}
           />
-          <Route path="/booking" element={<BookingPage />} />
-          <Route path="/my-booking" element={<UserBookingsPage />} />
+          <Route
+            path="/booking"
+            element={
+              <ProtectedRoute>
+                <BookingPage />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/my-bookings"
+            element={
+              <ProtectedRoute>
+                <UserBookingsPage />
+              </ProtectedRoute>
+            }
+          />
+          <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>
       </HomeLayout>
 
