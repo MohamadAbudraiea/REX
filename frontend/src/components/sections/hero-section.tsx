@@ -3,10 +3,26 @@ import { useTranslation } from "react-i18next";
 import { Link } from "react-router-dom";
 
 export function HeroSection() {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
+  const locale = i18n.language;
+
+  const acronymParts = [
+    { letter: "B", explanation: "Blazing Fast" },
+    { letter: "L", explanation: "Luxury Wash" },
+    { letter: "I", explanation: "Instant Shine" },
+    { letter: "N", explanation: "No Wait" },
+    { letter: "K", explanation: "Klean Finish" },
+  ];
+  const reversedAcronymParts = [
+    { letter: "K", explanation: "Klean Finish" },
+    { letter: "N", explanation: "No Wait" },
+    { letter: "I", explanation: "Instant Shine" },
+    { letter: "L", explanation: "Luxury Wash" },
+    { letter: "B", explanation: "Blazing Fast" },
+  ];
 
   return (
-    <section className="relative min-h-[80vh] flex items-center justify-center bg-gradient-to-br from-background via-background to-muted/20">
+    <section className="relative min-h-[80vh] flex items-center justify-center bg-gradient-to-b from-background  to-muted/90">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center max-w-4xl mx-auto">
           <motion.div
@@ -16,25 +32,74 @@ export function HeroSection() {
             className="space-y-6"
           >
             <div className="flex flex-col items-center space-y-4">
-              <motion.div
-                initial={{ scale: 0.8, opacity: 0 }}
-                animate={{ scale: 1, opacity: 1 }}
-                transition={{ duration: 0.8, delay: 0.2 }}
-                className="relative"
-              >
-                <img
-                  src="/logo.png"
-                  alt="REX CAR Logo"
-                  className="w-48 h-auto sm:w-56 lg:w-64"
-                />
-              </motion.div>
               <h1 className="text-6xl sm:text-7xl lg:text-8xl font-bold tracking-wider">
-                <span className="text-primary">R.E.X</span>
+                <div className="flex justify-center">
+                  {locale === "en"
+                    ? acronymParts.map((part, index) => (
+                        <motion.div
+                          key={index}
+                          initial={{ opacity: 0, y: 30 }}
+                          animate={{ opacity: 1, y: 0 }}
+                          transition={{ duration: 0.5, delay: index * 0.1 }}
+                          className="flex flex-col items-center mx-1 relative"
+                        >
+                          {/* Flash icon above the letter I */}
+                          {part.letter === "I" && (
+                            <motion.img
+                              src="/flash.png"
+                              alt="Flash"
+                              className="absolute right-6 -top-5 w-10 h-10"
+                              initial={{ scale: 0, rotate: -180 }}
+                              animate={{ scale: 1, rotate: 0 }}
+                              transition={{ duration: 0.7, delay: 0.5 }}
+                            />
+                          )}
+                          <span className="text-primary text-6xl sm:text-7xl lg:text-8xl">
+                            {part.letter}
+                          </span>
+                          <span className="text-xs sm:text-sm font-normal text-muted-foreground mt-1 max-w-[80px] text-center leading-tight">
+                            {part.explanation}
+                          </span>
+                        </motion.div>
+                      ))
+                    : reversedAcronymParts.map((part, index) => (
+                        <motion.div
+                          key={index}
+                          initial={{ opacity: 0, y: 30 }}
+                          animate={{ opacity: 1, y: 0 }}
+                          transition={{ duration: 0.5, delay: index * 0.1 }}
+                          className="flex flex-col items-center mx-1 relative"
+                        >
+                          {/* Flash icon above the letter I */}
+                          {part.letter === "I" && (
+                            <motion.img
+                              src="/flash.png"
+                              alt="Flash"
+                              className="absolute right-6 -top-5 w-10 h-10"
+                              initial={{ scale: 0, rotate: -180 }}
+                              animate={{ scale: 1, rotate: 0 }}
+                              transition={{ duration: 0.7, delay: 0.5 }}
+                            />
+                          )}
+                          <span className="text-primary text-6xl sm:text-7xl lg:text-8xl">
+                            {part.letter}
+                          </span>
+                          <span className="text-xs sm:text-sm font-normal text-muted-foreground mt-1 max-w-[80px] text-center leading-tight">
+                            {part.explanation}
+                          </span>
+                        </motion.div>
+                      ))}
+                </div>
               </h1>
             </div>
-            <p className="text-lg text-muted-foreground max-w-2xl mx-auto text-pretty">
+            <motion.p
+              className="text-lg text-muted-foreground max-w-2xl mx-auto text-pretty"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ delay: 0.8, duration: 0.5 }}
+            >
               {t("home.hero.description")}
-            </p>
+            </motion.p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center items-center pt-6">
               <Link
                 to="/booking"

@@ -83,7 +83,7 @@ export function SignupForm() {
             transition={{ delay: 0.2, duration: 0.3 }}
             className="flex justify-center"
           >
-            <img src="/logo.png" alt="REX CAR Logo" className="h-20 w-auto" />
+            <img src="/logo.png" alt="BLINK Logo" className="h-20 w-auto" />
           </motion.div>
           <div>
             <CardTitle className="text-2xl font-bold text-foreground">

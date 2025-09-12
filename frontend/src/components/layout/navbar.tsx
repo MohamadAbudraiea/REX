@@ -13,11 +13,13 @@ import { Menu } from "lucide-react";
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useCheckAuth, useLogout } from "@/hooks/useAuth";
+import { useTheme } from "@/context/theme-provider";
 
 export default function Navbar() {
   const { isAuthenticated } = useCheckAuth();
   const { logoutMutation, isPending: isLoggingOut } = useLogout();
   const { t, i18n } = useTranslation();
+  const { theme } = useTheme();
   const [isOpen, setIsOpen] = useState(false);
   const isRTL = i18n.language === "ar";
 
@@ -28,11 +30,15 @@ export default function Navbar() {
 
   return (
     <nav className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
-      <div className="container mx-auto">
+      <div className=" mx-auto">
         <div className="flex h-16 items-center justify-between">
           {/* Logo */}
           <Link to="/" className="flex items-center">
-            <img src="/logo.png" alt="REX CAR" className="h-15 w-auto" />
+            <img
+              src={theme === "light" ? "/white-logo.png" : "/dark-logo.png"}
+              alt="BLINK Logo"
+              className="h-25 w-25"
+            />
           </Link>
 
           {/* Navigation Links - Hidden on mobile */}
@@ -132,7 +138,13 @@ export default function Navbar() {
                       isRTL ? "justify-end" : "justify-start"
                     }`}
                   >
-                    <img src="/logo.png" alt="REX CAR" className="h-8 w-auto" />
+                    <img
+                      src={
+                        theme === "light" ? "/white-logo.png" : "/dark-logo.png"
+                      }
+                      alt="BLINK Logo"
+                      className="h-25 w-25"
+                    />
                   </SheetTitle>
                 </SheetHeader>
                 <div className="flex flex-col space-y-4 mt-8">

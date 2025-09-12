@@ -53,9 +53,9 @@ export default function AboutPage() {
               className="relative"
             >
               <img
-                src="/about-3.png"
-                alt="REX CAR Mobile App"
-                className="w-full max-w-md mx-auto"
+                src="/phone.png"
+                alt="BLINK Mobile App"
+                className="w-full "
               />
             </motion.div>
           </div>
@@ -74,8 +74,8 @@ export default function AboutPage() {
               className={locale === "ar" ? "lg:order-2" : ""}
             >
               <img
-                src="/about-2.png"
-                alt="REX CAR Brand Materials"
+                src="/paper.png"
+                alt="BLINK Brand Materials"
                 className="w-full rounded-lg"
               />
             </motion.div>
@@ -170,8 +170,8 @@ export default function AboutPage() {
               viewport={{ once: true }}
             >
               <img
-                src="/about-1.png"
-                alt="REX CAR Team Uniform"
+                src="/t-shirt.png"
+                alt="BLINK Team Uniform"
                 className="w-full max-w-md mx-auto"
               />
             </motion.div>

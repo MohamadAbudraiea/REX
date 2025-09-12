@@ -12,7 +12,7 @@
   },
 
   "signup": {
-    "title": "Join REX CAR",
+    "title": "Join BLINK",
     "description": "Create your account for premium car wash services",
     "name": "Full Name",
     "name_placeholder": "Enter your full name",
@@ -33,7 +33,7 @@
 
   "login": {
     "title": "Welcome Back",
-    "description": "Sign in to your REX CAR account",
+    "description": "Sign in to your BLINK account",
     "email": "Email",
     "email_placeholder": "Enter your email",
     "password": "Password",
@@ -69,7 +69,7 @@
 
   "home": {
     "hero": {
-      "description": "Experience the ultimate car care with REX CAR. Professional detailing services that bring out the best in your vehicle.",
+      "description": "Experience the ultimate car care with BLINK. Professional detailing services that bring out the best in your vehicle.",
       "cta": "Book Now"
     },
     "services": {
@@ -104,12 +104,12 @@
 
   "about": {
     "hero": {
-      "title": "About REX CAR",
+      "title": "About BLINK",
       "subtitle": "Elite. Precision. Shine."
     },
     "story": {
       "title": "Our Story",
-      "content": "REX CAR was founded with a simple mission: to provide the highest quality car care services with unmatched attention to detail. We believe every vehicle deserves royal treatment."
+      "content": "BLINK was founded with a simple mission: to provide the highest quality car care services with unmatched attention to detail. We believe every vehicle deserves royal treatment."
     },
     "mission": {
       "title": "Our Mission",
@@ -117,7 +117,7 @@
     },
     "values": {
       "title": "Our Values",
-      "description": "The principles that guide everything we do at REX CAR",
+      "description": "The principles that guide everything we do at BLINK",
       "items": {
         "quality": {
           "title": "Quality Excellence",
@@ -136,7 +136,7 @@
     "team": {
       "title": "Our Team",
       "content1": "Our success is built on the expertise and dedication of our professional team. Each member brings years of experience and a passion for automotive excellence.",
-      "content2": "From our skilled technicians to our customer service representatives, everyone at REX CAR is committed to delivering the royal treatment your vehicle deserves."
+      "content2": "From our skilled technicians to our customer service representatives, everyone at BLINK is committed to delivering the royal treatment your vehicle deserves."
     }
   },
 
@@ -229,7 +229,7 @@
     },
     "cta": {
       "title": "Ready to Give Your Car Royal Treatment?",
-      "subtitle": "Book your service today and experience the REX CAR difference"
+      "subtitle": "Book your service today and experience the BLINK difference"
     },
     "book": "Book Now",
     "back": "back to services",
@@ -240,7 +240,7 @@
   "book": {
     "hero": {
       "title": "Book Your Service",
-      "subtitle": "Schedule your premium car care service with REX CAR"
+      "subtitle": "Schedule your premium car care service with BLINK"
     },
     "form": {
       "title": "Service Booking",
@@ -314,7 +314,7 @@
   },
 
   "footer": {
-    "company": "REX CAR",
+    "company": "BLINK",
     "tagline": "Elite. Precision. Shine.",
     "rights": "All rights reserved.",
     "services": "Services",

@@ -28,7 +28,7 @@ const reviews: Review[] = [
     name: "Sarah Johnson",
     rating: 5,
     comment:
-      "Best car wash in the city! The polish service made my car shine like never before. Highly recommend REX CAR for premium car care.",
+      "Best car wash in the city! The polish service made my car shine like never before. Highly recommend BLINK for premium car care.",
     date: "2024-01-10",
   },
   {

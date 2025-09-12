@@ -1,8 +1,20 @@
+import { useTheme } from "@/context/theme-provider";
 import { useTranslation } from "react-i18next";
 import { Link } from "react-router-dom";
 
 export default function Footer() {
+  const { theme } = useTheme();
   const { t } = useTranslation();
+
+  const services = [
+    { name: t("home.services.items.wash.title"), href: "/services/wash" },
+    {
+      name: t("home.services.items.dryclean.title"),
+      href: "/services/dryclean",
+    },
+    { name: t("home.services.items.polish.title"), href: "/services/polish" },
+    { name: t("home.services.items.nano.title"), href: "/services/nano" },
+  ];
 
   return (
     <footer className="bg-muted/50 border-t">
@@ -11,7 +23,11 @@ export default function Footer() {
           {/* Logo and tagline */}
           <div className="col-span-1 md:col-span-2">
             <Link to="/" className="flex items-center space-x-2 mb-4">
-              <img src="/logo.png" alt="REX CAR" className="h-20 w-auto" />
+              <img
+                src={theme === "light" ? "/white-logo.png" : "/dark-logo.png"}
+                alt="BLINK Logo"
+                className="h-20 w-auto"
+              />
             </Link>
             <p className="text-sm text-muted-foreground mb-4">
               {t("footer.tagline")}
@@ -28,38 +44,16 @@ export default function Footer() {
               {t("footer.services")}
             </h3>
             <ul className="space-y-2 text-sm text-muted-foreground">
-              <li>
-                <Link
-                  to="/services/wash"
-                  className="hover:text-foreground transition-colors"
-                >
-                  {t("home.services.items.wash.title")}
-                </Link>
-              </li>
-              <li>
-                <Link
-                  to="/services/dryclean"
-                  className="hover:text-foreground transition-colors"
-                >
-                  {t("home.services.items.dryclean.title")}
-                </Link>
-              </li>
-              <li>
-                <Link
-                  to="/services/polish"
-                  className="hover:text-foreground transition-colors"
-                >
-                  {t("home.services.items.polish.title")}
-                </Link>
-              </li>
-              <li>
-                <Link
-                  to="/services/nano"
-                  className="hover:text-foreground transition-colors"
-                >
-                  {t("home.services.items.nano.title")}
-                </Link>
-              </li>
+              {services.map((service) => (
+                <li key={service.name}>
+                  <Link
+                    to={service.href}
+                    className="hover:text-foreground transition-colors"
+                  >
+                    {service.name}
+                  </Link>
+                </li>
+              ))}
             </ul>
           </div>
 
