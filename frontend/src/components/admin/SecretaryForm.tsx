@@ -1,0 +1,88 @@
+import { useState } from "react";
+import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
+import { Label } from "@/components/ui/label";
+import type { User } from "@/shared/types";
+
+export function SecretaryForm({
+  setSecretaries,
+}: {
+  setSecretaries: React.Dispatch<React.SetStateAction<User[]>>;
+}) {
+  const [form, setForm] = useState({
+    name: "",
+    email: "",
+    phone: "",
+    password: "",
+  });
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    const newSecretary: User = {
+      id: crypto.randomUUID(),
+      name: form.name,
+      email: form.email,
+      phone: form.phone,
+      password: form.password,
+      role: "secretary",
+    };
+    setSecretaries((prev) => [...prev, newSecretary]);
+    setForm({ name: "", email: "", phone: "", password: "" });
+  };
+
+  return (
+    <div className="w-full">
+      <form
+        onSubmit={handleSubmit}
+        className="flex gap-4 mb-4 md:items-end md:flex-row flex-col items-start w-full"
+      >
+        <div className="flex-1 min-w-0">
+          <Label>Name</Label>
+          <Input
+            value={form.name}
+            onChange={(e) => setForm({ ...form, name: e.target.value })}
+            required
+            className="border-primary w-full"
+            autoComplete="name"
+          />
+        </div>
+        <div className="flex-1 min-w-0">
+          <Label>Email</Label>
+          <Input
+            type="email"
+            value={form.email}
+            onChange={(e) => setForm({ ...form, email: e.target.value })}
+            required
+            className="border-primary w-full"
+            autoComplete="email"
+          />
+        </div>
+        <div className="flex-1 min-w-0">
+          <Label>Password</Label>
+          <Input
+            type="password"
+            value={form.password}
+            onChange={(e) => setForm({ ...form, password: e.target.value })}
+            required
+            className="border-primary w-full"
+            autoComplete="new-password webauthn"
+          />
+        </div>
+        <div className="flex-1 min-w-0">
+          <Label>Phone</Label>
+          <Input
+            type="tel"
+            value={form.phone}
+            onChange={(e) => setForm({ ...form, phone: e.target.value })}
+            required
+            className="border-primary w-full"
+            autoComplete="tel"
+          />
+        </div>
+        <Button type="submit" className="flex-shrink-0">
+          Add Secretary
+        </Button>
+      </form>
+    </div>
+  );
+}

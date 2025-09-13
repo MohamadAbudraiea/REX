@@ -114,7 +114,7 @@ export default function BookingCard({
         {(booking.status === "requested" || booking.status === "pending") && (
           <CancelDialog booking={booking} onCancel={onCancel} />
         )}
-        {booking.status === "finished" && !existingRating && (
+        {booking.status === "completed" && !existingRating && (
           <RatingDialog booking={booking} onRate={onRate} />
         )}
       </CardFooter>

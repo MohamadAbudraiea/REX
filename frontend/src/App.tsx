@@ -17,6 +17,7 @@ import { Toaster } from "./components/ui/sonner";
 import ProtectedRoute from "./components/auth/ProtectedRoute";
 import { useCheckAuth } from "./hooks/useAuth";
 import ScrollToTop from "./components/ui/ScrollToTop";
+import AdminDashboard from "./pages/admin/AdminDashboard";
 
 function App() {
   const { isAuthenticated } = useCheckAuth();
@@ -67,6 +68,8 @@ function App() {
             }
           />
           <Route path="*" element={<Navigate to="/" replace />} />
+
+          <Route path="/blink-admin" element={<AdminDashboard />} />
         </Routes>
       </HomeLayout>
 

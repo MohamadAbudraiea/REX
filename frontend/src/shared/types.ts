@@ -1,5 +1,15 @@
 export type ServiceType = "wash" | "dryclean" | "polish" | "nano" | "graphene";
-export type StatusType = "requested" | "pending" | "finished" | "canceled";
+export type StatusType = "requested" | "pending" | "completed" | "canceled";
+
+export interface User {
+  id: string;
+  created_at?: string;
+  name: string;
+  email: string;
+  phone: string;
+  role: string;
+  password: string;
+}
 
 export interface Ticket {
   id: number;
@@ -14,6 +24,7 @@ export interface Ticket {
   secretary_id: string | null;
   detailer_id: string | null;
   cancel_reason: string | null;
+  rating: number | null;
 }
 
 export interface Rating {
