@@ -7,22 +7,22 @@ export function HeroSection() {
   const locale = i18n.language;
 
   const acronymParts = [
-    { letter: "B", explanation: "Blazing Fast" },
-    { letter: "L", explanation: "Luxury Wash" },
-    { letter: "I", explanation: "Instant Shine" },
-    { letter: "N", explanation: "No Wait" },
-    { letter: "K", explanation: "Klean Finish" },
+    { letter: "B", explanation: t("home.hero.acronym.B") },
+    { letter: "L", explanation: t("home.hero.acronym.L") },
+    { letter: "I", explanation: t("home.hero.acronym.I") },
+    { letter: "N", explanation: t("home.hero.acronym.N") },
+    { letter: "K", explanation: t("home.hero.acronym.K") },
   ];
   const reversedAcronymParts = [
-    { letter: "K", explanation: "Klean Finish" },
-    { letter: "N", explanation: "No Wait" },
-    { letter: "I", explanation: "Instant Shine" },
-    { letter: "L", explanation: "Luxury Wash" },
-    { letter: "B", explanation: "Blazing Fast" },
+    { letter: "K", explanation: t("home.hero.acronym.K") },
+    { letter: "N", explanation: t("home.hero.acronym.N") },
+    { letter: "I", explanation: t("home.hero.acronym.I") },
+    { letter: "L", explanation: t("home.hero.acronym.L") },
+    { letter: "B", explanation: t("home.hero.acronym.B") },
   ];
 
   return (
-    <section className="relative min-h-[80vh] flex items-center justify-center bg-gradient-to-b from-background  to-muted/90">
+    <section className="relative min-h-screen flex items-center justify-center bg-gradient-to-b from-background  to-muted/90">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center max-w-4xl mx-auto">
           <motion.div
@@ -41,7 +41,7 @@ export function HeroSection() {
                           initial={{ opacity: 0, y: 30 }}
                           animate={{ opacity: 1, y: 0 }}
                           transition={{ duration: 0.5, delay: index * 0.1 }}
-                          className="flex flex-col items-center mx-1 relative"
+                          className="flex flex-col items-center mx-2 relative"
                         >
                           {/* Flash icon above the letter I */}
                           {part.letter === "I" && (
@@ -68,7 +68,7 @@ export function HeroSection() {
                           initial={{ opacity: 0, y: 30 }}
                           animate={{ opacity: 1, y: 0 }}
                           transition={{ duration: 0.5, delay: index * 0.1 }}
-                          className="flex flex-col items-center mx-1 relative"
+                          className="flex flex-col items-center mx-2 relative"
                         >
                           {/* Flash icon above the letter I */}
                           {part.letter === "I" && (

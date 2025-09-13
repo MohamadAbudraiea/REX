@@ -70,7 +70,14 @@
   "home": {
     "hero": {
       "description": "Experience the ultimate car care with BLINK. Professional detailing services that bring out the best in your vehicle.",
-      "cta": "Book Now"
+      "cta": "Book Now",
+      "acronym": {
+        "B": "Bright Wash",
+        "L": "Lux Polish",
+        "I": "Interior Care",
+        "N": "Nano Ceramic",
+        "K": "Keep Shining"
+      }
     },
     "services": {
       "title": "Our Services",

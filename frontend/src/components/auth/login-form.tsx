@@ -23,10 +23,12 @@ import {
 import { Link } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { useLogin } from "@/hooks/useAuth";
+import { useTheme } from "@/context/theme-provider";
 
 export function LoginForm() {
   const { loginMutation, isPending } = useLogin();
   const { t } = useTranslation();
+  const { theme } = useTheme();
   const [showPassword, setShowPassword] = useState(false);
 
   const loginSchema = z.object({
@@ -71,7 +73,11 @@ export function LoginForm() {
             transition={{ delay: 0.2, duration: 0.3 }}
             className="flex justify-center"
           >
-            <img src="/logo.png" alt="BLINK Logo" className="h-20 w-auto" />
+            <img
+              src={theme === "light" ? "/white-logo.png" : "/dark-logo.png"}
+              alt="BLINK Logo"
+              className="h-20 w-auto"
+            />
           </motion.div>
           <div>
             <CardTitle className="text-2xl font-bold text-foreground">
