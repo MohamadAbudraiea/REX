@@ -7,7 +7,7 @@ import {
   ResponsiveContainer,
 } from "recharts";
 import type { Ticket } from "@/shared/types";
-import { Separator } from "@/components/ui/separator"; // Import the Separator component
+import { Separator } from "@/components/ui/separator";
 
 export function BookingsChart({ bookings }: { bookings: Ticket[] }) {
   // Count by status
@@ -34,10 +34,10 @@ export function BookingsChart({ bookings }: { bookings: Ticket[] }) {
 
   // Map status to your theme colors
   const statusColors: Record<string, string> = {
-    Pending: "#3b82f6", // blue
-    Completed: "#22c55e", // green
-    Cancelled: "#ef4444", // red
-    Requested: "#facc15", // yellow
+    pending: "#3b82f6", // blue
+    finished: "#22c55e", // green
+    cancelled: "#ef4444", // red
+    requested: "#facc15", // yellow
   };
 
   // Dynamic service colors based on your theme variables

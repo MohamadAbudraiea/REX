@@ -8,7 +8,7 @@ export const MOCK_BOOKINGS = [
     end_time: "11:30:00",
     price: 49.99,
     service: "wash",
-    status: "completed",
+    status: "finished",
     secretary_id: "secretary-1",
     detailer_id: "detailer-1",
     cancel_reason: null,
