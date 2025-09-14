@@ -71,3 +71,202 @@ exports.rateticket = async (req, res) => {
     });
   }
 };
+// review
+exports.getAllTickets = async (req, res) => {
+  try {
+    const tickets = await Ticket.findAll({
+      order: [["status", "ASC"]],
+      include: {
+        model: user,
+        attributes: ["name", "phone"],
+      },
+    });
+
+    res.status(200).json({
+      status: "success",
+      data: tickets,
+    });
+  } catch (error) {
+    res.status(500).json({
+      status: "error",
+      message: error.message || "Something went wrong",
+    });
+  }
+};
+exports.getRequestedTickets = async (req, res) => {
+  try {
+    const reqTickets = await ticket.findAll({
+      where: { status: "requested" },
+      include: {
+        model: user,
+        attributes: ["name", "phone"],
+      },
+    });
+
+    res.status(200).json({
+      status: "success",
+      data: reqTickets,
+    });
+  } catch (error) {
+    res.status(500).json({
+      status: "error",
+      message: error.message || "Something went wrong",
+    });
+  }
+};
+exports.getPendingTickets = async (req, res) => {
+  try {
+    var pendingTickets;
+    if (req.user.role === "secretary") {
+      // secretary
+      pendingTickets = await ticket.findAll({
+        where: { status: "pending", secretary_id: req.user.id },
+        include: {
+          model: user,
+          attributes: ["name", "phone"],
+        },
+      });
+    } else if (req.user.role === "detailer") {
+      // detailer
+      pendingTickets = await ticket.findAll({
+        where: { status: "pending", detailer_id: req.user.id },
+        include: {
+          model: user,
+          attributes: ["name", "phone"],
+        },
+      });
+    } else if (req.user.role === "user") {
+      pendingTickets = await ticket.findAll({
+        where: { status: "pending", user_id: req.user_id },
+        include: {
+          model: user,
+          attributes: ["name", "phone"],
+        },
+      });
+    } else {
+      // admin
+
+      pendingTickets = await ticket.findAll({
+        where: { status: "pending" },
+        include: {
+          model: user,
+          attributes: ["name", "phone"],
+        },
+      });
+    }
+
+    res.status(200).json({
+      status: "success",
+      data: pendingTickets,
+    });
+  } catch (error) {
+    res.status(500).json({
+      status: "error",
+      message: error.message || "Something went wrong",
+    });
+  }
+};
+exports.getFinishedTickets = async (req, res) => {
+  try {
+    var finishedTickets;
+    if (req.user.role === "secretary") {
+      // secretary
+      finishedTickets = await ticket.findAll({
+        where: { status: "finished", secretary_id: req.user.id },
+        include: {
+          model: user,
+          attributes: ["name", "phone"],
+        },
+      });
+    } else if (req.user.role === "detailer") {
+      // detailer
+      finishedTickets = await ticket.findAll({
+        where: { status: "finished", detailer_id: req.user.id },
+        include: {
+          model: user,
+          attributes: ["name", "phone"],
+        },
+      });
+    } else if (req.user.role === "user") {
+      finishedTickets = await ticket.findAll({
+        where: { status: "finished", user_id: req.user_id },
+        include: {
+          model: user,
+          attributes: ["name", "phone"],
+        },
+      });
+    } else {
+      // admin
+
+      finishedTickets = await ticket.findAll({
+        where: { status: "finished" },
+        include: {
+          model: user,
+          attributes: ["name", "phone"],
+        },
+      });
+    }
+
+    res.status(200).json({
+      status: "success",
+      data: finishedTickets,
+    });
+  } catch (error) {
+    res.status(500).json({
+      status: "error",
+      message: error.message || "Something went wrong",
+    });
+  }
+};
+exports.getCanceldTickets = async (req, res) => {
+  try {
+    var canceledTickets;
+    if (req.user.role === "secretary") {
+      // secretary
+      canceledTickets = await ticket.findAll({
+        where: { status: "canceled", secretary_id: req.user.id },
+        include: {
+          model: user,
+          attributes: ["name", "phone"],
+        },
+      });
+    } else if (req.user.role === "detailer") {
+      // detailer
+      canceledTickets = await ticket.findAll({
+        where: { status: "canceled", detailer_id: req.user.id },
+        include: {
+          model: user,
+          attributes: ["name", "phone"],
+        },
+      });
+    } else if (req.user.role === "user") {
+      canceledTickets = await ticket.findAll({
+        where: { status: "canceled", user_id: req.user_id },
+        include: {
+          model: user,
+          attributes: ["name", "phone"],
+        },
+      });
+    } else {
+      // admin
+
+      canceledTickets = await ticket.findAll({
+        where: { status: "canceled" },
+        include: {
+          model: user,
+          attributes: ["name", "phone"],
+        },
+      });
+    }
+
+    res.status(200).json({
+      status: "success",
+      data: canceledTickets,
+    });
+  } catch (error) {
+    res.status(500).json({
+      status: "error",
+      message: error.message || "Something went wrong",
+    });
+  }
+};

@@ -85,7 +85,7 @@ exports.userSignup = async (req, res) => {
     const { name, email, phone, password } = req.body;
     if (!name || !email || !password || !phone) {
       return res.status(400).json({
-        status: "fail",
+        status: "failed",
         message: "please enter the full data",
       });
     }
@@ -100,8 +100,7 @@ exports.userSignup = async (req, res) => {
     }
     //--------------------------------------
     const hashedPassword = await bcrypt.hash(password, 10);
-    console.log(password);
-    console.log(hashedPassword);
+
     const newUser = await user.create({
       name: name,
       email: email,

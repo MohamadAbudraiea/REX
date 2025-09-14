@@ -1,6 +1,8 @@
 exports.authorizeAdmin = (req, res, next) => {
   try {
-    if (req.type !== "admin")
+    console.log(req.user.role);
+
+    if (req.user.role !== "admin")
       return res.status(401).json({
         status: "failed",
         message: "unauthorized",
@@ -14,7 +16,7 @@ exports.authorizeAdmin = (req, res, next) => {
 };
 exports.authorizeSecretary = (req, res, next) => {
   try {
-    if (req.type !== "secretary")
+    if (req.user.role !== "secretary")
       return res.status(401).json({
         status: "failed",
         message: "unauthorized",
@@ -28,7 +30,7 @@ exports.authorizeSecretary = (req, res, next) => {
 };
 exports.authorizeDetailer = (req, res, next) => {
   try {
-    if (req.type !== "detailer")
+    if (req.user.role !== "detailer")
       return res.status(401).json({
         status: "failed",
         message: "unauthorized",
@@ -38,7 +40,7 @@ exports.authorizeDetailer = (req, res, next) => {
 };
 exports.authorizeUser = (req, res, next) => {
   try {
-    if (req.type !== "User")
+    if (req.user.role !== "User")
       return res.status(401).json({
         status: "failed",
         message: "unauthorized",
