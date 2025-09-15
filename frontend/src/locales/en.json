@@ -7,6 +7,7 @@
     "login": "Login",
     "signup": "Sign Up",
     "my_bookings": "My Bookings",
+    "profile": "My Profile",
     "logout": "Logout",
     "logging_out": "Logging Out..."
   },
@@ -327,5 +328,37 @@
     "services": "Services",
     "company_info": "Company",
     "contact": "Contact"
+  },
+
+  "notfound": {
+    "title": "Page Not Found",
+    "description": "Sorry, we couldn't find the page you're looking for. Perhaps you've mistyped the URL? Be sure to check your spelling.",
+    "actions": {
+      "home": "Go Home",
+      "services": "Browse Services"
+    },
+    "help": {
+      "title": "Need Help Finding Something?",
+      "description": "Here are some helpful links instead:",
+      "items": {
+        "0": {
+          "title": "Double-check the URL",
+          "description": "Make sure you've entered the correct web address in your browser's address bar."
+        },
+        "1": {
+          "title": "Visit our homepage",
+          "description": "Navigate to our main page to explore all our services and offerings."
+        },
+        "2": {
+          "title": "Report a problem",
+          "description": "If you believe this is an error, please contact our support team."
+        }
+      }
+    },
+    "contact": {
+      "title": "Still Can't Find What You Need?",
+      "description": "Our team is here to help you find exactly what you're looking for.",
+      "cta": "Contact Support"
+    }
   }
 }

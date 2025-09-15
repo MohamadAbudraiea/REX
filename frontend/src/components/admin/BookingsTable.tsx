@@ -316,7 +316,7 @@ export function BookingsTable({
             <TableCell>Price</TableCell>
             <TableCell>Date</TableCell>
             <TableCell>Secretary</TableCell>
-            <TableCell>Delivery</TableCell>
+            <TableCell>Detailer</TableCell>
           </TableRow>
         </TableHeader>
         <TableBody>

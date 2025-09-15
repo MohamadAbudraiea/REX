@@ -5,7 +5,7 @@ import { Label } from "@/components/ui/label";
 import type { AddUser } from "@/shared/types";
 import { useAddUser } from "@/hooks/useAdmin";
 
-export function DeliveryForm() {
+export function DetailerForm() {
   const { addUserMutation, isAddingUser } = useAddUser();
   const [form, setForm] = useState({
     name: "",
@@ -82,7 +82,7 @@ export function DeliveryForm() {
           />
         </div>
         <Button type="submit" className="flex-shrink-0">
-          Add Delivery
+          Add Detailer
         </Button>
       </form>
     </div>

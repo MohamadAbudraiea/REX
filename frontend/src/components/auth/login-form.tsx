@@ -26,7 +26,7 @@ import { useLogin } from "@/hooks/useAuth";
 import { useTheme } from "@/context/theme-provider";
 
 export function LoginForm() {
-  const { loginMutation, isPending } = useLogin();
+  const { loginMutation, isLoggingin } = useLogin();
   const { t } = useTranslation();
   const { theme } = useTheme();
   const [showPassword, setShowPassword] = useState(false);
@@ -176,10 +176,10 @@ export function LoginForm() {
               {/* Login Button */}
               <Button
                 type="submit"
-                disabled={isPending}
+                disabled={isLoggingin}
                 className="w-full h-12 bg-primary hover:bg-primary/90 text-primary-foreground font-semibold transition-all duration-200 transform hover:scale-[1.02]"
               >
-                {isPending ? (
+                {isLoggingin ? (
                   <motion.div
                     animate={{ rotate: 360 }}
                     transition={{

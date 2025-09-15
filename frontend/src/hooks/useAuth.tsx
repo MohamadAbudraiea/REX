@@ -8,7 +8,7 @@ export const useSignUp = () => {
   const queryClient = useQueryClient();
   const { t } = useTranslation();
   const navigate = useNavigate();
-  const { mutate: signUpMutation, isPending } = useMutation({
+  const { mutate: signUpMutation, isPending: isSigningUp } = useMutation({
     mutationKey: ["signup"],
     mutationFn: signUp,
     onSuccess: () => {
@@ -22,14 +22,14 @@ export const useSignUp = () => {
     },
   });
 
-  return { signUpMutation, isPending };
+  return { signUpMutation, isSigningUp };
 };
 
 export const useLogin = () => {
   const queryClient = useQueryClient();
   const { t } = useTranslation();
   const navigate = useNavigate();
-  const { mutate: loginMutation, isPending } = useMutation({
+  const { mutate: loginMutation, isPending: isLoggingin } = useMutation({
     mutationKey: ["login"],
     mutationFn: login,
     onSuccess: () => {
@@ -43,14 +43,14 @@ export const useLogin = () => {
     },
   });
 
-  return { loginMutation, isPending };
+  return { loginMutation, isLoggingin };
 };
 
 export const useLogout = () => {
   const queryClient = useQueryClient();
   const navigate = useNavigate();
 
-  const { mutate: logoutMutation, isPending } = useMutation({
+  const { mutate: logoutMutation, isPending: isLoggingOut } = useMutation({
     mutationKey: ["logout"],
     mutationFn: logout,
     onSuccess: () => {
@@ -65,11 +65,11 @@ export const useLogout = () => {
     },
   });
 
-  return { logoutMutation, isPending };
+  return { logoutMutation, isLoggingOut };
 };
 
 export const useCheckAuth = () => {
-  const { data, isPending } = useQuery({
+  const { data, isPending: isCheckingAuth } = useQuery({
     queryKey: ["auth"],
     queryFn: checkAuth,
     retry: false,
@@ -78,7 +78,7 @@ export const useCheckAuth = () => {
 
   return {
     isAuthenticated: data?.status === "success",
-    isPending,
+    isCheckingAuth,
     user: data?.data,
   };
 };

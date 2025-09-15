@@ -3,7 +3,7 @@ import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { DataTable } from "@/components/admin/DataTable";
 import { SecretaryForm } from "@/components/admin/SecretaryForm";
-import { DeliveryForm } from "@/components/admin/DeliveryForm";
+import { DetailerForm } from "@/components/admin/DetailerForm";
 import { BookingsTable } from "@/components/admin/BookingsTable";
 import { BookingsChart } from "@/components/admin/BookingsChart";
 import type { Ticket } from "@/shared/types";
@@ -178,7 +178,7 @@ export default function AdminDashboard() {
       <Tabs defaultValue="secretary" className="space-y-4">
         <TabsList>
           <TabsTrigger value="secretary">Secretaries</TabsTrigger>
-          <TabsTrigger value="delivery">Delivery</TabsTrigger>
+          <TabsTrigger value="detailer">Detailer</TabsTrigger>
           <TabsTrigger value="bookings">Bookings</TabsTrigger>
           <TabsTrigger value="charts">Charts</TabsTrigger>
         </TabsList>
@@ -203,14 +203,14 @@ export default function AdminDashboard() {
           </Card>
         </TabsContent>
 
-        {/* Delivery CRUD */}
-        <TabsContent value="delivery">
+        {/* Detailer CRUD */}
+        <TabsContent value="Detailer">
           <Card>
             <CardHeader>
-              <CardTitle>Manage Delivery Staff</CardTitle>
+              <CardTitle>Manage Detailer Staff</CardTitle>
             </CardHeader>
             <CardContent>
-              <DeliveryForm />
+              <DetailerForm />
               <DataTable
                 data={users.detailers}
                 columns={[
