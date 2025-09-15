@@ -1,6 +1,6 @@
 import { Routes, Route, Navigate } from "react-router-dom";
 import HomePage from "@/pages/HomePage";
-import HomeLayout from "@/layout/homeLayout";
+import Layout from "@/layout/Layout";
 import SignupPage from "@/pages/SignUpPage";
 import LoginPage from "@/pages/LoginPage";
 import AboutPage from "@/pages/AboutPage";
@@ -18,13 +18,16 @@ import ProtectedRoute from "./components/auth/ProtectedRoute";
 import { useCheckAuth } from "./hooks/useAuth";
 import ScrollToTop from "./components/ui/ScrollToTop";
 import AdminDashboard from "./pages/admin/AdminDashboard";
+import NotFoundPage from "./pages/NotFoundPage";
 
 function App() {
-  const { isAuthenticated } = useCheckAuth();
+  const { isAuthenticated, user } = useCheckAuth();
+  const isAdmin = user?.role === "admin";
+
   return (
     <>
-      <ScrollToTop />
-      <HomeLayout>
+      <Layout>
+        <ScrollToTop />
         <Routes>
           <Route
             path="/signup"
@@ -67,11 +70,15 @@ function App() {
               </ProtectedRoute>
             }
           />
-          <Route path="*" element={<Navigate to="/" replace />} />
 
-          <Route path="/blink-admin" element={<AdminDashboard />} />
+          <Route
+            path="/blink-admin-dashboard"
+            element={isAdmin ? <AdminDashboard /> : <Navigate to="*" replace />}
+          />
+
+          <Route path="*" element={<NotFoundPage />} />
         </Routes>
-      </HomeLayout>
+      </Layout>
 
       <Toaster position="top-center" />
     </>

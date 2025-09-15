@@ -26,7 +26,7 @@ import { useSignUp } from "@/hooks/useAuth";
 import { useTheme } from "@/context/theme-provider";
 
 export function SignupForm() {
-  const { signUpMutation, isPending } = useSignUp();
+  const { signUpMutation, isSigningUp } = useSignUp();
   const { t } = useTranslation();
   const { theme } = useTheme();
   const [showPassword, setShowPassword] = useState(false);
@@ -275,10 +275,10 @@ export function SignupForm() {
               {/* Submit Button */}
               <Button
                 type="submit"
-                disabled={isPending}
+                disabled={isSigningUp}
                 className="w-full h-12 bg-primary hover:bg-primary/90 text-primary-foreground font-semibold transition-all duration-200 transform hover:scale-[1.02]"
               >
-                {isPending ? (
+                {isSigningUp ? (
                   <motion.div
                     animate={{ rotate: 360 }}
                     transition={{

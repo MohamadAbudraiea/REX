@@ -35,7 +35,7 @@ export default function UserBookingsPage() {
       setBookings(
         bookings.map((b) =>
           b.id === booking.id
-            ? { ...b, status: "canceled", cancel_reason: reason }
+            ? { ...b, status: "cancelled", cancel_reason: reason }
             : b
         )
       );

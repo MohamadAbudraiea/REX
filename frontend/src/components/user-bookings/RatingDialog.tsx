@@ -10,7 +10,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
-import { Star, StarHalf } from "lucide-react";
+import { Star } from "lucide-react";
 import type { Ticket } from "@/shared/types";
 import { useTranslation } from "react-i18next";
 
@@ -20,7 +20,7 @@ interface RatingDialogProps {
 }
 
 export default function RatingDialog({ booking, onRate }: RatingDialogProps) {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   const [isOpen, setIsOpen] = useState(false);
   const [ratingValue, setRatingValue] = useState(0);
   const [hoverValue, setHoverValue] = useState(0);
@@ -52,18 +52,24 @@ export default function RatingDialog({ booking, onRate }: RatingDialogProps) {
     const isHalfFilled = displayValue >= star - 0.5 && displayValue < star;
     const isFilled = displayValue >= star;
 
+    const isRTL = i18n.dir() === "rtl";
+
     return (
       <div key={star} className="relative w-8 h-8 mx-0.5">
-        {/* Left half (for half-star selection) */}
+        {/* Half star depending on direction */}
         <div
-          className="absolute left-0 top-0 w-1/2 h-full cursor-pointer z-10"
+          className={`absolute top-0 w-1/2 h-full cursor-pointer z-10 ${
+            isRTL ? "right-0" : "left-0"
+          }`}
           onClick={() => handleStarInteraction(star, true)}
           onMouseEnter={() => handleStarHover(star, true)}
         />
 
-        {/* Right half (for full-star selection) */}
+        {/* Full star depending on direction */}
         <div
-          className="absolute right-0 top-0 w-1/2 h-full cursor-pointer z-10"
+          className={`absolute top-0 w-1/2 h-full cursor-pointer z-10 ${
+            isRTL ? "left-0" : "right-0"
+          }`}
           onClick={() => handleStarInteraction(star)}
           onMouseEnter={() => handleStarHover(star)}
         />
@@ -72,8 +78,12 @@ export default function RatingDialog({ booking, onRate }: RatingDialogProps) {
         {isHalfFilled ? (
           <div className="relative">
             <Star className="w-8 h-8 text-muted-foreground" />
-            <div className="absolute inset-0 overflow-hidden w-1/2">
-              <StarHalf className="w-8 h-8 text-yellow-400 fill-yellow-400" />
+            <div
+              className={`absolute inset-0 overflow-hidden w-1/2 ${
+                isRTL ? "left-0" : "right-0"
+              }`}
+            >
+              <Star className="w-8 h-8 text-yellow-400 fill-yellow-400" />
             </div>
           </div>
         ) : (
@@ -107,7 +117,11 @@ export default function RatingDialog({ booking, onRate }: RatingDialogProps) {
             <Label>{t("book.rate.rating")}</Label>
             <div className="flex items-center" onMouseLeave={handleMouseLeave}>
               {[1, 2, 3, 4, 5].map(renderStar)}
-              <span className="ml-2 text-sm text-muted-foreground">
+              <span
+                className={`text-sm text-muted-foreground ${
+                  i18n.dir() === "rtl" ? "mr-2" : "ml-2"
+                }`}
+              >
                 {ratingValue.toFixed(1)} / 5.0
               </span>
             </div>

@@ -1,121 +1,175 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import { useState } from "react";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { DataTable } from "@/components/admin/DataTable";
 import { SecretaryForm } from "@/components/admin/SecretaryForm";
-import { DeliveryForm } from "@/components/admin/DeliveryForm";
+import { DetailerForm } from "@/components/admin/DetailerForm";
 import { BookingsTable } from "@/components/admin/BookingsTable";
 import { BookingsChart } from "@/components/admin/BookingsChart";
+import type { Ticket } from "@/shared/types";
+import { useGetUsers } from "@/hooks/useAdmin";
 
 export default function AdminDashboard() {
-  // ✅ Mock secretaries
-  const [secretaries, setSecretaries] = useState<any[]>([
-    {
-      id: "s1",
-      name: "Alice Johnson",
-      email: "alice@blink.com",
-      phone: "0790000000",
-    },
-    {
-      id: "s2",
-      name: "Bob Smith",
-      email: "bob@blink.com",
-      phone: "0791111111",
-    },
-  ]);
+  const { users, isGettingUsers } = useGetUsers();
 
-  // ✅ Mock deliveries
-  const [deliveries, setDeliveries] = useState<any[]>([
-    {
-      id: "d1",
-      name: "Charlie Brown",
-      email: "charlie@blink.com",
-      phone: "0791111111",
-    },
-    {
-      id: "d2",
-      name: "David Wilson",
-      email: "david@blink.com",
-      phone: "0792222222",
-    },
-  ]);
-
-  // ✅ More detailed bookings
-  const [bookings] = useState<any[]>([
+  // ✅ Mock bookings with correct types
+  const [bookings] = useState<Ticket[]>([
     {
       id: "b1",
-      user_id: "user1",
-      service: "Car Wash",
-      status: "Pending",
+      user: {
+        id: "u1",
+        name: "User One",
+        email: "user1@example.com",
+        phone: "0791111111",
+      },
+      service: "wash",
+      status: "pending",
+      phone: "0791111111",
       price: 15,
       date: "2025-09-01",
-      secretary_id: "Alice Johnson",
-      detailer_id: "Charlie Brown",
+      secretary_id: "s1",
+      detailer_id: "d1",
       rating: null,
       cancel_reason: null,
+      created_at: "",
+      start_time: null,
+      end_time: null,
     },
     {
       id: "b2",
-      user_id: "user2",
-      service: "Dry Cleaning",
-      status: "Completed",
+      user: {
+        id: "u2",
+        name: "User Two",
+        email: "user2@example.com",
+        phone: "0792222222",
+      },
+      service: "dryclean",
+      status: "finished",
+      phone: "0792222222",
       price: 50,
       date: "2025-09-05",
-      secretary_id: "Bob Smith",
-      detailer_id: "David Wilson",
-      rating: 5,
+      secretary_id: "s2",
+      detailer_id: "d2",
+      rating: {
+        id: "r1",
+        ticket_id: "b2",
+        rating_number: 4.5,
+        description: "Great service!",
+        created_at: "",
+        user_id: "u2",
+      },
       cancel_reason: null,
+      created_at: "",
+      start_time: null,
+      end_time: null,
     },
     {
       id: "b3",
-      user_id: "user3",
+      user: {
+        id: "u3",
+        name: "User Three",
+        email: "user3@example.com",
+        phone: "0793333333",
+      },
       service: "polish",
-      status: "Cancelled",
+      status: "cancelled", // ✅ fixed spelling
+      phone: "0793333333",
       price: 20,
       date: "2025-09-07",
-      secretary_id: "Alice Johnson",
-      detailer_id: "Charlie Brown",
+      secretary_id: "s1",
+      detailer_id: "d1",
       rating: null,
       cancel_reason: "High price",
+      created_at: "",
+      start_time: null,
+      end_time: null,
     },
     {
       id: "b4",
-      user_id: "user4",
-      service: "nano ceramic",
-      status: "Completed",
+      user: {
+        id: "u4",
+        name: "User Four",
+        email: "user4@example.com",
+        phone: "0794444444",
+      },
+      service: "nano",
+      status: "finished",
+      phone: "0794444444",
       price: 30,
       date: "2025-09-10",
-      secretary_id: "Bob Smith",
-      detailer_id: "David Wilson",
-      rating: 4,
+      secretary_id: "s2",
+      detailer_id: "d2",
+      rating: {
+        id: "r2",
+        ticket_id: "b4",
+        rating_number: 4,
+        description: "Good service",
+        created_at: "",
+        user_id: "u4",
+      },
       cancel_reason: null,
+      created_at: "",
+      start_time: null,
+      end_time: null,
     },
     {
       id: "b5",
-      user_id: "user5",
-      service: "Car Wash",
-      status: "Requested",
-      price: 15,
+      user: {
+        id: "u5",
+        name: "User Five",
+        email: "user5@example.com",
+        phone: "0795555555",
+      },
+      service: "wash",
+      status: "requested",
+      phone: "0795555555",
+      price: null,
       date: "2025-09-12",
       secretary_id: null,
       detailer_id: null,
       rating: null,
       cancel_reason: null,
+      created_at: "",
+      start_time: null,
+      end_time: null,
     },
     {
       id: "b6",
-      user_id: "user6",
-      service: "Graphene",
-      status: "Pending",
+      user: {
+        id: "u6",
+        name: "User Six",
+        email: "user6@example.com",
+        phone: "0796666666",
+      },
+      service: "graphene",
+      status: "pending",
+      phone: "0796666666",
       price: 50,
       date: "2025-09-15",
-      secretary_id: "Alice Johnson",
-      detailer_id: "Charlie Brown",
-      rating: 5,
+      secretary_id: "s1",
+      detailer_id: "d1",
+      rating: {
+        id: "r3",
+        ticket_id: "b6",
+        rating_number: 5,
+        description: "Excellent",
+        created_at: "",
+        user_id: "u6",
+      },
       cancel_reason: null,
+      created_at: "",
+      start_time: null,
+      end_time: null,
     },
   ]);
+
+  if (isGettingUsers) {
+    return (
+      <div className="flex justify-center items-center h-screen">
+        <div className="animate-spin rounded-full h-32 w-32 border-t-2 border-b-2 border-primary"></div>
+      </div>
+    );
+  }
 
   return (
     <div className="p-6 space-y-6">
@@ -124,7 +178,7 @@ export default function AdminDashboard() {
       <Tabs defaultValue="secretary" className="space-y-4">
         <TabsList>
           <TabsTrigger value="secretary">Secretaries</TabsTrigger>
-          <TabsTrigger value="delivery">Delivery</TabsTrigger>
+          <TabsTrigger value="detailer">Detailer</TabsTrigger>
           <TabsTrigger value="bookings">Bookings</TabsTrigger>
           <TabsTrigger value="charts">Charts</TabsTrigger>
         </TabsList>
@@ -136,52 +190,34 @@ export default function AdminDashboard() {
               <CardTitle>Manage Secretaries</CardTitle>
             </CardHeader>
             <CardContent>
-              <SecretaryForm setSecretaries={setSecretaries} />
+              <SecretaryForm />
               <DataTable
-                data={secretaries}
+                data={users.secretaries}
                 columns={[
-                  //   { key: "id", label: "ID" },
                   { key: "name", label: "Name" },
                   { key: "email", label: "Email" },
                   { key: "phone", label: "Phone" },
                 ]}
-                onDelete={(id: string) =>
-                  setSecretaries(secretaries.filter((s) => s.id !== id))
-                }
-                onEdit={(updated: any) =>
-                  setSecretaries(
-                    secretaries.map((s) => (s.id === updated.id ? updated : s))
-                  )
-                }
               />
             </CardContent>
           </Card>
         </TabsContent>
 
-        {/* Delivery CRUD */}
-        <TabsContent value="delivery">
+        {/* Detailer CRUD */}
+        <TabsContent value="Detailer">
           <Card>
             <CardHeader>
-              <CardTitle>Manage Delivery Staff</CardTitle>
+              <CardTitle>Manage Detailer Staff</CardTitle>
             </CardHeader>
             <CardContent>
-              <DeliveryForm setDeliveries={setDeliveries} />
+              <DetailerForm />
               <DataTable
-                data={deliveries}
+                data={users.detailers}
                 columns={[
-                  //   { key: "id", label: "ID" },
                   { key: "name", label: "Name" },
                   { key: "email", label: "Email" },
                   { key: "phone", label: "Phone" },
                 ]}
-                onDelete={(id: any) =>
-                  setDeliveries(deliveries.filter((d) => d.id !== id))
-                }
-                onEdit={(updated: any) =>
-                  setDeliveries(
-                    deliveries.map((d) => (d.id === updated.id ? updated : d))
-                  )
-                }
               />
             </CardContent>
           </Card>
@@ -194,7 +230,7 @@ export default function AdminDashboard() {
               <CardTitle>All Bookings</CardTitle>
             </CardHeader>
             <CardContent>
-              <BookingsTable bookings={bookings} />
+              <BookingsTable bookings={bookings} detailers={users.detailers} />
             </CardContent>
           </Card>
         </TabsContent>

@@ -2,13 +2,11 @@ import { useState } from "react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
-import type { User } from "@/shared/types";
+import type { AddUser } from "@/shared/types";
+import { useAddUser } from "@/hooks/useAdmin";
 
-export function SecretaryForm({
-  setSecretaries,
-}: {
-  setSecretaries: React.Dispatch<React.SetStateAction<User[]>>;
-}) {
+export function SecretaryForm() {
+  const { addUserMutation, isAddingUser } = useAddUser();
   const [form, setForm] = useState({
     name: "",
     email: "",
@@ -18,17 +16,23 @@ export function SecretaryForm({
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    const newSecretary: User = {
-      id: crypto.randomUUID(),
+    const newSecretary: AddUser = {
       name: form.name,
       email: form.email,
       phone: form.phone,
       password: form.password,
-      role: "secretary",
+      type: "secretary",
     };
-    setSecretaries((prev) => [...prev, newSecretary]);
+    addUserMutation(newSecretary);
     setForm({ name: "", email: "", phone: "", password: "" });
   };
+
+  if (isAddingUser)
+    return (
+      <div className="flex justify-center items-center h-screen">
+        <div className="animate-spin rounded-full h-32 w-32 border-t-2 border-b-2 border-primary"></div>
+      </div>
+    );
 
   return (
     <div className="w-full">

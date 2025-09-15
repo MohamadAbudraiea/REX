@@ -48,7 +48,7 @@ export function HeroSection() {
                             <motion.img
                               src="/flash.png"
                               alt="Flash"
-                              className="absolute right-6 -top-5 w-10 h-10"
+                              className="absolute left-1/2 -translate-x-1/2 -top-6 w-10 h-10"
                               initial={{ scale: 0, rotate: -180 }}
                               animate={{ scale: 1, rotate: 0 }}
                               transition={{ duration: 0.7, delay: 0.5 }}
@@ -75,7 +75,7 @@ export function HeroSection() {
                             <motion.img
                               src="/flash.png"
                               alt="Flash"
-                              className="absolute right-6 -top-5 w-10 h-10"
+                              className="absolute left-1/2 -translate-x-1/2 -top-6 w-10 h-10"
                               initial={{ scale: 0, rotate: -180 }}
                               animate={{ scale: 1, rotate: 0 }}
                               transition={{ duration: 0.7, delay: 0.5 }}

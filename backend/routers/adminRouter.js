@@ -12,5 +12,7 @@ router.delete("/user", adminController.deleteUser);
 //tickets
 router.post("/ticket/accept/:ticket_id", ticketController.acceptTicket);
 router.post("/ticket/cancel/:ticket_id", ticketController.cancelticket);
+// to edit users(shouldn't validate)
+router.put("/user", adminController.editUser);
 
 module.exports = router;

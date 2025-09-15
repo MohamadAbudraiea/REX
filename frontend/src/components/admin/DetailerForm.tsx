@@ -2,13 +2,11 @@ import { useState } from "react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
-import type { User } from "@/shared/types";
+import type { AddUser } from "@/shared/types";
+import { useAddUser } from "@/hooks/useAdmin";
 
-export function DeliveryForm({
-  setDeliveries,
-}: {
-  setDeliveries: React.Dispatch<React.SetStateAction<User[]>>;
-}) {
+export function DetailerForm() {
+  const { addUserMutation, isAddingUser } = useAddUser();
   const [form, setForm] = useState({
     name: "",
     email: "",
@@ -18,17 +16,21 @@ export function DeliveryForm({
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    const newDelivery: User = {
-      id: crypto.randomUUID(),
+    const newSecretary: AddUser = {
       name: form.name,
       email: form.email,
       phone: form.phone,
       password: form.password,
-      role: "detailer",
+      type: "detailer",
     };
-    setDeliveries((prev) => [...prev, newDelivery]);
+    addUserMutation(newSecretary);
     setForm({ name: "", email: "", phone: "", password: "" });
   };
+
+  if (isAddingUser)
+    return (
+      <div className="animate-spin rounded-full h-32 w-32 border-t-2 border-b-2 border-primary"></div>
+    );
 
   return (
     <div className="w-full">
@@ -80,7 +82,7 @@ export function DeliveryForm({
           />
         </div>
         <Button type="submit" className="flex-shrink-0">
-          Add Delivery
+          Add Detailer
         </Button>
       </form>
     </div>

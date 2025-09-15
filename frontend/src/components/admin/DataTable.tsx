@@ -19,26 +19,58 @@ import {
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { useDeleteUser, useEditUser } from "@/hooks/useAdmin";
+import type { EditUser } from "@/shared/types";
 
-export function DataTable({ data, columns, onDelete, onEdit }: any) {
+export function DataTable({
+  data,
+  columns,
+}: {
+  data: any[];
+  columns: { key: string; label: string }[];
+}) {
+  const { editUserMutation, isEditingUser } = useEditUser();
+  const { deleteUserMutation, isDeletingUser } = useDeleteUser();
   const [selectedRow, setSelectedRow] = useState<any | null>(null);
-  const [editForm, setEditForm] = useState<any>({});
+  const [editForm, setEditForm] = useState<EditUser | null>({
+    id: "",
+    name: "",
+    email: "",
+    phone: "",
+  });
 
   const handleSaveEdit = () => {
-    onEdit(editForm);
+    if (editForm) {
+      editUserMutation(editForm);
+      setEditForm(null);
+      setSelectedRow(null);
+    }
   };
 
   const handleConfirmDelete = () => {
     if (selectedRow) {
-      onDelete(selectedRow.id);
+      deleteUserMutation(
+        { id: selectedRow.id },
+        {
+          onSuccess: () => setSelectedRow(null),
+        }
+      );
     }
   };
+
+  if (isEditingUser || isDeletingUser) {
+    return (
+      <div className="flex justify-center items-center py-4">
+        <div className="animate-spin rounded-full h-16 w-16 border-t-2 border-b-2 border-primary"></div>
+      </div>
+    );
+  }
 
   return (
     <Table className="text-center bg-muted/50">
       <TableHeader className="bg-muted/50 font-bold">
         <TableRow>
-          {columns.map((col: any) => (
+          {columns.map((col: { key: string; label: string }) => (
             <TableCell key={col.key}>{col.label}</TableCell>
           ))}
           <TableCell>Actions</TableCell>
@@ -91,7 +123,12 @@ export function DataTable({ data, columns, onDelete, onEdit }: any) {
                       variant="info"
                       onClick={() => {
                         setSelectedRow(row);
-                        setEditForm(row);
+                        setEditForm({
+                          id: row.id,
+                          name: row.name,
+                          email: row.email,
+                          phone: row.phone,
+                        });
                       }}
                     >
                       Edit
@@ -101,20 +138,21 @@ export function DataTable({ data, columns, onDelete, onEdit }: any) {
                     <DialogHeader>
                       <DialogTitle>Edit Entry</DialogTitle>
                     </DialogHeader>
-                    {columns.map((col: any) => (
-                      <div key={col.key} className="mb-2">
-                        <Label>{col.label}</Label>
-                        <Input
-                          value={editForm[col.key] || ""}
-                          onChange={(e) =>
-                            setEditForm({
-                              ...editForm,
-                              [col.key]: e.target.value,
-                            })
-                          }
-                        />
-                      </div>
-                    ))}
+                    {editForm &&
+                      columns.map((col: { key: string; label: string }) => (
+                        <div key={col.key} className="mb-2">
+                          <Label>{col.label}</Label>
+                          <Input
+                            value={editForm[col.key] || ""}
+                            onChange={(e) =>
+                              setEditForm({
+                                ...editForm,
+                                [col.key]: e.target.value,
+                              })
+                            }
+                          />
+                        </div>
+                      ))}
                     <DialogFooter className="flex gap-2">
                       <Button onClick={handleSaveEdit}>Save</Button>
                       <DialogClose asChild>
