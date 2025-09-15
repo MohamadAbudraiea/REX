@@ -25,9 +25,11 @@ import type { EditUser } from "@/shared/types";
 export function DataTable({
   data,
   columns,
+  showSchedule = false,
 }: {
   data: any[];
   columns: { key: string; label: string }[];
+  showSchedule?: boolean;
 }) {
   const { editUserMutation, isEditingUser } = useEditUser();
   const { deleteUserMutation, isDeletingUser } = useDeleteUser();
@@ -161,6 +163,27 @@ export function DataTable({
                     </DialogFooter>
                   </DialogContent>
                 </Dialog>
+
+                {/* Show Schedule Dialog (only for detailer) */}
+                {showSchedule && (
+                  <Dialog>
+                    <DialogTrigger asChild>
+                      <Button size="sm" variant="warning">
+                        Schedule
+                      </Button>
+                    </DialogTrigger>
+                    <DialogContent>
+                      <DialogHeader>
+                        <DialogTitle>Detailer Schedule</DialogTitle>
+                      </DialogHeader>
+                      <DialogFooter className="flex gap-2">
+                        <DialogClose asChild>
+                          <Button variant="secondary">Close</Button>
+                        </DialogClose>
+                      </DialogFooter>
+                    </DialogContent>
+                  </Dialog>
+                )}
               </div>
             </TableCell>
           </TableRow>

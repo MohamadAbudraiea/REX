@@ -5,19 +5,16 @@ import UserNavbar from "@/components/layout/userNavbar";
 import StaffNavbar from "@/components/layout/StaffNavbar";
 
 export default function Layout({ children }: { children: React.ReactNode }) {
-  const { user } = useCheckAuth();
+  const { user, isUser, isAdmin, isSecretary, isDetailer } = useCheckAuth();
 
-  const isUser = user?.role === "user";
-  const isStaff =
-    user?.role === "admin" ||
-    user?.role === "secretary" ||
-    user?.role === "detailer";
   return (
     <div className="min-h-screen flex flex-col ">
       {/* Navbar */}
-      {isStaff && <StaffNavbar role={user?.role} />}
+      {(isAdmin || isSecretary || isDetailer) && (
+        <StaffNavbar role={user?.role} />
+      )}
       {isUser && <UserNavbar />}
-      {!isStaff && !isUser && <HomeNavbar />}
+      {!isAdmin && !isSecretary && !isDetailer && !isUser && <HomeNavbar />}
 
       {/* Main content */}
       <main className="flex-1">{children}</main>

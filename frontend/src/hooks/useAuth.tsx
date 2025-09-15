@@ -76,9 +76,18 @@ export const useCheckAuth = () => {
     staleTime: 1000 * 60 * 5, // 5 minutes
   });
 
+  const isAdmin = data?.data?.role === "admin";
+  const isSecretary = data?.data?.role === "secretary";
+  const isDetailer = data?.data?.role === "detailer";
+  const isUser = data?.data?.role === "user";
+
   return {
     isAuthenticated: data?.status === "success",
     isCheckingAuth,
+    isAdmin,
+    isSecretary,
+    isDetailer,
+    isUser,
     user: data?.data,
   };
 };

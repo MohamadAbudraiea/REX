@@ -21,8 +21,7 @@ import AdminDashboard from "./pages/admin/AdminDashboard";
 import NotFoundPage from "./pages/NotFoundPage";
 
 function App() {
-  const { isAuthenticated, user } = useCheckAuth();
-  const isAdmin = user?.role === "admin";
+  const { isAuthenticated } = useCheckAuth();
 
   return (
     <>
@@ -73,7 +72,11 @@ function App() {
 
           <Route
             path="/blink-admin-dashboard"
-            element={isAdmin ? <AdminDashboard /> : <Navigate to="*" replace />}
+            element={
+              <ProtectedRoute>
+                <AdminDashboard />
+              </ProtectedRoute>
+            }
           />
 
           <Route path="*" element={<NotFoundPage />} />

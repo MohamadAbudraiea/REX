@@ -204,7 +204,7 @@ export default function AdminDashboard() {
         </TabsContent>
 
         {/* Detailer CRUD */}
-        <TabsContent value="Detailer">
+        <TabsContent value="detailer">
           <Card>
             <CardHeader>
               <CardTitle>Manage Detailer Staff</CardTitle>
@@ -218,6 +218,7 @@ export default function AdminDashboard() {
                   { key: "email", label: "Email" },
                   { key: "phone", label: "Phone" },
                 ]}
+                showSchedule={true}
               />
             </CardContent>
           </Card>
