@@ -31,7 +31,6 @@ exports.getUsers = async (req, res) => {
     });
   }
 };
-
 exports.addUser = async (req, res) => {
   try {
     //type mSust be detailer or secretary
@@ -64,7 +63,6 @@ exports.addUser = async (req, res) => {
     });
   }
 };
-
 exports.deleteUser = async (req, res) => {
   try {
     const { id } = req.body;

@@ -19,6 +19,7 @@ const autharizationMiddleware = require("./middlewares/authorization");
 // router imports
 const authRouter = require("./routers/authRouter");
 const adminRouter = require("./routers/adminRouter");
+const userRouter = require("./routers/userRouter");
 // routing
 app.use("/auth", authRouter);
 // authinticate then authorize then enter the router
@@ -28,5 +29,10 @@ app.use(
   autharizationMiddleware.authorizeAdmin,
   adminRouter
 );
-
+app.use(
+  "/user",
+  authenticateUser,
+  autharizationMiddleware.authorizeUser,
+  userRouter
+);
 module.exports = app;

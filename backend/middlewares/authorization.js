@@ -40,7 +40,7 @@ exports.authorizeDetailer = (req, res, next) => {
 };
 exports.authorizeUser = (req, res, next) => {
   try {
-    if (req.user.role !== "User")
+    if (req.user.role !== "user")
       return res.status(401).json({
         status: "failed",
         message: "unauthorized",
