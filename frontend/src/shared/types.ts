@@ -7,7 +7,7 @@ export interface User {
   name: string;
   email: string;
   phone: string;
-  role?: string;
+  type?: string;
   password?: string;
 }
 
@@ -37,10 +37,18 @@ export interface Rating {
   rating_number: number;
 }
 
-export type ErrorProps = {
-  response: {
-    data: {
-      message: string;
-    };
-  };
+export type AddUser = {
+  name: string;
+  email: string;
+  phone: string;
+  password: string;
+  type: string;
+};
+
+export type EditUser = {
+  id: string;
+  name: string;
+  email: string;
+  phone: string;
+  [key: string]: string;
 };

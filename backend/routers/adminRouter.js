@@ -8,5 +8,7 @@ router.get("/user", adminController.getUsers);
 router.post("/user", adminController.addUser);
 // to delete users(shouldn't validate)
 router.delete("/user", adminController.deleteUser);
+// to edit users(shouldn't validate)
+router.put("/user", adminController.editUser);
 
 module.exports = router;

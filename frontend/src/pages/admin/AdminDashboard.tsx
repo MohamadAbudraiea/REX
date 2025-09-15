@@ -6,40 +6,11 @@ import { SecretaryForm } from "@/components/admin/SecretaryForm";
 import { DeliveryForm } from "@/components/admin/DeliveryForm";
 import { BookingsTable } from "@/components/admin/BookingsTable";
 import { BookingsChart } from "@/components/admin/BookingsChart";
-import type { Ticket, User } from "@/shared/types";
+import type { Ticket } from "@/shared/types";
+import { useGetUsers } from "@/hooks/useAdmin";
 
 export default function AdminDashboard() {
-  // ✅ Mock secretaries
-  const [secretaries, setSecretaries] = useState<User[]>([
-    {
-      id: "s1",
-      name: "Alice Johnson",
-      email: "alice@blink.com",
-      phone: "0790000000",
-    },
-    {
-      id: "s2",
-      name: "Bob Smith",
-      email: "bob@blink.com",
-      phone: "0791111111",
-    },
-  ]);
-
-  // ✅ Mock deliveries
-  const [deliveries, setDeliveries] = useState<User[]>([
-    {
-      id: "d1",
-      name: "Charlie Brown",
-      email: "charlie@blink.com",
-      phone: "0791111111",
-    },
-    {
-      id: "d2",
-      name: "David Wilson",
-      email: "david@blink.com",
-      phone: "0792222222",
-    },
-  ]);
+  const { users, isGettingUsers } = useGetUsers();
 
   // ✅ Mock bookings with correct types
   const [bookings] = useState<Ticket[]>([
@@ -192,6 +163,14 @@ export default function AdminDashboard() {
     },
   ]);
 
+  if (isGettingUsers) {
+    return (
+      <div className="flex justify-center items-center h-screen">
+        <div className="animate-spin rounded-full h-32 w-32 border-t-2 border-b-2 border-primary"></div>
+      </div>
+    );
+  }
+
   return (
     <div className="p-6 space-y-6">
       <h1 className="text-3xl font-bold">BLINK Admin Dashboard</h1>
@@ -211,22 +190,14 @@ export default function AdminDashboard() {
               <CardTitle>Manage Secretaries</CardTitle>
             </CardHeader>
             <CardContent>
-              <SecretaryForm setSecretaries={setSecretaries} />
+              <SecretaryForm />
               <DataTable
-                data={secretaries}
+                data={users.secretaries}
                 columns={[
                   { key: "name", label: "Name" },
                   { key: "email", label: "Email" },
                   { key: "phone", label: "Phone" },
                 ]}
-                onDelete={(id: string) =>
-                  setSecretaries(secretaries.filter((s) => s.id !== id))
-                }
-                onEdit={(updated: User) =>
-                  setSecretaries(
-                    secretaries.map((s) => (s.id === updated.id ? updated : s))
-                  )
-                }
               />
             </CardContent>
           </Card>
@@ -239,22 +210,14 @@ export default function AdminDashboard() {
               <CardTitle>Manage Delivery Staff</CardTitle>
             </CardHeader>
             <CardContent>
-              <DeliveryForm setDeliveries={setDeliveries} />
+              <DeliveryForm />
               <DataTable
-                data={deliveries}
+                data={users.detailers}
                 columns={[
                   { key: "name", label: "Name" },
                   { key: "email", label: "Email" },
                   { key: "phone", label: "Phone" },
                 ]}
-                onDelete={(id: string) =>
-                  setDeliveries(deliveries.filter((d) => d.id !== id))
-                }
-                onEdit={(updated: User) =>
-                  setDeliveries(
-                    deliveries.map((d) => (d.id === updated.id ? updated : d))
-                  )
-                }
               />
             </CardContent>
           </Card>
@@ -267,7 +230,7 @@ export default function AdminDashboard() {
               <CardTitle>All Bookings</CardTitle>
             </CardHeader>
             <CardContent>
-              <BookingsTable bookings={bookings} detailers={deliveries} />
+              <BookingsTable bookings={bookings} detailers={users.detailers} />
             </CardContent>
           </Card>
         </TabsContent>
