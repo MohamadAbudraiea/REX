@@ -118,7 +118,63 @@ exports.userSignup = async (req, res) => {
     await sendEmail(
       newUser.email,
       `Welcome ${newUser.name}`,
-      "Welcome to our family"
+      `<body style="font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; margin: 0; padding: 40px 0; background-color: #0a0a0a; color: #e5e5e5;">
+  <div style="max-width: 600px; margin: 0 auto; background-color: #111; border: 1px solid #1f1f1f; border-radius: 12px; overflow: hidden;">
+
+    <!-- Header / Logo -->
+    <div style="background: linear-gradient(90deg, #3B82F6, #2563EB); padding: 24px; text-align: center;">
+      <div style="font-size: 28px; font-weight: bold; letter-spacing: 2px; color: #0a0a0a;">BLINK</div>
+    </div>
+
+    <!-- Body -->
+    <div style="padding: 36px;">
+      <h1 style="font-size: 24px; margin-bottom: 16px; color: #fff;">Welcome to BLINK, ${
+        newUser.name
+      }!</h1>
+      <p style="margin-bottom: 20px; color: #d4d4d4; line-height: 1.6;">
+        Thanks for joining the BLINK family 🚗✨. We're excited to keep your car looking sharp and spotless.
+      </p>
+
+      <p style="margin-bottom: 12px; font-weight: 600; color: #fff;">With your account, you can:</p>
+      <ul style="padding-left: 20px; margin-bottom: 28px; color: #a3a3a3; line-height: 1.6;">
+        <li>📅 Book car wash and detailing services easily</li>
+        <li>📊 Track your service history</li>
+        <li>⚡ Manage appointments online</li>
+      </ul>
+
+      <div style="border-top: 1px solid #1f1f1f; margin: 32px 0;"></div>
+
+      <p style="margin-bottom: 20px; color: #d4d4d4;">Ready to shine?</p>
+      <p style="text-align: center; margin-bottom: 32px;">
+        <a href="${process.env.FRONTEND_URL}/booking"
+           style="display: inline-block; padding: 14px 28px; background-color: #3B82F6; color: #0a0a0a; text-decoration: none; border-radius: 8px; font-weight: bold; font-size: 16px;">
+          🚀 Book Your First Service
+        </a>
+      </p>
+
+      <div style="border-top: 1px solid #1f1f1f; margin: 32px 0;"></div>
+
+      <p style="color: #a3a3a3; line-height: 1.6;">
+        Have questions? Contact us anytime at 
+        <a href="mailto:support@blink.com" style="color: #3B82F6; text-decoration: none;">support@blink.com</a> 
+        or visit our 
+        <a href="${
+          process.env.FRONTEND_URL
+        }/contact" style="color: #3B82F6; text-decoration: none;">contact page</a>.
+      </p>
+
+      <p style="margin-top: 24px; color: #d4d4d4;">Cheers,<br>The BLINK Team</p>
+    </div>
+
+    <!-- Footer -->
+    <div style="background-color: #0d0d0d; padding: 20px; text-align: center; font-size: 12px; color: #737373;">
+      <p>© ${new Date().getFullYear()} BLINK. All rights reserved.</p>
+      <p>You’re receiving this email because you created an account with BLINK.</p>
+    </div>
+  </div>
+</body>
+
+`
     );
   } catch (error) {
     res.status(400).json({

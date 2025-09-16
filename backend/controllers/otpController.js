@@ -15,7 +15,75 @@ function generateOTP() {
   }
   return otp;
 }
-const htmlcontent = "hi";
+function otpEmailTemplate(userName, otpCode) {
+  return `
+  <body style="font-family: 'Segoe UI', Tahoma, sans-serif; margin:0; padding:40px 0; background-color:#0a0a0a; color:#e5e5e5;">
+    <div style="max-width:600px; margin:0 auto; background-color:#111; border:1px solid #1f1f1f; border-radius:12px; overflow:hidden;">
+      
+      <!-- Header -->
+      <div style="background:linear-gradient(90deg,#3B82F6,#2563EB); padding:24px; text-align:center;">
+        <div style="font-size:28px; font-weight:bold; letter-spacing:2px; color:#0a0a0a;">BLINK</div>
+      </div>
+      
+      <!-- Body -->
+      <div style="padding:36px; text-align:center;">
+        <h1 style="font-size:22px; margin-bottom:16px; color:#fff;">Verify Your Account</h1>
+        <p style="margin-bottom:24px; color:#d4d4d4; line-height:1.6;">
+          Hi ${
+            userName || "there"
+          }, use the code below to verify your email with BLINK.
+        </p>
+        <div style="display:inline-block; background-color:#1a1a1a; padding:16px 32px; border-radius:8px; font-size:32px; font-weight:bold; letter-spacing:4px; color:#3B82F6;">
+          ${otpCode}
+        </div>
+        <p style="margin-top:24px; color:#a3a3a3; font-size:14px;">
+          This code will expire in <strong>60 seconds</strong>.
+        </p>
+      </div>
+
+      <!-- Footer -->
+      <div style="background-color:#0d0d0d; padding:20px; text-align:center; font-size:12px; color:#737373;">
+        <p>© ${new Date().getFullYear()} BLINK. All rights reserved.</p>
+      </div>
+    </div>
+  </body>
+  `;
+}
+
+function passwordChangedTemplate(userName) {
+  return `
+  <body style="font-family: 'Segoe UI', Tahoma, sans-serif; margin:0; padding:40px 0; background-color:#0a0a0a; color:#e5e5e5;">
+    <div style="max-width:600px; margin:0 auto; background-color:#111; border:1px solid #1f1f1f; border-radius:12px; overflow:hidden;">
+      
+      <!-- Header -->
+      <div style="background:linear-gradient(90deg,#3B82F6,#2563EB); padding:24px; text-align:center;">
+        <div style="font-size:28px; font-weight:bold; letter-spacing:2px; color:#0a0a0a;">BLINK</div>
+      </div>
+      
+      <!-- Body -->
+      <div style="padding:36px; text-align:center;">
+        <h1 style="font-size:22px; margin-bottom:16px; color:#fff;">Password Changed Successfully</h1>
+        <p style="margin-bottom:24px; color:#d4d4d4; line-height:1.6;">
+          Hi ${
+            userName || "there"
+          }, your password has been updated successfully.  
+        </p>
+        <p style="margin-bottom:24px; color:#a3a3a3; font-size:14px;">
+          If this wasn’t you, please <a href="${
+            process.env.FRONTEND_URL
+          }/contact" style="color:#3B82F6; text-decoration:none;">contact support immediately</a>.
+        </p>
+        <p style="color:#d4d4d4;">Stay safe,<br>The BLINK Team</p>
+      </div>
+
+      <!-- Footer -->
+      <div style="background-color:#0d0d0d; padding:20px; text-align:center; font-size:12px; color:#737373;">
+        <p>© ${new Date().getFullYear()} BLINK. All rights reserved.</p>
+      </div>
+    </div>
+  </body>
+  `;
+}
 
 exports.sendOTP = async (req, res) => {
   try {
@@ -31,7 +99,11 @@ exports.sendOTP = async (req, res) => {
       });
     }
     const otpContent = generateOTP();
-    await sendEmail(email, "BLINK Verification Code", otpContent);
+    await sendEmail(
+      email,
+      "BLINK Verification Code",
+      otpEmailTemplate(existUser.name, otpContent)
+    );
 
     const otpRecord = await OTP.create({
       code: otpContent,
@@ -53,6 +125,7 @@ exports.sendOTP = async (req, res) => {
       }
     }, 60 * 1000);
   } catch (error) {
+    console.log("error:", error.message);
     res.status(500).json({
       status: "error",
       message: error.message || "sth went wrong",
@@ -70,13 +143,18 @@ exports.changePassword = async (req, res) => {
         message: "Your Code have been expired",
       });
     }
-
     if (foundedOTP.code == otpCode) {
       const hashedNewPassword = await bcrypt.hash(newPassword, 10);
-      await user.update(
+      const existUser = await user.update(
         { password: hashedNewPassword },
         { where: { email: email } }
       );
+      await sendEmail(
+        email,
+        "Your BLINK Password Was Changed",
+        passwordChangedTemplate(existUser.name)
+      );
+
       return res.status(201).json({
         status: "success",
         message: "Password have been changed",
@@ -88,6 +166,7 @@ exports.changePassword = async (req, res) => {
       });
     }
   } catch (error) {
+    console.log("error:", error.message);
     res.status(500).json({
       status: "error",
       message: error.message || "sth went wrong",
