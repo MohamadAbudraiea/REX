@@ -6,6 +6,7 @@ const initModels = require("../models/init-models");
 const models = initModels(SQL);
 const { user } = models;
 //------------------------------------------
+const { sendEmail } = require("../Drivers/mailer");
 exports.userLogin = async (req, res) => {
   const { email, password } = req.body;
   try {
@@ -114,6 +115,11 @@ exports.userSignup = async (req, res) => {
       data: newUser,
       message: "signed up successfully",
     });
+    await sendEmail(
+      newUser.email,
+      `Welcome ${newUser.name}`,
+      "Welcome to our family"
+    );
   } catch (error) {
     res.status(400).json({
       error: error,

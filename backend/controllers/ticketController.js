@@ -50,11 +50,23 @@ exports.getAllTickets = async (req, res) => {
   try {
     const tickets = await ticket.findAll({
       order: [["status", "ASC"]],
-      include: {
-        model: user,
-        as: "user",
-        attributes: ["name", "phone"],
-      },
+      include: [
+        {
+          model: user,
+          as: "user",
+          attributes: ["name", "phone"],
+        },
+        {
+          model: user,
+          as: "detailer",
+          attributes: ["name"],
+        },
+        {
+          model: user,
+          as: "secretary",
+          attributes: ["name"],
+        },
+      ],
     });
 
     res.status(200).json({
