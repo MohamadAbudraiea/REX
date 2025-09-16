@@ -36,4 +36,5 @@ app.use(
   autharizationMiddleware.authorizeUser,
   userRouter
 );
+app.use("/shared", sharedRouter);
 module.exports = app;

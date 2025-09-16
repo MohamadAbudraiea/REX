@@ -3,7 +3,8 @@ const initModels = require("../models/init-models");
 const models = initModels(SQL);
 const { user, OTP } = models;
 const bcrypt = require("bcrypt");
-
+const { sendEmail } = require("../Drivers/mailer");
+//----------------------------------------
 function generateOTP() {
   const length = 6;
   const characters = "1234567890";
@@ -29,23 +30,27 @@ exports.sendOTP = async (req, res) => {
         message: "user not found",
       });
     }
-
     const otpContent = generateOTP();
-    const otpRecord = OTP.create({
+    await sendEmail(email, "BLINK Verification Code", otpContent);
+
+    const otpRecord = await OTP.create({
       code: otpContent,
-      user_id: existUser.user_id,
+      user_id: existUser.id,
       email: email,
     });
-    // send the email here
 
-    //
     res.status(201).json({
       status: "success",
       message: `OTP sent to ${existUser.email}`,
     });
     // delete otp
     setTimeout(async () => {
-      await OTP.destroy({ where: { id: otpRecord.id } });
+      try {
+        await OTP.destroy({ where: { id: otpRecord.id } });
+        console.log(`OTP for ${email} deleted after 60 seconds`);
+      } catch (error) {
+        console.log(error.message);
+      }
     }, 60 * 1000);
   } catch (error) {
     res.status(500).json({
@@ -55,7 +60,7 @@ exports.sendOTP = async (req, res) => {
   }
 };
 
-const changePassword = async (req, res) => {
+exports.changePassword = async (req, res) => {
   try {
     const { email, newPassword, otpCode } = req.body;
     const foundedOTP = await OTP.findOne({ where: { email: email } });
@@ -68,7 +73,10 @@ const changePassword = async (req, res) => {
 
     if (foundedOTP.code == otpCode) {
       const hashedNewPassword = await bcrypt.hash(newPassword, 10);
-      await user.update({ password: newPassword }, { where: { email: email } });
+      await user.update(
+        { password: hashedNewPassword },
+        { where: { email: email } }
+      );
       return res.status(201).json({
         status: "success",
         message: "Password have been changed",
@@ -79,5 +87,10 @@ const changePassword = async (req, res) => {
         message: "OTP is not matched",
       });
     }
-  } catch (error) {}
+  } catch (error) {
+    res.status(500).json({
+      status: "error",
+      message: error.message || "sth went wrong",
+    });
+  }
 };
