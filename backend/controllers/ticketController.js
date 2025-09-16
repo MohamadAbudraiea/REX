@@ -89,11 +89,6 @@ exports.getRequestedTickets = async (req, res) => {
         as: "user",
         attributes: ["name", "phone"],
       },
-      include: {
-        model: user,
-        as: "secretary",
-        attributes: ["name", "phone"],
-      },
     });
     res.status(200).json({
       status: "success",
@@ -113,41 +108,89 @@ exports.getPendingTickets = async (req, res) => {
       // secretary
       pendingTickets = await ticket.findAll({
         where: { status: "pending", secretary_id: req.user.id },
-        include: {
-          model: user,
-          as: "user",
-          attributes: ["name", "phone"],
-        },
+        include: [
+          {
+            model: user,
+            as: "user",
+            attributes: ["name", "phone"],
+          },
+          {
+            model: user,
+            as: "detailer",
+            attributes: ["name"],
+          },
+          {
+            model: user,
+            as: "secretary",
+            attributes: ["name"],
+          },
+        ],
       });
     } else if (req.user.role === "detailer") {
       // detailer
       pendingTickets = await ticket.findAll({
         where: { status: "pending", detailer_id: req.user.id },
-        include: {
-          model: user,
-          as: "user",
-          attributes: ["name", "phone"],
-        },
+        include: [
+          {
+            model: user,
+            as: "user",
+            attributes: ["name", "phone"],
+          },
+          {
+            model: user,
+            as: "detailer",
+            attributes: ["name"],
+          },
+          {
+            model: user,
+            as: "secretary",
+            attributes: ["name"],
+          },
+        ],
       });
     } else if (req.user.role === "user") {
       pendingTickets = await ticket.findAll({
         where: { status: "pending", user_id: req.user_id },
-        include: {
-          model: user,
-          as: "user",
-          attributes: ["name", "phone"],
-        },
+        include: [
+          {
+            model: user,
+            as: "user",
+            attributes: ["name", "phone"],
+          },
+          {
+            model: user,
+            as: "detailer",
+            attributes: ["name"],
+          },
+          {
+            model: user,
+            as: "secretary",
+            attributes: ["name"],
+          },
+        ],
       });
     } else {
       // admin
 
       pendingTickets = await ticket.findAll({
         where: { status: "pending" },
-        include: {
-          model: user,
-          as: "user",
-          attributes: ["name", "phone"],
-        },
+        include: [
+          {
+            model: user,
+            as: "user",
+            attributes: ["name", "phone"],
+          },
+          {
+            model: user,
+            as: "detailer",
+            attributes: ["name"],
+          },
+          {
+            model: user,
+            as: "secretary",
+            attributes: ["name"],
+          },
+        ],
       });
     }
 
@@ -169,30 +212,66 @@ exports.getFinishedTickets = async (req, res) => {
       // secretary
       finishedTickets = await ticket.findAll({
         where: { status: "finished", secretary_id: req.user.id },
-        include: {
-          model: user,
-          as: "user",
-          attributes: ["name", "phone"],
-        },
+        include: [
+          {
+            model: user,
+            as: "user",
+            attributes: ["name", "phone"],
+          },
+          {
+            model: user,
+            as: "detailer",
+            attributes: ["name"],
+          },
+          {
+            model: user,
+            as: "secretary",
+            attributes: ["name"],
+          },
+        ],
       });
     } else if (req.user.role === "detailer") {
       // detailer
       finishedTickets = await ticket.findAll({
         where: { status: "finished", detailer_id: req.user.id },
-        include: {
-          model: user,
-          as: "user",
-          attributes: ["name", "phone"],
-        },
+        include: [
+          {
+            model: user,
+            as: "user",
+            attributes: ["name", "phone"],
+          },
+          {
+            model: user,
+            as: "detailer",
+            attributes: ["name"],
+          },
+          {
+            model: user,
+            as: "secretary",
+            attributes: ["name"],
+          },
+        ],
       });
     } else if (req.user.role === "user") {
       finishedTickets = await ticket.findAll({
         where: { status: "finished", user_id: req.user_id },
-        include: {
-          model: user,
-          as: "user",
-          attributes: ["name", "phone"],
-        },
+        include: [
+          {
+            model: user,
+            as: "user",
+            attributes: ["name", "phone"],
+          },
+          {
+            model: user,
+            as: "detailer",
+            attributes: ["name"],
+          },
+          {
+            model: user,
+            as: "secretary",
+            attributes: ["name"],
+          },
+        ],
       });
     } else {
       // admin
@@ -225,41 +304,89 @@ exports.getCanceldTickets = async (req, res) => {
       // secretary
       canceledTickets = await ticket.findAll({
         where: { status: "canceled", secretary_id: req.user.id },
-        include: {
-          model: user,
-          as: "user",
-          attributes: ["name", "phone"],
-        },
+        include: [
+          {
+            model: user,
+            as: "user",
+            attributes: ["name", "phone"],
+          },
+          {
+            model: user,
+            as: "detailer",
+            attributes: ["name"],
+          },
+          {
+            model: user,
+            as: "secretary",
+            attributes: ["name"],
+          },
+        ],
       });
     } else if (req.user.role === "detailer") {
       // detailer
       canceledTickets = await ticket.findAll({
         where: { status: "canceled", detailer_id: req.user.id },
-        include: {
-          model: user,
-          as: "user",
-          attributes: ["name", "phone"],
-        },
+        include: [
+          {
+            model: user,
+            as: "user",
+            attributes: ["name", "phone"],
+          },
+          {
+            model: user,
+            as: "detailer",
+            attributes: ["name"],
+          },
+          {
+            model: user,
+            as: "secretary",
+            attributes: ["name"],
+          },
+        ],
       });
     } else if (req.user.role === "user") {
       canceledTickets = await ticket.findAll({
         where: { status: "canceled", user_id: req.user_id },
-        include: {
-          model: user,
-          as: "user",
-          attributes: ["name", "phone"],
-        },
+        include: [
+          {
+            model: user,
+            as: "user",
+            attributes: ["name", "phone"],
+          },
+          {
+            model: user,
+            as: "detailer",
+            attributes: ["name"],
+          },
+          {
+            model: user,
+            as: "secretary",
+            attributes: ["name"],
+          },
+        ],
       });
     } else {
       // admin
 
       canceledTickets = await ticket.findAll({
         where: { status: "canceled" },
-        include: {
-          model: user,
-          as: "user",
-          attributes: ["name", "phone"],
-        },
+        include: [
+          {
+            model: user,
+            as: "user",
+            attributes: ["name", "phone"],
+          },
+          {
+            model: user,
+            as: "detailer",
+            attributes: ["name"],
+          },
+          {
+            model: user,
+            as: "secretary",
+            attributes: ["name"],
+          },
+        ],
       });
     }
 
