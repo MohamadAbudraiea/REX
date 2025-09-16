@@ -1,7 +1,5 @@
 exports.authorizeAdmin = (req, res, next) => {
   try {
-    console.log(req.user.role);
-
     if (req.user.role !== "admin")
       return res.status(401).json({
         status: "failed",

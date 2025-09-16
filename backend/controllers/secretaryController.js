@@ -6,7 +6,10 @@ const bcrypt = require("bcrypt");
 
 exports.getAllSecretaries = async (req, res) => {
   try {
-    const detailers = await user.findAll({ where: { type: "secretary" } });
+    const detailers = await user.findAll(
+      { where: { type: "secretary" } },
+      { attributes: ["id", "name", "email", "phone"] }
+    );
     res.status(200).json({
       status: "success",
       data: detailers,

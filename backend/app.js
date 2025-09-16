@@ -20,6 +20,7 @@ const autharizationMiddleware = require("./middlewares/authorization");
 const authRouter = require("./routers/authRouter");
 const adminRouter = require("./routers/adminRouter");
 const userRouter = require("./routers/userRouter");
+const sharedRouter = require("./routers/shared");
 // routing
 app.use("/auth", authRouter);
 // authinticate then authorize then enter the router

@@ -1,6 +1,6 @@
 const express = require("express");
 const router = express.Router();
-const sharedController = require("../controllers/shared");
+const sharedController = require("../controllers/sharedController");
 const authController = require("../controllers/authController");
 const authUser = require("../middlewares/authentication");
 const authenticateUser = require("../middlewares/authentication");

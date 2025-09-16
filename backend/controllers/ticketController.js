@@ -28,11 +28,27 @@ exports.addticket = async (req, res) => {
     });
   }
 };
-
+exports.getTicketByID = async (req, res) => {
+  try {
+    const { ticket_id } = req.params;
+    const returendTicket = await ticket.findOne({
+      where: { id: ticket_id },
+    });
+    res.status(200).json({
+      status: "success",
+      data: returendTicket,
+    });
+  } catch (error) {
+    res.status(500).json({
+      status: "error",
+      message: error.message || "sth went wrong",
+    });
+  }
+};
 // getTickets all and based on their status
 exports.getAllTickets = async (req, res) => {
   try {
-    const tickets = await Ticket.findAll({
+    const tickets = await ticket.findAll({
       order: [["status", "ASC"]],
       include: {
         model: user,
@@ -67,7 +83,6 @@ exports.getRequestedTickets = async (req, res) => {
         attributes: ["name", "phone"],
       },
     });
-
     res.status(200).json({
       status: "success",
       data: reqTickets,
@@ -247,7 +262,21 @@ exports.getCanceldTickets = async (req, res) => {
     });
   }
 };
+//check time for detailer functionality
+const isDetailerFree = async (detailer_id, date, start_time, end_time) => {
+  const existingTickets = await ticket.findAll({
+    where: {
+      detailer_id,
+      date,
+      status: "pending",
+    },
+    attributes: ["start_time", "end_time"],
+  });
 
+  return !existingTickets.some(
+    (t) => start_time < t.end_time && end_time > t.start_time
+  );
+};
 // change status functionalites
 exports.acceptTicket = async (req, res) => {
   try {
@@ -255,27 +284,37 @@ exports.acceptTicket = async (req, res) => {
       req.body;
     const { ticket_id } = req.params;
 
+    // 1️⃣ Check if detailer is free
+    const free = await isDetailerFree(detailer_id, date, start_time, end_time);
+
+    if (!free) {
+      return res.status(400).json({
+        status: "failed",
+        message: "Detailer is busy at this time",
+      });
+    }
+
+    // 2️⃣ If free, update ticket
     await ticket.update(
       {
         status: "pending",
         secretary_id: req.user.id,
-        detailer_id: detailer_id,
-        date: date,
-        location: location,
-        start_time: start_time,
-        end_time: end_time,
-        price: price,
+        detailer_id,
+        date,
+        location,
+        start_time,
+        end_time,
+        price,
       },
-      {
-        where: { id: ticket_id },
-      }
+      { where: { id: ticket_id } }
     );
 
     res.status(201).json({
       status: "success",
-      message: "order has been accepted",
+      message: "Order has been accepted",
     });
   } catch (error) {
+    console.error(error);
     res.status(500).json({
       status: "error",
       message: error.message || "Something went wrong",
