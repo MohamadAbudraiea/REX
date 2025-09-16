@@ -45,8 +45,16 @@ import {
   AlertDialogCancel,
   AlertDialogAction,
 } from "@/components/ui/alert-dialog";
-import { Star } from "lucide-react";
+import { Star, CalendarIcon, Clock } from "lucide-react";
 import { Separator } from "../ui/separator";
+import { format } from "date-fns";
+import { Calendar } from "@/components/ui/calendar";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
+import { cn } from "@/lib/utils";
 
 const statusColors: Record<
   "finished" | "pending" | "requested" | "cancelled",
@@ -57,6 +65,38 @@ const statusColors: Record<
   requested: "warning",
   cancelled: "destructive",
 };
+
+const CancelReasonSelector = ({
+  cancelReason,
+  setCancelReason,
+  customReason,
+  setCustomReason,
+}: {
+  cancelReason: string;
+  setCancelReason: (val: string) => void;
+  customReason: string;
+  setCustomReason: (val: string) => void;
+}) => (
+  <div className="space-y-3">
+    <Select value={cancelReason} onValueChange={setCancelReason}>
+      <SelectTrigger>
+        <SelectValue placeholder="Select Cancel Reason" />
+      </SelectTrigger>
+      <SelectContent>
+        <SelectItem value="price">High Price</SelectItem>
+        <SelectItem value="time">Not Suitable Time</SelectItem>
+        <SelectItem value="other">Other</SelectItem>
+      </SelectContent>
+    </Select>
+    {cancelReason === "other" && (
+      <Textarea
+        placeholder="Enter custom reason"
+        value={customReason}
+        onChange={(e) => setCustomReason(e.target.value)}
+      />
+    )}
+  </div>
+);
 
 export function BookingsTable({
   bookings,
@@ -71,6 +111,9 @@ export function BookingsTable({
   const [selectedTicket, setSelectedTicket] = useState<Ticket | null>(null);
   const [cancelReason, setCancelReason] = useState<string>("");
   const [customReason, setCustomReason] = useState<string>("");
+  const [selectedDate, setSelectedDate] = useState<Date | undefined>(undefined);
+  const [startTime, setStartTime] = useState("");
+  const [endTime, setEndTime] = useState("");
 
   const itemsPerPage = 5;
 
@@ -105,30 +148,20 @@ export function BookingsTable({
     setCustomReason("");
   };
 
-  const CancelReasonSelector = () => (
-    <div className="space-y-3">
-      <Select
-        value={cancelReason}
-        onValueChange={(val) => setCancelReason(val)}
-      >
-        <SelectTrigger>
-          <SelectValue placeholder="Select Cancel Reason" />
-        </SelectTrigger>
-        <SelectContent>
-          <SelectItem value="price">High Price</SelectItem>
-          <SelectItem value="time">Not Suitable Time</SelectItem>
-          <SelectItem value="other">Other</SelectItem>
-        </SelectContent>
-      </Select>
-      {cancelReason === "other" && (
-        <Textarea
-          placeholder="Enter custom reason"
-          value={customReason}
-          onChange={(e) => setCustomReason(e.target.value)}
-        />
-      )}
-    </div>
-  );
+  const handleDialogOpen = (ticket: Ticket) => {
+    setSelectedTicket(ticket);
+
+    if (ticket.date) {
+      const parsedDate = new Date(ticket.date);
+      if (!isNaN(parsedDate.getTime())) {
+        setSelectedDate(parsedDate);
+      } else {
+        setSelectedDate(undefined);
+      }
+    } else {
+      setSelectedDate(undefined);
+    }
+  };
 
   const renderDialogContent = (ticket: Ticket) => {
     switch (ticket.status) {
@@ -141,12 +174,16 @@ export function BookingsTable({
                 Review details and assign a detailer or cancel.
               </DialogDescription>
             </DialogHeader>
+
             <div className="space-y-3 py-4">
               <p className="text-sm text-muted-foreground">
                 User: <span className="font-medium">{ticket.user.name}</span>
               </p>
               <p className="text-sm text-muted-foreground">
-                Email: <span className="font-medium">{ticket.user.email}</span>
+                Phone:{" "}
+                <a href={`tel:${ticket.user.phone}`} className="font-medium">
+                  {ticket.user.phone}
+                </a>
               </p>
 
               <Select defaultValue={ticket.detailer_id || ""}>
@@ -166,25 +203,88 @@ export function BookingsTable({
                 placeholder="Price"
                 defaultValue={ticket.price ? ticket.price : ""}
               />
-              <Input placeholder="Date" defaultValue={ticket.date || ""} />
-              <Input placeholder="Hour" />
-              <Input placeholder="Location" />
 
-              {/* Cancel Reason Section */}
-              <CancelReasonSelector />
+              {/* Date + Time pickers */}
+              <div className="flex flex-col gap-3">
+                {/* Date Picker */}
+                <Popover>
+                  <PopoverTrigger asChild>
+                    <Button
+                      variant={"outline"}
+                      className={cn(
+                        "w-full justify-start text-left font-normal",
+                        !selectedDate && "text-muted-foreground"
+                      )}
+                    >
+                      <CalendarIcon className="mr-2 h-4 w-4" />
+                      {selectedDate ? (
+                        format(selectedDate, "PPP")
+                      ) : (
+                        <span>Pick a date</span>
+                      )}
+                    </Button>
+                  </PopoverTrigger>
+                  <PopoverContent className="w-auto p-0" align="start">
+                    <Calendar
+                      mode="single"
+                      selected={selectedDate}
+                      onSelect={setSelectedDate}
+                      disabled={(date) =>
+                        date < new Date(new Date().setHours(0, 0, 0, 0))
+                      }
+                    />
+                  </PopoverContent>
+                </Popover>
+
+                {/* Time Pickers */}
+                <div className="flex gap-2">
+                  <div className="flex items-center gap-2 w-1/2">
+                    <Clock className="h-4 w-4 text-muted-foreground" />
+                    <Input
+                      type="time"
+                      value={startTime}
+                      onChange={(e) => setStartTime(e.target.value)}
+                    />
+                  </div>
+                  <div className="flex items-center gap-2 w-1/2">
+                    <Clock className="h-4 w-4 text-muted-foreground" />
+                    <Input
+                      type="time"
+                      value={endTime}
+                      onChange={(e) => setEndTime(e.target.value)}
+                    />
+                  </div>
+                </div>
+              </div>
             </div>
-            <DialogFooter>
+
+            {/* Confirmation Section */}
+            <DialogFooter className="flex flex-col gap-2">
+              <Button variant="success" className="w-full">
+                Confirm Booking
+              </Button>
+            </DialogFooter>
+
+            {/* Cancellation Section */}
+            <Separator className="my-4" />
+            <div className="space-y-3">
+              <CancelReasonSelector
+                cancelReason={cancelReason}
+                setCancelReason={setCancelReason}
+                customReason={customReason}
+                setCustomReason={setCustomReason}
+              />
               <Button
                 variant="destructive"
                 onClick={() => handleCancelClick(ticket)}
                 disabled={
                   !cancelReason || (cancelReason === "other" && !customReason)
                 }
+                className="w-full"
               >
-                Cancel
+                Cancel Booking
               </Button>
-              <Button variant="success">Confirm</Button>
-            </DialogFooter>
+            </div>
           </>
         );
 
@@ -202,7 +302,10 @@ export function BookingsTable({
                 User: <span className="font-medium">{ticket.user.name}</span>
               </p>
               <p className="text-sm text-muted-foreground">
-                Email: <span className="font-medium">{ticket.user.email}</span>
+                Phone:{" "}
+                <a href={`tel:${ticket.user.phone}`} className="font-medium">
+                  {ticket.user.phone}
+                </a>
               </p>
 
               <Button variant="success" className="w-full">
@@ -212,7 +315,12 @@ export function BookingsTable({
               <Separator className="mt-4 bg-muted-foreground" />
 
               {/* Cancel Reason Section */}
-              <CancelReasonSelector />
+              <CancelReasonSelector
+                cancelReason={cancelReason}
+                setCancelReason={setCancelReason}
+                customReason={customReason}
+                setCustomReason={setCustomReason}
+              />
             </div>
             <Button
               variant="destructive"
@@ -267,7 +375,10 @@ export function BookingsTable({
               User: <span className="font-medium">{ticket.user.name}</span>
             </p>
             <p className="text-sm text-muted-foreground">
-              Email: <span className="font-medium">{ticket.user.email}</span>
+              Phone:{" "}
+              <a href={`tel:${ticket.user.phone}`} className="font-medium">
+                {ticket.user.phone}
+              </a>
             </p>
             <p className="font-medium">
               Reason: {ticket.cancel_reason || "Other"}
@@ -327,16 +438,22 @@ export function BookingsTable({
               <TableCell>
                 <Dialog>
                   <DialogTrigger asChild>
-                    <Button size="xs" variant={statusColors[ticket.status]}>
+                    <Button
+                      size="xs"
+                      variant={statusColors[ticket.status]}
+                      onClick={() => handleDialogOpen(ticket)}
+                    >
                       {ticket.status}
                     </Button>
                   </DialogTrigger>
-                  <DialogContent className="sm:max-w-md">
+                  <DialogContent className="sm:max-w-md max-h-screen overflow-y-auto">
                     {renderDialogContent(ticket)}
                   </DialogContent>
                 </Dialog>
               </TableCell>
-              <TableCell>{ticket.phone}</TableCell>
+              <TableCell>
+                <a href={`tel:${ticket.user.phone}`}>{ticket.user.phone}</a>
+              </TableCell>
               <TableCell>{ticket.price || "-"}</TableCell>
               <TableCell>{ticket.date}</TableCell>
               <TableCell>{ticket.secretary_id || "-"}</TableCell>
