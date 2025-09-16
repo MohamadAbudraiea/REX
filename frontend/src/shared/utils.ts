@@ -18,7 +18,7 @@ export const getStatusBadgeConfig = (status: StatusType) => {
       icon: "CheckCircle",
       text: t("book.status.finished"),
     },
-    cancelled: {
+    canceled: {
       variant: "destructive",
       icon: "X",
       text: t("book.status.canceled"),

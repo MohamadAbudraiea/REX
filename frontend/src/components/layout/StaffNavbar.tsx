@@ -27,6 +27,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
+import { ThemeSwitcher } from "@/components/ui/theme-switcher";
 
 export default function StaffNavbar({ role }: { role: string }) {
   const { user } = useCheckAuth();
@@ -99,6 +100,7 @@ export default function StaffNavbar({ role }: { role: string }) {
 
           {/* Desktop Profile + Logout */}
           <div className="hidden md:flex items-center ml-4 space-x-2">
+            <ThemeSwitcher />
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <Button
@@ -137,6 +139,7 @@ export default function StaffNavbar({ role }: { role: string }) {
 
           {/* Mobile Sheet */}
           <div className="flex md:hidden items-center">
+            <ThemeSwitcher />
             <Sheet open={isOpen} onOpenChange={setIsOpen}>
               <SheetTrigger asChild>
                 <Button variant="ghost" size="sm">

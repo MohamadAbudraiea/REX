@@ -1,4 +1,11 @@
-import { checkAuth, login, logout, signUp } from "@/api/auth";
+import {
+  checkAuth,
+  forgotPassword,
+  login,
+  logout,
+  resetPassword,
+  signUp,
+} from "@/api/auth";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
@@ -90,4 +97,42 @@ export const useCheckAuth = () => {
     isUser,
     user: data?.data,
   };
+};
+
+export const useForgotPassword = () => {
+  const { t } = useTranslation();
+
+  const { mutate: forgotPasswordMutation, isPending: isForgotPassword } =
+    useMutation({
+      mutationKey: ["forgotPassword"],
+      mutationFn: forgotPassword,
+      onSuccess: () => {
+        toast.success(t("forgotPassword.send.success"));
+      },
+      onError: () => {
+        toast.error(t("forgotPassword.send.error"));
+      },
+    });
+
+  return { forgotPasswordMutation, isForgotPassword };
+};
+
+export const useResetPassword = () => {
+  const { t } = useTranslation();
+  const navigate = useNavigate();
+
+  const { mutate: resetPasswordMutation, isPending: isResetPassword } =
+    useMutation({
+      mutationKey: ["resetPassword"],
+      mutationFn: resetPassword,
+      onSuccess: () => {
+        toast.success(t("forgotPassword.reset.success"));
+        navigate("/login");
+      },
+      onError: () => {
+        toast.error(t("forgotPassword.reset.error"));
+      },
+    });
+
+  return { resetPasswordMutation, isResetPassword };
 };

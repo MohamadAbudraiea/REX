@@ -57,13 +57,13 @@ import {
 import { cn } from "@/lib/utils";
 
 const statusColors: Record<
-  "finished" | "pending" | "requested" | "cancelled",
+  "finished" | "pending" | "requested" | "canceled",
   "success" | "warning" | "destructive" | "default"
 > = {
   finished: "success",
   pending: "default",
   requested: "warning",
-  cancelled: "destructive",
+  canceled: "destructive",
 };
 
 const CancelReasonSelector = ({
@@ -141,7 +141,7 @@ export function BookingsTable({
   const confirmCancel = () => {
     if (selectedTicket) {
       const reason = cancelReason === "other" ? customReason : cancelReason;
-      console.log("Booking cancelled:", selectedTicket.id, "Reason:", reason);
+      console.log("Booking canceled:", selectedTicket.id, "Reason:", reason);
     }
     setCancelDialogOpen(false);
     setCancelReason("");
@@ -187,7 +187,8 @@ export function BookingsTable({
               </p>
 
               <Select defaultValue={ticket.detailer_id || ""}>
-                <SelectTrigger>
+                <SelectTrigger className="w-full">
+                  <DialogTitle>Assign Detailer</DialogTitle>
                   <SelectValue placeholder="Assign Detailer" />
                 </SelectTrigger>
                 <SelectContent>
@@ -199,14 +200,38 @@ export function BookingsTable({
                 </SelectContent>
               </Select>
 
-              <Input
-                placeholder="Price"
-                defaultValue={ticket.price ? ticket.price : ""}
-              />
+              {/* Location */}
+              <div className="flex flex-col gap-3">
+                <label className="font-medium">Location</label>
+                <Input
+                  className={`${ticket.location && "cursor-pointer"}`}
+                  placeholder="Location"
+                  defaultValue={ticket.location ? ticket.location : ""}
+                />
+                <Button
+                  onClick={() => {
+                    if (ticket.location) {
+                      window.open(`${ticket.location}`, "_blank");
+                    }
+                  }}
+                >
+                  Open in Google Maps
+                </Button>
+              </div>
+
+              {/* Price */}
+              <div className="flex flex-col gap-3">
+                <label className="font-medium">Price</label>
+                <Input
+                  placeholder="Price"
+                  defaultValue={ticket.price ? ticket.price : ""}
+                />
+              </div>
 
               {/* Date + Time pickers */}
               <div className="flex flex-col gap-3">
                 {/* Date Picker */}
+                <label className="font-medium">Date</label>
                 <Popover>
                   <PopoverTrigger asChild>
                     <Button
@@ -237,6 +262,7 @@ export function BookingsTable({
                 </Popover>
 
                 {/* Time Pickers */}
+                <label className="font-medium">Time</label>
                 <div className="flex gap-2">
                   <div className="flex items-center gap-2 w-1/2">
                     <Clock className="h-4 w-4 text-muted-foreground" />
@@ -365,11 +391,11 @@ export function BookingsTable({
           </>
         );
 
-      case "cancelled":
+      case "canceled":
         return (
           <>
             <DialogHeader>
-              <DialogTitle>Canceled Booking</DialogTitle>
+              <DialogTitle>Cancelled Booking</DialogTitle>
             </DialogHeader>
             <p className="text-sm text-muted-foreground">
               User: <span className="font-medium">{ticket.user.name}</span>
@@ -410,7 +436,7 @@ export function BookingsTable({
             <SelectItem value="All">All</SelectItem>
             <SelectItem value="requested">Requested</SelectItem>
             <SelectItem value="pending">Pending</SelectItem>
-            <SelectItem value="cancelled">Canceled</SelectItem>
+            <SelectItem value="canceled">Cancelled</SelectItem>
             <SelectItem value="finished">Finished</SelectItem>
           </SelectContent>
         </Select>
@@ -456,8 +482,8 @@ export function BookingsTable({
               </TableCell>
               <TableCell>{ticket.price || "-"}</TableCell>
               <TableCell>{ticket.date}</TableCell>
-              <TableCell>{ticket.secretary_id || "-"}</TableCell>
-              <TableCell>{ticket.detailer_id || "-"}</TableCell>
+              <TableCell>{ticket.secretary?.name || "-"}</TableCell>
+              <TableCell>{ticket.detailer?.name || "-"}</TableCell>
             </TableRow>
           ))}
         </TableBody>

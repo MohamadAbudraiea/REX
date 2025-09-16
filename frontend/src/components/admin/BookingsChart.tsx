@@ -36,7 +36,7 @@ export function BookingsChart({ bookings }: { bookings: Ticket[] }) {
   const statusColors: Record<string, string> = {
     pending: "#3b82f6", // blue
     finished: "#22c55e", // green
-    cancelled: "#ef4444", // red
+    canceled: "#ef4444", // red
     requested: "#facc15", // yellow
   };
 

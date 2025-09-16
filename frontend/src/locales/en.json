@@ -55,10 +55,11 @@
 
   "validations": {
     "required": "This field is required",
+    "email": "Please enter a valid email address",
+    "otp": "OTP must be 6 characters long",
     "name": {
       "min": "Name must be at least 2 characters"
     },
-    "email": "Please enter a valid email address",
     "phone": {
       "min": "Phone number must be at least 10 characters long"
     },
@@ -359,6 +360,39 @@
       "title": "Still Can't Find What You Need?",
       "description": "Our team is here to help you find exactly what you're looking for.",
       "cta": "Contact Support"
+    }
+  },
+
+  "forgotPassword": {
+    "title": "Reset Your Password",
+    "subtitle": "Enter your email to receive a verification code",
+    "otpSubtitle": "Enter the code sent to your email and set a new password",
+    "enterEmail": "Enter Your Email",
+    "resetPassword": "Reset Password",
+    "emailInstructions": "We'll send a verification code to this email",
+    "otpInstructions": "Enter the 6-digit code sent to {{email}}",
+    "emailLabel": "Email Address",
+    "emailPlaceholder": "your.email@example.com",
+    "sendOtp": "Send Verification Code",
+    "sending": "Sending...",
+    "otpLabel": "Verification Code",
+    "otpPlaceholder": "Enter 6-digit code",
+    "newPasswordLabel": "New Password",
+    "newPasswordPlaceholder": "Enter your new password",
+    "confirmPasswordLabel": "Confirm Password",
+    "confirmPasswordPlaceholder": "Confirm your new password",
+    "resetButton": "Reset Password",
+    "resetting": "Resetting...",
+    "backToEmail": "Back to email entry",
+    "rememberPassword": "Remember your password?",
+    "backToLogin": "Back to login",
+    "send": {
+      "success": "OTP sent successfully",
+      "error": "Failed to send OTP"
+    },
+    "reset": {
+      "success": "Password reset successfully",
+      "error": "Failed to reset password"
     }
   }
 }

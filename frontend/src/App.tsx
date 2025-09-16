@@ -19,14 +19,15 @@ import { useCheckAuth } from "./hooks/useAuth";
 import ScrollToTop from "./components/ui/ScrollToTop";
 import AdminDashboard from "./pages/admin/AdminDashboard";
 import NotFoundPage from "./pages/NotFoundPage";
+import ForgotPasswordPage from "./pages/ForgotPasswordPage";
 
 function App() {
   const { isAuthenticated } = useCheckAuth();
 
   return (
     <>
+      <ScrollToTop />
       <Layout>
-        <ScrollToTop />
         <Routes>
           <Route
             path="/signup"
@@ -38,6 +39,17 @@ function App() {
             path="/login"
             element={
               isAuthenticated ? <Navigate to="/" replace /> : <LoginPage />
+            }
+          />
+
+          <Route
+            path="/forgot-password"
+            element={
+              isAuthenticated ? (
+                <Navigate to="/" replace />
+              ) : (
+                <ForgotPasswordPage />
+              )
             }
           />
 

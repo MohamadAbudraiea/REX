@@ -40,3 +40,25 @@ export async function checkAuth() {
   const res = await axiosInstance.get("/auth/check");
   return res.data;
 }
+
+export async function forgotPassword({ email }: { email: string }) {
+  const res = await axiosInstance.post("/shared/otp", { email });
+  return res.data;
+}
+
+export async function resetPassword({
+  email,
+  otpCode,
+  newPassword,
+}: {
+  email: string;
+  otpCode: string;
+  newPassword: string;
+}) {
+  const res = await axiosInstance.post("/shared/otp/changepassword", {
+    email,
+    otpCode,
+    newPassword,
+  });
+  return res.data;
+}

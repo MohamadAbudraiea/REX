@@ -1,4 +1,3 @@
-import { useState } from "react";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { DataTable } from "@/components/admin/DataTable";
@@ -6,164 +5,14 @@ import { SecretaryForm } from "@/components/admin/SecretaryForm";
 import { DetailerForm } from "@/components/admin/DetailerForm";
 import { BookingsTable } from "@/components/admin/BookingsTable";
 import { BookingsChart } from "@/components/admin/BookingsChart";
-import type { Ticket } from "@/shared/types";
 import { useGetUsers } from "@/hooks/useAdmin";
+import { useGetAllTickets } from "@/hooks/useTicket";
 
 export default function AdminDashboard() {
   const { users, isGettingUsers } = useGetUsers();
+  const { tickets, isFetchingTickets } = useGetAllTickets();
 
-  // ✅ Mock bookings with correct types
-  const [bookings] = useState<Ticket[]>([
-    {
-      id: "b1",
-      user: {
-        id: "u1",
-        name: "User One",
-        email: "user1@example.com",
-        phone: "0791111111",
-      },
-      service: "wash",
-      status: "pending",
-      phone: "0791111111",
-      price: 15,
-      date: "2025-09-01",
-      secretary_id: "s1",
-      detailer_id: "d1",
-      rating: null,
-      cancel_reason: null,
-      created_at: "",
-      start_time: null,
-      end_time: null,
-    },
-    {
-      id: "b2",
-      user: {
-        id: "u2",
-        name: "User Two",
-        email: "user2@example.com",
-        phone: "0792222222",
-      },
-      service: "dryclean",
-      status: "finished",
-      phone: "0792222222",
-      price: 50,
-      date: "2025-09-05",
-      secretary_id: "s2",
-      detailer_id: "d2",
-      rating: {
-        id: "r1",
-        ticket_id: "b2",
-        rating_number: 4.5,
-        description: "Great service!",
-        created_at: "",
-        user_id: "u2",
-      },
-      cancel_reason: null,
-      created_at: "",
-      start_time: null,
-      end_time: null,
-    },
-    {
-      id: "b3",
-      user: {
-        id: "u3",
-        name: "User Three",
-        email: "user3@example.com",
-        phone: "0793333333",
-      },
-      service: "polish",
-      status: "cancelled", // ✅ fixed spelling
-      phone: "0793333333",
-      price: 20,
-      date: "2025-09-07",
-      secretary_id: "s1",
-      detailer_id: "d1",
-      rating: null,
-      cancel_reason: "High price",
-      created_at: "",
-      start_time: null,
-      end_time: null,
-    },
-    {
-      id: "b4",
-      user: {
-        id: "u4",
-        name: "User Four",
-        email: "user4@example.com",
-        phone: "0794444444",
-      },
-      service: "nano",
-      status: "finished",
-      phone: "0794444444",
-      price: 30,
-      date: "2025-09-10",
-      secretary_id: "s2",
-      detailer_id: "d2",
-      rating: {
-        id: "r2",
-        ticket_id: "b4",
-        rating_number: 4,
-        description: "Good service",
-        created_at: "",
-        user_id: "u4",
-      },
-      cancel_reason: null,
-      created_at: "",
-      start_time: null,
-      end_time: null,
-    },
-    {
-      id: "b5",
-      user: {
-        id: "u5",
-        name: "User Five",
-        email: "user5@example.com",
-        phone: "0795555555",
-      },
-      service: "wash",
-      status: "requested",
-      phone: "0795555555",
-      price: null,
-      date: "2025-09-12",
-      secretary_id: null,
-      detailer_id: null,
-      rating: null,
-      cancel_reason: null,
-      created_at: "",
-      start_time: null,
-      end_time: null,
-    },
-    {
-      id: "b6",
-      user: {
-        id: "u6",
-        name: "User Six",
-        email: "user6@example.com",
-        phone: "0796666666",
-      },
-      service: "graphene",
-      status: "pending",
-      phone: "0796666666",
-      price: 50,
-      date: "2025-09-15",
-      secretary_id: "s1",
-      detailer_id: "d1",
-      rating: {
-        id: "r3",
-        ticket_id: "b6",
-        rating_number: 5,
-        description: "Excellent",
-        created_at: "",
-        user_id: "u6",
-      },
-      cancel_reason: null,
-      created_at: "",
-      start_time: null,
-      end_time: null,
-    },
-  ]);
-
-  if (isGettingUsers) {
+  if (isGettingUsers || isFetchingTickets) {
     return (
       <div className="flex justify-center items-center h-screen">
         <div className="animate-spin rounded-full h-32 w-32 border-t-2 border-b-2 border-primary"></div>
@@ -231,7 +80,7 @@ export default function AdminDashboard() {
               <CardTitle>All Bookings</CardTitle>
             </CardHeader>
             <CardContent>
-              <BookingsTable bookings={bookings} detailers={users.detailers} />
+              <BookingsTable bookings={tickets} detailers={users.detailers} />
             </CardContent>
           </Card>
         </TabsContent>
@@ -243,7 +92,7 @@ export default function AdminDashboard() {
               <CardTitle>Booking Status Chart</CardTitle>
             </CardHeader>
             <CardContent>
-              <BookingsChart bookings={bookings} />
+              <BookingsChart bookings={tickets} />
             </CardContent>
           </Card>
         </TabsContent>
