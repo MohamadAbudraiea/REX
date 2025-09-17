@@ -26,6 +26,7 @@ const authenticateUser = (req, res, next) => {
       email: decoded.email,
       phone: decoded.phone,
       name: decoded.name,
+      created_at: decoded.created_at,
     };
 
     next();

@@ -20,6 +20,7 @@ import ScrollToTop from "./components/ui/ScrollToTop";
 import AdminDashboard from "./pages/admin/AdminDashboard";
 import NotFoundPage from "./pages/NotFoundPage";
 import ForgotPasswordPage from "./pages/ForgotPasswordPage";
+import ProfilePage from "./pages/ProfilePage";
 
 function App() {
   const { isAuthenticated } = useCheckAuth();
@@ -78,6 +79,15 @@ function App() {
             element={
               <ProtectedRoute>
                 <UserBookingsPage />
+              </ProtectedRoute>
+            }
+          />
+
+          <Route
+            path="/profile"
+            element={
+              <ProtectedRoute>
+                <ProfilePage />
               </ProtectedRoute>
             }
           />

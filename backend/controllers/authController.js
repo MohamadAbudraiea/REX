@@ -42,6 +42,7 @@ exports.userLogin = async (req, res) => {
           email: findUser.email,
           phone: findUser.phone,
           name: findUser.name,
+          created_at: findUser.created_at,
         },
         process.env.JWT_SECRET
       );

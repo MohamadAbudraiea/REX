@@ -65,7 +65,8 @@
     },
     "password": {
       "min": "Password must be at least 6 characters long",
-      "match": "Passwords do not match"
+      "match": "Passwords do not match",
+      "new": "New password is required when changing password"
     }
   },
 
@@ -394,5 +395,31 @@
       "success": "Password reset successfully",
       "error": "Failed to reset password"
     }
+  },
+
+  "profile": {
+    "title": "Profile Settings",
+    "description": "Manage your account settings",
+    "tabs": {
+      "profile": "Profile Information",
+      "security": "Security"
+    },
+    "form": {
+      "name": "Full Name",
+      "namePlaceholder": "Enter your full name",
+      "email": "Email Address",
+      "emailPlaceholder": "Enter your email address",
+      "phone": "Phone Number",
+      "phonePlaceholder": "Enter your phone number",
+      "currentPassword": "Current Password",
+      "currentPasswordPlaceholder": "Enter your current password",
+      "newPassword": "New Password",
+      "newPasswordPlaceholder": "Enter your new password",
+      "confirmPassword": "Confirm Password",
+      "confirmPasswordPlaceholder": "Confirm your new password"
+    },
+    "save": "Save Changes",
+    "saving": "Saving",
+    "saved": "Changes saved successfully"
   }
 }

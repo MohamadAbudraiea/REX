@@ -3,7 +3,7 @@ export type StatusType = "requested" | "pending" | "finished" | "canceled";
 
 export interface User {
   id: string;
-  created_at?: string;
+  created_at?: Date;
   name: string;
   email: string;
   phone: string;
@@ -13,7 +13,7 @@ export interface User {
 
 export interface Ticket {
   id: string;
-  created_at: string;
+  created_at: Date;
   user: User;
   date: string | null;
   start_time: string | null;
@@ -33,7 +33,7 @@ export interface Ticket {
 
 export interface Rating {
   id: string;
-  created_at: string;
+  created_at: Date;
   user_id: string;
   ticket_id: string;
   description: string;
