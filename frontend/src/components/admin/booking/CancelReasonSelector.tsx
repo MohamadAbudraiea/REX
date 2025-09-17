@@ -1,0 +1,42 @@
+import { Textarea } from "@/components/ui/textarea";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+
+export function CancelReasonSelector({
+  cancelReason,
+  setCancelReason,
+  customReason,
+  setCustomReason,
+}: {
+  cancelReason: string;
+  setCancelReason: (val: string) => void;
+  customReason: string;
+  setCustomReason: (val: string) => void;
+}) {
+  return (
+    <div className="space-y-3">
+      <Select value={cancelReason} onValueChange={setCancelReason}>
+        <SelectTrigger>
+          <SelectValue placeholder="Select Cancel Reason" />
+        </SelectTrigger>
+        <SelectContent>
+          <SelectItem value="price">High Price</SelectItem>
+          <SelectItem value="time">Not Suitable Time</SelectItem>
+          <SelectItem value="other">Other</SelectItem>
+        </SelectContent>
+      </Select>
+      {cancelReason === "other" && (
+        <Textarea
+          placeholder="Enter custom reason"
+          value={customReason}
+          onChange={(e) => setCustomReason(e.target.value)}
+        />
+      )}
+    </div>
+  );
+}
