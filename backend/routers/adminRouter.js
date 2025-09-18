@@ -33,6 +33,6 @@ router.post("/ticket/cancel/:ticket_id", ticketController.cancelticket);
 router.post("/ticket/finish/:ticket_id", ticketController.finishTicket);
 
 //get rating
-router.post("/ticket/rating", ratingController.rateticket);
+router.get("/ticket/rating/:ticket_id", ratingController.getTicketRating);
 
 module.exports = router;
