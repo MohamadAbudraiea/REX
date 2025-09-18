@@ -62,3 +62,38 @@ export const formatDate = (dateString: string | null): string => {
   if (!dateString) return "";
   return new Date(dateString).toLocaleDateString();
 };
+
+export const months = [
+  "January",
+  "February",
+  "March",
+  "April",
+  "May",
+  "June",
+  "July",
+  "August",
+  "September",
+  "October",
+  "November",
+  "December",
+];
+
+export function getDaysInMonth(year: number, month: number) {
+  return new Date(year, month + 1, 0).getDate(); // month is 0-based
+}
+
+// --- Colors ---
+export const statusColors: Record<string, string> = {
+  Pending: "#3b82f6",
+  Finished: "#22c55e",
+  Canceled: "#ef4444",
+  Requested: "#facc15",
+};
+
+export const serviceThemeColors = [
+  "var(--chart-1)",
+  "var(--chart-2)",
+  "var(--chart-3)",
+  "var(--chart-4)",
+  "var(--chart-5)",
+];

@@ -20,19 +20,25 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { useState, useMemo } from "react";
-
-// Helper: get number of days in a month
-function getDaysInMonth(year: number, month: number) {
-  return new Date(year, month + 1, 0).getDate(); // month is 0-based
-}
+import { useMemo } from "react";
+import { useBookingStore } from "@/stores/useBookingStore";
+import {
+  getDaysInMonth,
+  months,
+  serviceThemeColors,
+  statusColors,
+} from "@/shared/utils";
+import { useTheme } from "@/context/theme-provider";
 
 export function BookingsChart({ bookings }: { bookings: Ticket[] }) {
+  const { theme } = useTheme();
   const now = new Date();
-  const [selectedMonth, setSelectedMonth] = useState<number>(now.getMonth());
-  const [selectedYear, setSelectedYear] = useState<number>(now.getFullYear());
+  const { filterMonth, filterYear, setFilterMonth, setFilterYear } =
+    useBookingStore();
+  const selectedMonth = filterMonth ? Number(filterMonth) - 1 : now.getMonth();
+  const selectedYear = filterYear ? Number(filterYear) : now.getFullYear();
 
-  // --- Count by Status ---
+  // Count by Status
   const statusCount = bookings.reduce((acc: Record<string, number>, b) => {
     acc[b.status] = (acc[b.status] || 0) + 1;
     return acc;
@@ -43,7 +49,7 @@ export function BookingsChart({ bookings }: { bookings: Ticket[] }) {
     value: statusCount[status],
   }));
 
-  // --- Count by Service ---
+  // Count by Service
   const serviceCount = bookings.reduce((acc: Record<string, number>, b) => {
     acc[b.service] = (acc[b.service] || 0) + 1;
     return acc;
@@ -54,7 +60,7 @@ export function BookingsChart({ bookings }: { bookings: Ticket[] }) {
     value: serviceCount[service],
   }));
 
-  // --- Count by Day of Selected Month ---
+  // Count by Day of Selected Month
   const lineData = useMemo(() => {
     const daysInMonth = getDaysInMonth(selectedYear, selectedMonth);
     const dayCount = bookings.reduce((acc: Record<number, number>, b) => {
@@ -77,7 +83,7 @@ export function BookingsChart({ bookings }: { bookings: Ticket[] }) {
     });
   }, [bookings, selectedMonth, selectedYear]);
 
-  // --- Stats ---
+  // Stats
   const totalBookings = lineData.reduce((sum, d) => sum + d.bookings, 0);
   const peakDay =
     lineData.length > 0
@@ -87,40 +93,9 @@ export function BookingsChart({ bookings }: { bookings: Ticket[] }) {
         ).day
       : null;
 
-  // --- Colors ---
-  const statusColors: Record<string, string> = {
-    Pending: "#3b82f6",
-    Finished: "#22c55e",
-    Canceled: "#ef4444",
-    Requested: "#facc15",
-  };
-
-  const serviceThemeColors = [
-    "var(--chart-1)",
-    "var(--chart-2)",
-    "var(--chart-3)",
-    "var(--chart-4)",
-    "var(--chart-5)",
-  ];
-
   const serviceColors = serviceData.map(
     (_, i) => serviceThemeColors[i % serviceThemeColors.length]
   );
-
-  const months = [
-    "January",
-    "February",
-    "March",
-    "April",
-    "May",
-    "June",
-    "July",
-    "August",
-    "September",
-    "October",
-    "November",
-    "December",
-  ];
 
   return (
     <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
@@ -129,24 +104,32 @@ export function BookingsChart({ bookings }: { bookings: Ticket[] }) {
         <CardHeader className="flex flex-col md:flex-row md:items-center md:justify-between">
           <CardTitle className="text-lg font-bold">Bookings per Day</CardTitle>
           <div className="flex gap-2 mt-2 md:mt-0">
+            {/* Month Select */}
             <Select
-              value={String(selectedMonth)}
-              onValueChange={(val) => setSelectedMonth(Number(val))}
+              value={filterMonth ?? String(now.getMonth() + 1).padStart(2, "0")}
+              onValueChange={(val) =>
+                setFilterMonth(val === "all" ? null : val)
+              }
             >
               <SelectTrigger className="w-[140px]">
                 <SelectValue placeholder="Select Month" />
               </SelectTrigger>
               <SelectContent>
-                {months.map((m, i) => (
-                  <SelectItem key={i} value={String(i)}>
-                    {m}
-                  </SelectItem>
-                ))}
+                {months.map((m, i) => {
+                  const val = String(i + 1).padStart(2, "0");
+                  return (
+                    <SelectItem key={i} value={val}>
+                      {m}
+                    </SelectItem>
+                  );
+                })}
               </SelectContent>
             </Select>
+
+            {/* Year Select */}
             <Select
-              value={String(selectedYear)}
-              onValueChange={(val) => setSelectedYear(Number(val))}
+              value={filterYear ?? String(now.getFullYear())}
+              onValueChange={(val) => setFilterYear(val === "all" ? null : val)}
             >
               <SelectTrigger className="w-[100px]">
                 <SelectValue placeholder="Year" />
@@ -185,7 +168,14 @@ export function BookingsChart({ bookings }: { bookings: Ticket[] }) {
               <ReferenceLine y={0} stroke="#9ca3af" />
               <XAxis dataKey="day" tickLine={false} />
               <YAxis allowDecimals={false} tickLine={false} />
-              <Tooltip />
+              <Tooltip
+                contentStyle={{
+                  backgroundColor: `${
+                    theme === "dark" ? "#1f2937" : "#9ca3af"
+                  }`,
+                  color: `${theme === "dark" ? "#9ca3af" : "#1f2937"}`,
+                }}
+              />
               <Line
                 type="monotone"
                 dataKey="bookings"

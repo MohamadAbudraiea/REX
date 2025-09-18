@@ -17,6 +17,7 @@ import { BookingsTableRow } from "@/components/admin/booking/BookingsTableRow";
 import { PaginationControls } from "@/components/admin/booking/PaginationControls";
 import { CancelConfirmationDialog } from "@/components/admin/booking/CancelConfirmationDialog";
 import { useBookingStore } from "@/stores/useBookingStore";
+import { months, getDaysInMonth } from "@/shared/utils";
 
 export function BookingsTable({
   bookings,
@@ -39,6 +40,15 @@ export function BookingsTable({
     setCancelDialogOpen,
     confirmCancel,
   } = useBookingStore();
+
+  // Get current date for default values
+  const now = new Date();
+  const currentYear = now.getFullYear();
+
+  // Calculate days in selected month
+  const daysInSelectedMonth = filterMonth
+    ? getDaysInMonth(currentYear, Number(filterMonth) - 1)
+    : 31; // Default to 31 if no month selected
 
   const filteredBookings = bookings.filter((b) => {
     const matchesStatus = filter === "All" || b.status === filter;
@@ -96,7 +106,7 @@ export function BookingsTable({
           </Select>
         </div>
 
-        {/* Month Filter */}
+        {/* Month Filter - Updated to use months array */}
         <div className="flex items-center gap-2">
           <span className="font-medium">Month:</span>
           <Select
@@ -110,11 +120,11 @@ export function BookingsTable({
             </SelectTrigger>
             <SelectContent>
               <SelectItem value="all">All</SelectItem>
-              {Array.from({ length: 12 }, (_, i) => {
-                const month = String(i + 1).padStart(2, "0");
+              {months.map((monthName, i) => {
+                const monthValue = String(i + 1).padStart(2, "0");
                 return (
-                  <SelectItem key={month} value={month}>
-                    {month}
+                  <SelectItem key={monthValue} value={monthValue}>
+                    {monthName}
                   </SelectItem>
                 );
               })}
@@ -122,7 +132,7 @@ export function BookingsTable({
           </Select>
         </div>
 
-        {/* Day Filter (Optional) */}
+        {/* Day Filter - Updated to use getDaysInMonth */}
         <div className="flex items-center gap-2">
           <span className="font-medium">Day:</span>
           <Select
@@ -137,7 +147,7 @@ export function BookingsTable({
             </SelectTrigger>
             <SelectContent>
               <SelectItem value="all">All</SelectItem>
-              {Array.from({ length: 31 }, (_, i) => {
+              {Array.from({ length: daysInSelectedMonth }, (_, i) => {
                 const day = String(i + 1).padStart(2, "0");
                 return (
                   <SelectItem key={day} value={day}>
@@ -161,6 +171,7 @@ export function BookingsTable({
             <TableCell>Phone</TableCell>
             <TableCell>Price</TableCell>
             <TableCell>Date</TableCell>
+            <TableCell>Note</TableCell>
             <TableCell>Secretary</TableCell>
             <TableCell>Detailer</TableCell>
           </TableRow>
