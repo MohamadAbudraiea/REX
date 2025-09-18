@@ -1,7 +1,7 @@
 const SQL = require("../Drivers/SQL_Driver");
 const initModels = require("../models/init-models");
 const models = initModels(SQL);
-const { user, ticket } = models;
+const { user, ticket, rating } = models;
 const bcrypt = require("bcrypt");
 
 exports.rateticket = async (req, res) => {
@@ -38,6 +38,21 @@ exports.rateticket = async (req, res) => {
 exports.getTicketRating = async (req, res) => {
   try {
     const { ticket_id } = req.params;
+
+    const ratingForTicket = await rating.findOne({
+      where: {
+        ticket_id,
+      },
+    });
+    if (!ratingForTicket)
+      return res.status(200).json({
+        data: "Not Rated Yet",
+      });
+
+    res.status(200).json({
+      status: "success",
+      data: ratingForTicket,
+    });
   } catch (error) {
     res.status(500).json({
       error: error.message,

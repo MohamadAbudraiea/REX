@@ -6,25 +6,32 @@ const bcrypt = require("bcrypt");
 
 exports.addticket = async (req, res) => {
   try {
-    const { date, service, location } = req.body;
+    const { date, service, location, note } = req.body || {};
     const user_id = req.user.id;
     const status = "requested";
-    const newTicket = await ticket.create({
-      user_id: user_id,
-      date: date,
-      service: service,
-      location,
-      status: status,
-    });
 
-    res.status(201).json({
+    // build ticket data dynamically
+    const ticketData = {
+      user_id,
+      date,
+      service,
+      location,
+      status,
+      ...(note ? { note } : {}), // only add note if it exists
+    };
+
+    const newTicket = await ticket.create(ticketData);
+
+    return res.status(201).json({
       status: "success",
       data: newTicket,
-      message: "Your Order have been requested",
     });
   } catch (error) {
-    res.status(500).json({
-      error: error.message,
+    console.error(error);
+    return res.status(500).json({
+      status: "failed",
+      message:
+        error.message || "Something went wrong while creating the ticket",
     });
   }
 };
