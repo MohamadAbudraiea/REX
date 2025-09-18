@@ -1,5 +1,12 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { getUsers, addUser, deleteUser, editUser } from "@/api/admin";
+import {
+  getUsers,
+  addUser,
+  deleteUser,
+  editUser,
+  getDetailerSchedule,
+  getDetailerScheduleByDate,
+} from "@/api/admin";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 
@@ -71,4 +78,39 @@ export const useEditUser = () => {
   });
 
   return { editUserMutation, isEditingUser };
+};
+
+export const useGetDetailerSchedule = (id?: string) => {
+  const { data, isPending: isGettingDetailerSchedule } = useQuery({
+    queryKey: ["detailerSchedule", id],
+    queryFn: () => getDetailerSchedule({ id: id! }),
+    enabled: !!id,
+    retry: false,
+  });
+
+  return {
+    schedule: data?.schedule,
+    isGettingDetailerSchedule,
+  };
+};
+
+export const useGetDetailerScheduleByDate = (id?: string, date?: Date) => {
+  const formattedDate = date ? date.toISOString().split("T")[0] : "";
+
+  const { data, isPending: isGettingDetailerSchedule } = useQuery({
+    queryKey: ["detailerSchedule", id, formattedDate],
+    queryFn: () => {
+      if (!id || !formattedDate) {
+        throw new Error("Detailer ID and date are required");
+      }
+      return getDetailerScheduleByDate({ id, date: formattedDate });
+    },
+    enabled: !!id && !!formattedDate,
+    retry: false,
+  });
+
+  return {
+    schedule: data?.schedule,
+    isGettingDetailerSchedule,
+  };
 };

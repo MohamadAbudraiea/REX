@@ -1,5 +1,4 @@
 import type { Ticket } from "@/shared/types";
-import { useState } from "react";
 import {
   Table,
   TableHeader,
@@ -17,6 +16,7 @@ import {
 import { BookingsTableRow } from "@/components/admin/booking/BookingsTableRow";
 import { PaginationControls } from "@/components/admin/booking/PaginationControls";
 import { CancelConfirmationDialog } from "@/components/admin/booking/CancelConfirmationDialog";
+import { useBookingStore } from "@/stores/useBookingStore";
 
 export function BookingsTable({
   bookings,
@@ -25,17 +25,16 @@ export function BookingsTable({
   bookings: Ticket[];
   detailers?: { id: string; name: string }[];
 }) {
-  const [filter, setFilter] = useState("All");
-  const [currentPage, setCurrentPage] = useState(1);
-  const [cancelDialogOpen, setCancelDialogOpen] = useState(false);
-  const [selectedTicket, setSelectedTicket] = useState<Ticket | null>(null);
-  const [cancelReason, setCancelReason] = useState("");
-  const [customReason, setCustomReason] = useState("");
-  const [selectedDate, setSelectedDate] = useState<Date | undefined>();
-  const [startTime, setStartTime] = useState("");
-  const [endTime, setEndTime] = useState("");
-
-  const itemsPerPage = 5;
+  const {
+    filter,
+    currentPage,
+    itemsPerPage,
+    cancelDialogOpen,
+    setFilter,
+    setCurrentPage,
+    setCancelDialogOpen,
+    confirmCancel,
+  } = useBookingStore();
 
   const filteredBookings =
     filter === "All" ? bookings : bookings.filter((b) => b.status === filter);
@@ -50,36 +49,6 @@ export function BookingsTable({
   const handlePageChange = (page: number) => {
     setCurrentPage(page);
     window.scrollTo({ top: 0, behavior: "smooth" });
-  };
-
-  const handleCancelClick = (ticket: Ticket) => {
-    setSelectedTicket(ticket);
-    setCancelDialogOpen(true);
-  };
-
-  const confirmCancel = () => {
-    if (selectedTicket) {
-      const reason = cancelReason === "other" ? customReason : cancelReason;
-      console.log("Booking canceled:", selectedTicket.id, "Reason:", reason);
-    }
-    setCancelDialogOpen(false);
-    setCancelReason("");
-    setCustomReason("");
-  };
-
-  const handleDialogOpen = (ticket: Ticket) => {
-    setSelectedTicket(ticket);
-
-    if (ticket.date) {
-      const parsedDate = new Date(ticket.date);
-      if (!isNaN(parsedDate.getTime())) {
-        setSelectedDate(parsedDate);
-      } else {
-        setSelectedDate(undefined);
-      }
-    } else {
-      setSelectedDate(undefined);
-    }
   };
 
   return (
@@ -126,18 +95,6 @@ export function BookingsTable({
             <BookingsTableRow
               key={ticket.id}
               ticket={ticket}
-              onDialogOpen={handleDialogOpen}
-              cancelReason={cancelReason}
-              setCancelReason={setCancelReason}
-              customReason={customReason}
-              setCustomReason={setCustomReason}
-              selectedDate={selectedDate}
-              setSelectedDate={setSelectedDate}
-              startTime={startTime}
-              setStartTime={setStartTime}
-              endTime={endTime}
-              setEndTime={setEndTime}
-              handleCancelClick={handleCancelClick}
               detailers={detailers}
             />
           ))}

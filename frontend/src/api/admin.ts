@@ -52,3 +52,23 @@ export async function editUser({
   });
   return res.data;
 }
+
+export async function getDetailerSchedule({ id }: { id: string }) {
+  const res = await axiosInstance.get(`/admin/detailer/${id}`);
+  return res.data;
+}
+
+// api/admin.ts
+export async function getDetailerScheduleByDate({
+  id,
+  date,
+}: {
+  id: string;
+  date: string;
+}) {
+  if (!id || !date) {
+    throw new Error("Detailer ID and date are required");
+  }
+  const res = await axiosInstance.get(`/admin/detailer/${id}/${date}`);
+  return res.data;
+}

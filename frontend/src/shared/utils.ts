@@ -39,9 +39,23 @@ export const getServiceName = (service: ServiceType): string => {
   return serviceNames[service];
 };
 
-export const formatTime = (timeString: string | null): string => {
-  if (!timeString) return "";
-  return timeString.substring(0, 5);
+export const formatTime = (time: string) => {
+  const [hours, minutes, seconds] = time.split(":").map(Number);
+  const date = new Date();
+  date.setHours(hours, minutes, seconds || 0);
+
+  return date.toLocaleTimeString("en-US", {
+    hour: "numeric",
+    minute: "2-digit",
+    hour12: true,
+  });
+};
+
+export const formatInterval = (interval: string) => {
+  // interval example: "17:00:00 - 18:00:00"
+  const [start, end] = interval.split(" - ");
+
+  return `${formatTime(start)} - ${formatTime(end)}`;
 };
 
 export const formatDate = (dateString: string | null): string => {

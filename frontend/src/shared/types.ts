@@ -55,3 +55,11 @@ export type EditUser = {
   phone: string;
   [key: string]: string;
 };
+
+export interface ScheduleItem {
+  ticket_id: string;
+  date: string;
+  start: string;
+  end: string;
+  interval: string;
+}

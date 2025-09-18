@@ -11,7 +11,8 @@ import type { Ticket, Rating } from "@/shared/types";
 import StatusBadge from "./StatusBadge";
 import CancelDialog from "./CancelDialog";
 import RatingDialog from "./RatingDialog";
-import { getServiceName, formatDate, formatTime } from "@/shared/utils";
+import { getServiceName } from "@/shared/utils";
+import { formatDate } from "date-fns";
 
 interface BookingCardProps {
   booking: Ticket;
@@ -34,7 +35,9 @@ export default function BookingCard({
             <CardTitle className="text-xl">
               {getServiceName(booking.service)}
             </CardTitle>
-            <CardDescription>{formatDate(booking.created_at)}</CardDescription>
+            <CardDescription>
+              {formatDate(booking.created_at.toISOString(), "dd/MM/yyyy")}
+            </CardDescription>
           </div>
           <StatusBadge status={booking.status} />
         </div>
@@ -44,15 +47,15 @@ export default function BookingCard({
           {booking.date && (
             <div className="flex items-center gap-2">
               <Calendar className="w-4 h-4 text-muted-foreground" />
-              <span>{formatDate(booking.date)}</span>
+              <span>{formatDate(booking.date, "dd//MM/yyyy")}</span>
             </div>
           )}
           {booking.start_time && booking.end_time && (
             <div className="flex items-center gap-2">
               <Clock className="w-4 h-4 text-muted-foreground" />
               <span>
-                {formatTime(booking.start_time)} -{" "}
-                {formatTime(booking.end_time)}
+                {booking.start_time.substring(0, 5)} -{" "}
+                {booking.end_time.substring(0, 5)}
               </span>
             </div>
           )}

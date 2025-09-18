@@ -6,18 +6,12 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { useBookingStore } from "@/stores/useBookingStore";
 
-export function CancelReasonSelector({
-  cancelReason,
-  setCancelReason,
-  customReason,
-  setCustomReason,
-}: {
-  cancelReason: string;
-  setCancelReason: (val: string) => void;
-  customReason: string;
-  setCustomReason: (val: string) => void;
-}) {
+export function CancelReasonSelector() {
+  const { cancelReason, setCancelReason, customReason, setCustomReason } =
+    useBookingStore();
+
   return (
     <div className="space-y-3">
       <Select value={cancelReason} onValueChange={setCancelReason}>

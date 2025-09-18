@@ -48,14 +48,7 @@ export default function StaffNavbar({ role }: { role: string }) {
       ? "/detailer-dashboard"
       : "/";
 
-  const profileLink =
-    role === "admin"
-      ? "/admin-profile"
-      : role === "secretary"
-      ? "/secretary-profile"
-      : role === "detailer"
-      ? "/detailer-profile"
-      : "/";
+  const profileLink = "/profile";
 
   const navItems = [
     { path: "/", label: "Home", icon: Home },

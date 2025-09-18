@@ -3,6 +3,7 @@ import { Button } from "@/components/ui/button";
 import { Dialog, DialogTrigger, DialogContent } from "@/components/ui/dialog";
 import type { Ticket } from "@/shared/types";
 import { BookingDialog } from "./BookingDialog";
+import { useBookingStore } from "@/stores/useBookingStore";
 
 const statusColors: Record<
   Ticket["status"],
@@ -14,23 +15,14 @@ const statusColors: Record<
   canceled: "destructive",
 };
 
-export function BookingsTableRow(props: {
+export function BookingsTableRow({
+  ticket,
+  detailers = [],
+}: {
   ticket: Ticket;
-  onDialogOpen: (t: Ticket) => void;
-  cancelReason: string;
-  setCancelReason: (val: string) => void;
-  customReason: string;
-  setCustomReason: (val: string) => void;
-  selectedDate: Date | undefined;
-  setSelectedDate: (val: Date | undefined) => void;
-  startTime: string;
-  setStartTime: (val: string) => void;
-  endTime: string;
-  setEndTime: (val: string) => void;
-  handleCancelClick: (t: Ticket) => void;
   detailers?: { id: string; name: string }[];
 }) {
-  const { ticket, onDialogOpen, ...rest } = props;
+  const { handleDialogOpen } = useBookingStore();
 
   return (
     <TableRow>
@@ -42,13 +34,13 @@ export function BookingsTableRow(props: {
             <Button
               size="xs"
               variant={statusColors[ticket.status]}
-              onClick={() => onDialogOpen(ticket)}
+              onClick={() => handleDialogOpen(ticket)}
             >
               {ticket.status}
             </Button>
           </DialogTrigger>
           <DialogContent className="sm:max-w-md max-h-screen overflow-y-auto">
-            <BookingDialog ticket={ticket} {...rest} />
+            <BookingDialog ticket={ticket} detailers={detailers} />
           </DialogContent>
         </Dialog>
       </TableCell>
