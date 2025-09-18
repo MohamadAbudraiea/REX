@@ -29,5 +29,6 @@ router.get("/ticket/type/canceled", ticketController.getCanceldTickets);
 // tickets functionalites
 router.post("/ticket/accept/:ticket_id", ticketController.acceptTicket);
 router.post("/ticket/cancel/:ticket_id", ticketController.cancelticket);
+router.post("/ticket/finish/:ticket_id", ticketController.finishTicket);
 
 module.exports = router;

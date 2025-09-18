@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import type { Ticket, ScheduleItem } from "@/shared/types";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -29,6 +29,7 @@ import {
 import { useBookingStore } from "@/stores/useBookingStore";
 import { useGetDetailerScheduleByDate } from "@/hooks/useAdmin";
 import { Badge } from "@/components/ui/badge";
+import { useAcceptTicket, useCancelTicket } from "@/hooks/useTicket";
 
 interface RequestedBookingProps {
   ticket: Ticket;
@@ -48,12 +49,19 @@ export function RequestedBooking({
     setStartTime,
     endTime,
     setEndTime,
-    handleCancelClick,
     selectedDetailerId,
     setSelectedDetailerId,
     setDetailerSchedule,
     setIsGettingDetailerSchedule,
+    resetCancelState,
+    setCancelDialogOpen,
   } = useBookingStore();
+
+  const [price, setPrice] = useState(ticket.price);
+  const [location, setLocation] = useState(ticket.location || "");
+
+  const { acceptTicketMutation, isAcceptingTicket } = useAcceptTicket();
+  const { cancelTicketMutation, isCancellingTicket } = useCancelTicket();
 
   const detailerIdString = selectedDetailerId || undefined;
   const { schedule, isGettingDetailerSchedule } = useGetDetailerScheduleByDate(
@@ -99,6 +107,34 @@ export function RequestedBooking({
         (selectedStart <= busyStart && selectedEnd >= busyEnd)
       );
     });
+  };
+
+  const handleAcceptBooking = () => {
+    if (!selectedDetailerId || !selectedDate || !startTime || !endTime) {
+      return;
+    }
+
+    acceptTicketMutation({
+      id: ticket.id,
+      detailer_id: selectedDetailerId,
+      date: selectedDate.toISOString().split("T")[0],
+      start_time: startTime,
+      end_time: endTime,
+      price: price,
+      location: location,
+    });
+  };
+
+  const handleCancelBooking = () => {
+    const reason = cancelReason === "other" ? customReason : cancelReason;
+    if (reason) {
+      cancelTicketMutation({
+        id: ticket.id,
+        reason: reason,
+      });
+      setCancelDialogOpen(false);
+      resetCancelState();
+    }
   };
 
   const timeConflict = hasTimeConflict();
@@ -181,10 +217,19 @@ export function RequestedBooking({
         {/* Location */}
         <div className="space-y-2">
           <label className="text-sm font-medium">Location</label>
-          <Input placeholder="Location" defaultValue={ticket.location || ""} />
-          {ticket.location && (
+          <Input
+            placeholder="Location"
+            value={location}
+            onChange={(e) => setLocation(e.target.value)}
+          />
+          {location && (
             <Button
-              onClick={() => window.open(ticket.location, "_blank")}
+              onClick={() =>
+                window.open(
+                  `https://maps.google.com/?q=${encodeURIComponent(location)}`,
+                  "_blank"
+                )
+              }
               className="w-full bg-primary text-white hover:bg-primary/90 transition-colors duration-300 rounded-md mt-2"
               size="sm"
             >
@@ -196,7 +241,12 @@ export function RequestedBooking({
         {/* Price */}
         <div className="space-y-2">
           <label className="text-sm font-medium">Price</label>
-          <Input placeholder="Price" defaultValue={ticket.price || ""} />
+          <Input
+            placeholder="Price"
+            value={price}
+            onChange={(e) => setPrice(Number(e.target.value))}
+            type="number"
+          />
         </div>
 
         {/* Date + Time pickers */}
@@ -277,15 +327,17 @@ export function RequestedBooking({
         <Button
           variant="success"
           className="w-full"
+          onClick={handleAcceptBooking}
           disabled={
             timeConflict ||
             !selectedDetailerId ||
             !selectedDate ||
             !startTime ||
-            !endTime
+            !endTime ||
+            isAcceptingTicket
           }
         >
-          Confirm Booking
+          {isAcceptingTicket ? "Accepting..." : "Confirm Booking"}
         </Button>
       </DialogFooter>
 
@@ -295,13 +347,15 @@ export function RequestedBooking({
         <CancelReasonSelector />
         <Button
           variant="destructive"
-          onClick={() => handleCancelClick(ticket)}
+          onClick={handleCancelBooking}
           disabled={
-            !cancelReason || (cancelReason === "other" && !customReason)
+            !cancelReason ||
+            (cancelReason === "other" && !customReason) ||
+            isCancellingTicket
           }
           className="w-full"
         >
-          Cancel Booking
+          {isCancellingTicket ? "Canceling..." : "Cancel Booking"}
         </Button>
       </div>
     </>

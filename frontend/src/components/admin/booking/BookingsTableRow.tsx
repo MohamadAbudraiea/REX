@@ -26,6 +26,7 @@ export function BookingsTableRow({
 
   return (
     <TableRow>
+      <TableCell>{ticket.id}</TableCell>
       <TableCell>{ticket.user.name}</TableCell>
       <TableCell>{ticket.service}</TableCell>
       <TableCell>

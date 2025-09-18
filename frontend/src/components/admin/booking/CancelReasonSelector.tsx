@@ -19,8 +19,8 @@ export function CancelReasonSelector() {
           <SelectValue placeholder="Select Cancel Reason" />
         </SelectTrigger>
         <SelectContent>
-          <SelectItem value="price">High Price</SelectItem>
-          <SelectItem value="time">Not Suitable Time</SelectItem>
+          <SelectItem value="High Price">High Price</SelectItem>
+          <SelectItem value="Not Suitable Time">Not Suitable Time</SelectItem>
           <SelectItem value="other">Other</SelectItem>
         </SelectContent>
       </Select>

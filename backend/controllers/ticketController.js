@@ -491,15 +491,18 @@ exports.finishTicket = async (req, res) => {
     const { ticket_id } = req.params;
     const updatedTicket = await ticket.update(
       {
-        where: { id: ticket_id },
+        status: "finished",
       },
-      { status: "finished" }
+      {
+        where: { id: ticket_id },
+      }
     );
     res.status(201).json({
       status: "success",
       message: "the order has finished",
     });
   } catch (error) {
+    console.error(error.message);
     res.status(500).json({
       status: "error",
       message: error.message || "Something went wrong",

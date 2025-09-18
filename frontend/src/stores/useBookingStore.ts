@@ -83,11 +83,6 @@ export const useBookingStore = create<BookingState>((set, get) => ({
   },
 
   confirmCancel: () => {
-    const { selectedTicket, cancelReason, customReason } = get();
-    if (selectedTicket) {
-      const reason = cancelReason === "other" ? customReason : cancelReason;
-      console.log("Booking canceled:", selectedTicket.id, "Reason:", reason);
-    }
     set({ cancelDialogOpen: false });
     get().resetCancelState();
   },

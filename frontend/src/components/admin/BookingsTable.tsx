@@ -80,7 +80,8 @@ export function BookingsTable({
       <Table className="text-center bg-muted/50">
         <TableHeader className="bg-muted/50 font-bold">
           <TableRow>
-            <TableCell>User</TableCell>
+            <TableCell>ID</TableCell>
+            <TableCell>Name</TableCell>
             <TableCell>Service</TableCell>
             <TableCell>Status</TableCell>
             <TableCell>Phone</TableCell>

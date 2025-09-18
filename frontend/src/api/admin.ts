@@ -58,7 +58,6 @@ export async function getDetailerSchedule({ id }: { id: string }) {
   return res.data;
 }
 
-// api/admin.ts
 export async function getDetailerScheduleByDate({
   id,
   date,

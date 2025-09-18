@@ -8,13 +8,33 @@ import {
 } from "@/components/ui/dialog";
 import { CancelReasonSelector } from "../CancelReasonSelector";
 import { useBookingStore } from "@/stores/useBookingStore";
+import { useCancelTicket, useFinishTicket } from "@/hooks/useTicket";
 
 interface PendingBookingProps {
   ticket: Ticket;
 }
 
 export function PendingBooking({ ticket }: PendingBookingProps) {
-  const { cancelReason, customReason, handleCancelClick } = useBookingStore();
+  const { cancelReason, customReason, setCancelDialogOpen, selectedTicket } =
+    useBookingStore();
+
+  const { cancelTicketMutation, isCancellingTicket } = useCancelTicket();
+  const { finishTicketMutation, isFinishingTicket } = useFinishTicket();
+
+  const handleFinishOrder = () => {
+    finishTicketMutation({ id: ticket.id });
+  };
+
+  const handleCancelOrder = () => {
+    const reason = cancelReason === "other" ? customReason : cancelReason;
+    if (reason && selectedTicket) {
+      cancelTicketMutation({
+        id: selectedTicket.id,
+        reason: reason,
+      });
+      setCancelDialogOpen(false);
+    }
+  };
 
   return (
     <>
@@ -34,8 +54,13 @@ export function PendingBooking({ ticket }: PendingBookingProps) {
           </a>
         </p>
 
-        <Button variant="success" className="w-full">
-          Finish Order
+        <Button
+          variant="success"
+          className="w-full"
+          onClick={handleFinishOrder}
+          disabled={isFinishingTicket}
+        >
+          {isFinishingTicket ? "Finishing..." : "Finish Order"}
         </Button>
 
         <Separator className="mt-4 bg-muted-foreground" />
@@ -45,10 +70,14 @@ export function PendingBooking({ ticket }: PendingBookingProps) {
 
       <Button
         variant="destructive"
-        onClick={() => handleCancelClick(ticket)}
-        disabled={!cancelReason || (cancelReason === "other" && !customReason)}
+        onClick={handleCancelOrder}
+        disabled={
+          !cancelReason ||
+          (cancelReason === "other" && !customReason) ||
+          isCancellingTicket
+        }
       >
-        Cancel Order
+        {isCancellingTicket ? "Canceling..." : "Cancel Order"}
       </Button>
     </>
   );

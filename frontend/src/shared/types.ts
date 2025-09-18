@@ -18,7 +18,7 @@ export interface Ticket {
   date: string | null;
   start_time: string | null;
   end_time: string | null;
-  price: number | null;
+  price: number;
   phone: string;
   service: ServiceType;
   status: StatusType;
