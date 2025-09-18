@@ -16,7 +16,7 @@ import {
   PopoverTrigger,
   PopoverContent,
 } from "@/components/ui/popover";
-import { CalendarIcon, Clock, AlertCircle } from "lucide-react";
+import { CalendarIcon, Clock, AlertCircle, Loader2 } from "lucide-react";
 import { format, parseISO } from "date-fns";
 import { cn } from "@/lib/utils";
 import {
@@ -63,9 +63,8 @@ export function RequestedBooking({
   const { acceptTicketMutation, isAcceptingTicket } = useAcceptTicket();
   const { cancelTicketMutation, isCancellingTicket } = useCancelTicket();
 
-  const detailerIdString = selectedDetailerId || undefined;
   const { schedule, isGettingDetailerSchedule } = useGetDetailerScheduleByDate(
-    detailerIdString,
+    selectedDetailerId || undefined,
     selectedDate
   );
 
@@ -79,6 +78,15 @@ export function RequestedBooking({
 
   const handleDateSelect = (date: Date | undefined) => {
     setSelectedDate(date);
+    setStartTime("");
+    setEndTime("");
+  };
+
+  const handleDetailerChange = (value: string) => {
+    setSelectedDetailerId(value || null);
+    setDetailerSchedule([]);
+    setStartTime("");
+    setEndTime("");
   };
 
   const hasTimeConflict = () => {
@@ -117,7 +125,7 @@ export function RequestedBooking({
     acceptTicketMutation({
       id: ticket.id,
       detailer_id: selectedDetailerId,
-      date: selectedDate.toISOString().split("T")[0],
+      date: format(selectedDate, "yyyy-MM-dd"),
       start_time: startTime,
       end_time: endTime,
       price: price,
@@ -167,7 +175,7 @@ export function RequestedBooking({
           <label className="text-sm font-medium">Assign Detailer</label>
           <Select
             value={selectedDetailerId || ""}
-            onValueChange={(value) => setSelectedDetailerId(value || null)}
+            onValueChange={handleDetailerChange}
           >
             <SelectTrigger>
               <SelectValue placeholder="Select a detailer" />
@@ -187,15 +195,21 @@ export function RequestedBooking({
           <div className="space-y-2">
             <label className="text-sm font-medium">
               Detailer's Schedule for {format(selectedDate, "PPP")}
+              {isGettingDetailerSchedule && (
+                <Loader2 className="h-3 w-3 animate-spin ml-2 inline" />
+              )}
             </label>
             <div className="border rounded-md p-3 bg-muted/20">
               {isGettingDetailerSchedule ? (
-                <p className="text-sm text-muted-foreground">
-                  Loading schedule...
-                </p>
+                <div className="flex items-center justify-center py-2">
+                  <Loader2 className="h-4 w-4 animate-spin mr-2" />
+                  <span className="text-sm text-muted-foreground">
+                    Loading schedule...
+                  </span>
+                </div>
               ) : !schedule || schedule.length === 0 ? (
-                <p className="text-sm text-muted-foreground">
-                  No bookings scheduled
+                <p className="text-sm text-muted-foreground text-center py-2">
+                  No bookings scheduled for this date
                 </p>
               ) : (
                 <div className="space-y-2">
