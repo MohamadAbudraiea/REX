@@ -14,13 +14,14 @@ import NanoCeramicServicePage from "@/pages/services/NanoCeramicServicePage";
 import BookingPage from "@/pages/user/BookingPage";
 import UserBookingsPage from "@/pages/user/UserBookingsPage";
 import { Toaster } from "./components/ui/sonner";
-import ProtectedRoute from "./components/auth/ProtectedRoute";
+import ProtectedUserRoute from "./components/auth/ProtectedUserRoute";
 import { useCheckAuth } from "./hooks/useAuth";
 import ScrollToTop from "./components/ui/ScrollToTop";
 import AdminDashboard from "./pages/admin/AdminDashboard";
 import NotFoundPage from "./pages/NotFoundPage";
 import ForgotPasswordPage from "./pages/ForgotPasswordPage";
 import ProfilePage from "./pages/ProfilePage";
+import ProtectedAdminRoute from "./components/auth/ProtectedAdminRoute";
 
 function App() {
   const { isAuthenticated } = useCheckAuth();
@@ -69,35 +70,35 @@ function App() {
           <Route
             path="/booking"
             element={
-              <ProtectedRoute>
+              <ProtectedUserRoute>
                 <BookingPage />
-              </ProtectedRoute>
+              </ProtectedUserRoute>
             }
           />
           <Route
             path="/my-bookings"
             element={
-              <ProtectedRoute>
+              <ProtectedUserRoute>
                 <UserBookingsPage />
-              </ProtectedRoute>
+              </ProtectedUserRoute>
             }
           />
 
           <Route
             path="/profile"
             element={
-              <ProtectedRoute>
+              <ProtectedUserRoute>
                 <ProfilePage />
-              </ProtectedRoute>
+              </ProtectedUserRoute>
             }
           />
 
           <Route
             path="/blink-admin-dashboard"
             element={
-              <ProtectedRoute>
+              <ProtectedAdminRoute>
                 <AdminDashboard />
-              </ProtectedRoute>
+              </ProtectedAdminRoute>
             }
           />
 

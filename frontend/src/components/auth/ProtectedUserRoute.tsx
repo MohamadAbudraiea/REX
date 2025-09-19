@@ -2,8 +2,8 @@ import { Navigate } from "react-router-dom";
 import { useCheckAuth } from "@/hooks/useAuth";
 import type { JSX } from "react";
 
-function ProtectedRoute({ children }: { children: JSX.Element }) {
-  const { isAuthenticated, isCheckingAuth } = useCheckAuth();
+function ProtectedUserRoute({ children }: { children: JSX.Element }) {
+  const { isUser, isCheckingAuth } = useCheckAuth();
 
   if (isCheckingAuth) {
     return (
@@ -12,9 +12,9 @@ function ProtectedRoute({ children }: { children: JSX.Element }) {
       </div>
     );
   }
-  if (!isAuthenticated) return <Navigate to="/login" replace />;
+  if (!isUser) return <Navigate to="/login" replace />;
 
   return children;
 }
 
-export default ProtectedRoute;
+export default ProtectedUserRoute;
