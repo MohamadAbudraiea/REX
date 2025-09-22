@@ -17,6 +17,7 @@ import { BookingsTableRow } from "@/components/admin/booking/BookingsTableRow";
 import { PaginationControls } from "@/components/admin/booking/PaginationControls";
 import { CancelConfirmationDialog } from "@/components/admin/booking/CancelConfirmationDialog";
 import { useBookingStore } from "@/stores/useBookingStore";
+import { months, getDaysInMonth } from "@/shared/utils";
 
 export function BookingsTable({
   bookings,
@@ -27,17 +28,44 @@ export function BookingsTable({
 }) {
   const {
     filter,
+    filterMonth,
+    filterDay,
     currentPage,
     itemsPerPage,
     cancelDialogOpen,
     setFilter,
+    setFilterMonth,
+    setFilterDay,
     setCurrentPage,
     setCancelDialogOpen,
     confirmCancel,
   } = useBookingStore();
 
-  const filteredBookings =
-    filter === "All" ? bookings : bookings.filter((b) => b.status === filter);
+  // Get current date for default values
+  const now = new Date();
+  const currentYear = now.getFullYear();
+
+  // Calculate days in selected month
+  const daysInSelectedMonth = filterMonth
+    ? getDaysInMonth(currentYear, Number(filterMonth) - 1)
+    : 31; // Default to 31 if no month selected
+
+  const filteredBookings = bookings.filter((b) => {
+    const matchesStatus = filter === "All" || b.status === filter;
+
+    const bookingDate = b.date ? new Date(b.date) : null;
+    const bookingMonth = bookingDate
+      ? String(bookingDate.getMonth() + 1).padStart(2, "0")
+      : null;
+    const bookingDay = bookingDate
+      ? String(bookingDate.getDate()).padStart(2, "0")
+      : null;
+
+    const matchesMonth = !filterMonth || bookingMonth === filterMonth;
+    const matchesDay = !filterDay || bookingDay === filterDay;
+
+    return matchesStatus && matchesMonth && matchesDay;
+  });
 
   const totalPages = Math.ceil(filteredBookings.length / itemsPerPage);
   const startIndex = (currentPage - 1) * itemsPerPage;
@@ -53,27 +81,83 @@ export function BookingsTable({
 
   return (
     <div>
-      {/* Filter */}
-      <div className="mb-4 flex items-center gap-2">
-        <span className="font-medium">Filter by status:</span>
-        <Select
-          value={filter}
-          onValueChange={(value) => {
-            setFilter(value);
-            handlePageChange(1);
-          }}
-        >
-          <SelectTrigger className="w-40 rounded-md border-muted-foreground bg-muted/50">
-            <SelectValue placeholder="All" />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="All">All</SelectItem>
-            <SelectItem value="requested">Requested</SelectItem>
-            <SelectItem value="pending">Pending</SelectItem>
-            <SelectItem value="canceled">Cancelled</SelectItem>
-            <SelectItem value="finished">Finished</SelectItem>
-          </SelectContent>
-        </Select>
+      {/* Filter options */}
+      <div className="mb-4 flex flex-wrap items-center gap-4">
+        {/* Status Filter */}
+        <div className="flex items-center gap-2">
+          <span className="font-medium">Status:</span>
+          <Select
+            value={filter}
+            onValueChange={(value) => {
+              setFilter(value);
+              handlePageChange(1);
+            }}
+          >
+            <SelectTrigger className="w-40 rounded-md border-muted-foreground bg-muted/50">
+              <SelectValue placeholder="All" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="All">All</SelectItem>
+              <SelectItem value="requested">Requested</SelectItem>
+              <SelectItem value="pending">Pending</SelectItem>
+              <SelectItem value="canceled">Cancelled</SelectItem>
+              <SelectItem value="finished">Finished</SelectItem>
+            </SelectContent>
+          </Select>
+        </div>
+
+        {/* Month Filter - Updated to use months array */}
+        <div className="flex items-center gap-2">
+          <span className="font-medium">Month:</span>
+          <Select
+            value={filterMonth ?? "all"}
+            onValueChange={(value) =>
+              setFilterMonth(value === "all" ? null : value)
+            }
+          >
+            <SelectTrigger className="w-28 rounded-md border-muted-foreground bg-muted/50">
+              <SelectValue placeholder="All" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="all">All</SelectItem>
+              {months.map((monthName, i) => {
+                const monthValue = String(i + 1).padStart(2, "0");
+                return (
+                  <SelectItem key={monthValue} value={monthValue}>
+                    {monthName}
+                  </SelectItem>
+                );
+              })}
+            </SelectContent>
+          </Select>
+        </div>
+
+        {/* Day Filter - Updated to use getDaysInMonth */}
+        <div className="flex items-center gap-2">
+          <span className="font-medium">Day:</span>
+          <Select
+            disabled={filterMonth === "all" || !filterMonth}
+            value={filterDay ?? "all"}
+            onValueChange={(value) =>
+              setFilterDay(value === "all" ? null : value)
+            }
+          >
+            <SelectTrigger className="w-28 rounded-md border-muted-foreground bg-muted/50">
+              <SelectValue placeholder="All" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="all">All</SelectItem>
+              {Array.from({ length: daysInSelectedMonth }, (_, i) => {
+                const day = String(i + 1).padStart(2, "0");
+                return (
+                  <SelectItem key={day} value={day}>
+                    {day}
+                  </SelectItem>
+                );
+              })}
+            </SelectContent>
+          </Select>
+        </div>
       </div>
 
       {/* Table */}
@@ -87,18 +171,25 @@ export function BookingsTable({
             <TableCell>Phone</TableCell>
             <TableCell>Price</TableCell>
             <TableCell>Date</TableCell>
+            <TableCell>Note</TableCell>
             <TableCell>Secretary</TableCell>
             <TableCell>Detailer</TableCell>
           </TableRow>
         </TableHeader>
         <TableBody>
-          {currentBookings.map((ticket) => (
-            <BookingsTableRow
-              key={ticket.id}
-              ticket={ticket}
-              detailers={detailers}
-            />
-          ))}
+          {currentBookings.length > 0 ? (
+            currentBookings.map((ticket) => (
+              <BookingsTableRow
+                key={ticket.id}
+                ticket={ticket}
+                detailers={detailers}
+              />
+            ))
+          ) : (
+            <TableRow className="">
+              <TableCell colSpan={9}>No bookings found.</TableCell>
+            </TableRow>
+          )}
         </TableBody>
       </Table>
 

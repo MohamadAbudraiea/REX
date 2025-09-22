@@ -8,6 +8,8 @@ import {
   getDetailerScheduleByDate,
 } from "@/api/admin";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { format } from "date-fns";
+import { useEffect, useState } from "react";
 import { toast } from "sonner";
 
 export const useGetUsers = () => {
@@ -95,10 +97,19 @@ export const useGetDetailerSchedule = (id?: string) => {
 };
 
 export const useGetDetailerScheduleByDate = (id?: string, date?: Date) => {
-  const formattedDate = date ? date.toISOString().split("T")[0] : "";
+  // Use local date formatting instead of UTC
+  const formattedDate = date ? format(date, "yyyy-MM-dd") : "";
+  const [timestamp, setTimestamp] = useState(Date.now());
+
+  // Update timestamp when date changes to force refetch
+  useEffect(() => {
+    if (date) {
+      setTimestamp(Date.now());
+    }
+  }, [date]);
 
   const { data, isPending: isGettingDetailerSchedule } = useQuery({
-    queryKey: ["detailerSchedule", id, formattedDate],
+    queryKey: ["detailerSchedule", id, formattedDate, timestamp],
     queryFn: () => {
       if (!id || !formattedDate) {
         throw new Error("Detailer ID and date are required");

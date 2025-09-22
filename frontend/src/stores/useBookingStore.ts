@@ -15,6 +15,9 @@ interface BookingState {
   filter: string;
   currentPage: number;
   itemsPerPage: number;
+  filterMonth: string | null;
+  filterDay: string | null;
+  filterYear: string | null;
 
   // Cancel dialog state
   cancelDialogOpen: boolean;
@@ -49,11 +52,17 @@ interface BookingState {
   setSelectedDetailerId: (id: string | null) => void;
   setDetailerSchedule: (schedule: ScheduleItem[]) => void;
   setIsGettingDetailerSchedule: (loading: boolean) => void;
+  setFilterMonth: (month: string | null) => void;
+  setFilterDay: (day: string | null) => void;
+  setFilterYear: (year: string | null) => void;
 }
 
 export const useBookingStore = create<BookingState>((set, get) => ({
   // Initial state
   filter: "All",
+  filterMonth: null,
+  filterDay: null,
+  filterYear: null,
   currentPage: 1,
   itemsPerPage: 5,
   cancelDialogOpen: false,
@@ -69,6 +78,9 @@ export const useBookingStore = create<BookingState>((set, get) => ({
 
   // Actions
   setFilter: (filter) => set({ filter, currentPage: 1 }),
+  setFilterMonth: (filterMonth) => set({ filterMonth, currentPage: 1 }),
+  setFilterDay: (filterDay) => set({ filterDay, currentPage: 1 }),
+  setFilterYear: (filterYear) => set({ filterYear, currentPage: 1 }),
   setCurrentPage: (currentPage) => set({ currentPage }),
   setCancelDialogOpen: (cancelDialogOpen) => set({ cancelDialogOpen }),
   setSelectedTicket: (selectedTicket) => set({ selectedTicket }),

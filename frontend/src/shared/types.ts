@@ -20,6 +20,7 @@ export interface Ticket {
   end_time: string | null;
   price: number;
   phone: string;
+  note: string;
   service: ServiceType;
   status: StatusType;
   location: string;

@@ -27,8 +27,8 @@ export function BookingsTableRow({
   return (
     <TableRow>
       <TableCell>{ticket.id}</TableCell>
-      <TableCell>{ticket.user.name}</TableCell>
-      <TableCell>{ticket.service}</TableCell>
+      <TableCell>{ticket.user.name || "-"}</TableCell>
+      <TableCell>{ticket.service || "-"}</TableCell>
       <TableCell>
         <Dialog>
           <DialogTrigger asChild>
@@ -46,10 +46,13 @@ export function BookingsTableRow({
         </Dialog>
       </TableCell>
       <TableCell>
-        <a href={`tel:${ticket.user.phone}`}>{ticket.user.phone}</a>
+        <a href={`tel:${ticket.user.phone || ""}`}>
+          {ticket.user.phone || "-"}
+        </a>
       </TableCell>
       <TableCell>{ticket.price || "-"}</TableCell>
-      <TableCell>{ticket.date}</TableCell>
+      <TableCell>{ticket.date || "-"}</TableCell>
+      <TableCell>{ticket.note || "-"}</TableCell>
       <TableCell>{ticket.secretary?.name || "-"}</TableCell>
       <TableCell>{ticket.detailer?.name || "-"}</TableCell>
     </TableRow>

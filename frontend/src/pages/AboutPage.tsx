@@ -1,7 +1,7 @@
-import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { motion } from "framer-motion";
 import { useTranslation } from "react-i18next";
+import { Link } from "react-router-dom";
 
 export default function AboutPage() {
   const { t, i18n } = useTranslation();
@@ -42,9 +42,12 @@ export default function AboutPage() {
               <p className="text-lg text-muted-foreground mb-8 leading-relaxed">
                 {t("about.hero.subtitle")}
               </p>
-              <Button size="lg" className="bg-primary hover:bg-primary/90">
+              <Link
+                to="/contact"
+                className="bg-primary hover:bg-primary/90 py-3 px-6 rounded-full"
+              >
                 {t("home.hero.cta")}
-              </Button>
+              </Link>
             </motion.div>
             <motion.div
               initial={{ opacity: 0, x: locale === "ar" ? -50 : 50 }}
