@@ -3,6 +3,7 @@ const initModels = require("../models/init-models");
 const models = initModels(SQL);
 const { user, ticket, rating } = models;
 const bcrypt = require("bcrypt");
+const { Op } = require("sequelize");
 
 exports.rateticket = async (req, res) => {
   try {
@@ -34,7 +35,6 @@ exports.rateticket = async (req, res) => {
     });
   }
 };
-
 exports.getTicketRating = async (req, res) => {
   try {
     const { ticket_id } = req.params;
@@ -52,6 +52,33 @@ exports.getTicketRating = async (req, res) => {
     res.status(200).json({
       status: "success",
       data: ratingForTicket,
+    });
+  } catch (error) {
+    res.status(500).json({
+      error: error.message,
+    });
+  }
+};
+exports.getRatingsWithTickets = async (req, res) => {
+  try {
+    const ratingsWithTickets = await rating.findAll({
+      where: {
+        rating_number: { [Op.gte]: 3 },
+      },
+      include: [
+        {
+          model: ticket,
+          as: "ticket",
+          attributes: ["type"],
+        },
+      ],
+      limit: 100,
+      order: [["createdAt", "DESC"]],
+    });
+
+    res.status(200).json({
+      status: "success",
+      data: ratingsWithTickets,
     });
   } catch (error) {
     res.status(500).json({
