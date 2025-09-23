@@ -4,81 +4,40 @@ import { Star } from "lucide-react";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Autoplay } from "swiper/modules";
 import { useTranslation } from "react-i18next";
+import { useGetReviewsFoHome } from "@/hooks/useRating";
+import { format } from "date-fns";
 import "swiper/css";
 
-interface Review {
-  id: number;
-  name: string;
-  rating: number;
-  comment: string;
-  date: string;
-}
-
-const reviews: Review[] = [
-  {
-    id: 1,
-    name: "Ahmed Al-Rashid",
-    rating: 5,
-    comment:
-      "Exceptional service! My car looks brand new after the nano ceramic treatment. The team is professional and attention to detail is outstanding.",
-    date: "2024-01-15",
-  },
-  {
-    id: 2,
-    name: "Sarah Johnson",
-    rating: 5,
-    comment:
-      "Best car wash in the city! The polish service made my car shine like never before. Highly recommend BLINK for premium car care.",
-    date: "2024-01-10",
-  },
-  {
-    id: 3,
-    name: "Mohammed Hassan",
-    rating: 4,
-    comment:
-      "Great dry cleaning service for my car's interior. The staff is friendly and the results exceeded my expectations. Will definitely come back.",
-    date: "2024-01-08",
-  },
-  {
-    id: 4,
-    name: "Emily Chen",
-    rating: 5,
-    comment:
-      "Amazing graphene coating service! My car has been protected for months now and still looks incredible. Worth every penny.",
-    date: "2024-01-05",
-  },
-  {
-    id: 5,
-    name: "Omar Abdullah",
-    rating: 5,
-    comment:
-      "Professional wash service with premium products. The team takes care of every detail and the results are always perfect.",
-    date: "2024-01-03",
-  },
-  {
-    id: 6,
-    name: "Lisa Martinez",
-    rating: 4,
-    comment:
-      "Excellent service quality and customer care. The nano ceramic treatment has kept my car looking pristine for months.",
-    date: "2024-01-01",
-  },
-];
-
 export function ReviewsSection() {
+  const { reviews, isFetchingReviews } = useGetReviewsFoHome();
   const { t, i18n } = useTranslation();
 
   const locale = i18n.language;
 
   const renderStars = (rating: number) => {
-    return Array.from({ length: 5 }, (_, i) => (
-      <Star
-        key={i}
-        className={`h-4 w-4 ${
-          i < rating ? "fill-yellow-400 text-yellow-400" : "text-gray-300"
-        }`}
-      />
-    ));
+    const fullStars = Math.floor(rating);
+    const hasHalfStar = rating % 1 >= 0.5;
+
+    return Array.from({ length: 5 }, (_, i) => {
+      if (i < fullStars) {
+        // Full star
+        return (
+          <Star key={i} className="h-4 w-4 fill-yellow-400 text-yellow-400" />
+        );
+      } else if (i === fullStars && hasHalfStar) {
+        // Half star trick
+        return (
+          <div key={i} className="relative h-4 w-4">
+            <Star className="h-4 w-4 text-gray-300" />
+            <div className="absolute top-0 left-0 w-1/2 h-full overflow-hidden">
+              <Star className="h-4 w-4 fill-yellow-400 text-yellow-400" />
+            </div>
+          </div>
+        );
+      } else {
+        return <Star key={i} className="h-4 w-4 text-gray-300" />;
+      }
+    });
   };
 
   return (
@@ -114,69 +73,103 @@ export function ReviewsSection() {
           key={locale} // Force re-render when language changes
           className={locale === "ar" ? "swiper-rtl" : ""}
         >
-          {reviews.map((review) => (
-            <SwiperSlide key={review.id} className="!w-80">
-              <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.6 }}
-                viewport={{ once: true }}
-              >
+          {isFetchingReviews &&
+            Array.from({ length: 5 }, (_, i) => (
+              <SwiperSlide key={i} className="!w-80">
                 <Card className="h-full hover:shadow-lg transition-shadow duration-300">
                   <CardContent className="p-6">
-                    <div
-                      className={`flex items-center justify-between mb-4 ${
-                        locale === "ar" ? "flex-row-reverse" : ""
-                      }`}
-                    >
-                      <div
-                        className={`flex ${
-                          locale === "ar"
-                            ? "space-x-reverse space-x-1"
-                            : "space-x-1"
-                        }`}
-                      >
-                        {renderStars(review.rating)}
+                    <div className="flex items-center justify-between mb-4">
+                      <div className="flex space-x-1">
+                        <Star className="h-4 w-4 fill-yellow-400 text-yellow-400" />
+                        <Star className="h-4 w-4 fill-yellow-400 text-yellow-400" />
+                        <Star className="h-4 w-4 fill-yellow-400 text-yellow-400" />
+                        <Star className="h-4 w-4 fill-yellow-400 text-yellow-400" />
+                        <Star className="h-4 w-4 text-gray-300" />
                       </div>
                       <span className="text-sm text-muted-foreground">
-                        {new Date(review.date).toLocaleDateString()}
+                        {format(new Date(), "dd/MM/yyyy")}
                       </span>
                     </div>
-                    <p
-                      className={`text-muted-foreground mb-4 text-sm leading-relaxed ${
-                        locale === "ar" ? "text-right" : "text-left"
-                      }`}
-                    >
-                      "{review.comment}"
+                    <p className="text-muted-foreground mb-4 text-sm leading-relaxed">
+                      Lorem ipsum dolor sit amet, consectetur adipiscing elit.
                     </p>
-                    <div
-                      className={`flex items-center ${
-                        locale === "ar" ? "flex-row-reverse" : ""
-                      }`}
-                    >
-                      <div
-                        className={`w-10 h-10 bg-muted rounded-full flex items-center justify-center ${
-                          locale === "ar" ? "ml-3" : "mr-3"
-                        }`}
-                      >
-                        <span className="text-foreground font-semibold text-sm">
-                          {review.name.charAt(0)}
-                        </span>
-                      </div>
-                      <div className={locale === "ar" ? "text-right" : ""}>
-                        <p className="font-semibold text-foreground text-sm">
-                          {review.name}
-                        </p>
-                        <p className="text-xs text-muted-foreground">
-                          Verified Customer
-                        </p>
-                      </div>
+                    <div className="flex items-center">
+                      <p className="w-10 h-10 bg-muted rounded-full flex items-center justify-center mr-3">
+                        JD
+                      </p>
+                      <p className="font-semibold text-foreground text-sm">
+                        John Doe
+                      </p>
                     </div>
                   </CardContent>
                 </Card>
-              </motion.div>
-            </SwiperSlide>
-          ))}
+              </SwiperSlide>
+            ))}
+          {reviews &&
+            reviews.map((review) => (
+              <SwiperSlide key={review.id} className="!w-80">
+                <motion.div
+                  initial={{ opacity: 0, y: 20 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.6 }}
+                  viewport={{ once: true }}
+                >
+                  <Card className="h-full hover:shadow-lg transition-shadow duration-300">
+                    <CardContent className="p-6">
+                      <div
+                        className={`flex items-center justify-between mb-4 ${
+                          locale === "ar" ? "flex-row-reverse" : ""
+                        }`}
+                      >
+                        <div
+                          className={`flex ${
+                            locale === "ar"
+                              ? "space-x-reverse space-x-1"
+                              : "space-x-1"
+                          }`}
+                        >
+                          {renderStars(review.rating_number) || ""}
+                        </div>
+                        <span className="text-sm text-muted-foreground">
+                          {format(new Date(review.created_at), "dd/MM/yyyy") ||
+                            ""}
+                        </span>
+                      </div>
+                      <p
+                        className={`text-muted-foreground mb-4 text-sm leading-relaxed ${
+                          locale === "ar" ? "text-right" : "text-left"
+                        }`}
+                      >
+                        {review.description ||
+                          "Lorem ipsum dolor sit amet, consectetur adipiscing elit."}
+                      </p>
+                      <div
+                        className={`flex items-center ${
+                          locale === "ar" ? "flex-row-reverse" : ""
+                        }`}
+                      >
+                        <div
+                          className={`w-10 h-10 bg-muted rounded-full flex items-center justify-center ${
+                            locale === "ar" ? "ml-3" : "mr-3"
+                          }`}
+                        >
+                          {/* ADD USER AVATAR */}
+                          <span className="text-foreground font-semibold text-sm">
+                            {review.user?.name.charAt(0) || "Anonymous"}
+                          </span>
+                        </div>
+                        {/* ADD USER NAME */}
+                        <div className={locale === "ar" ? "text-right" : ""}>
+                          <p className="font-semibold text-foreground text-sm">
+                            {review.user?.name || "Anonymous"}
+                          </p>
+                        </div>
+                      </div>
+                    </CardContent>
+                  </Card>
+                </motion.div>
+              </SwiperSlide>
+            ))}
         </Swiper>
       </div>
     </section>

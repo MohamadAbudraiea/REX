@@ -69,11 +69,16 @@ exports.getRatingsWithTickets = async (req, res) => {
         {
           model: ticket,
           as: "ticket",
-          attributes: ["type"],
+          attributes: ["service"],
+        },
+        {
+          model: user,
+          as: "user",
+          attributes: ["name"],
         },
       ],
       limit: 100,
-      order: [["createdAt", "DESC"]],
+      order: [["created_at", "DESC"]],
     });
 
     res.status(200).json({

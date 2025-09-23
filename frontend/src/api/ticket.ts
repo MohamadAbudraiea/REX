@@ -5,11 +5,6 @@ export async function getAllTickets() {
   return res.data;
 }
 
-export async function getRatingForTicket({ id }: { id: string }) {
-  const res = await axiosInstance.get(`/admin/ticket/rating/${id}`);
-  return res.data;
-}
-
 export async function acceptTicket({
   id,
   detailer_id,

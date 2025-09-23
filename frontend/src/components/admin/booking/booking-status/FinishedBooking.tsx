@@ -5,7 +5,7 @@ import {
   DialogDescription,
 } from "@/components/ui/dialog";
 import { Star } from "lucide-react";
-import { useGetRatingForTicket } from "@/hooks/useTicket";
+import { useGetRatingForTicket } from "@/hooks/useRating";
 
 interface FinishedBookingProps {
   ticket: Ticket;

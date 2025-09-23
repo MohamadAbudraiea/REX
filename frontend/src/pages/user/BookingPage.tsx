@@ -51,7 +51,7 @@ export default function BookPage() {
   const bookingSchema = z.object({
     service: z.string().min(1, t("errors.service_required")),
     address: z.string().min(5, t("errors.address_required")),
-    notes: z.string().optional(),
+    note: z.string().optional(),
     preferredDate: z.date().optional(),
   });
 
@@ -68,7 +68,7 @@ export default function BookPage() {
     defaultValues: {
       service: "",
       address: "",
-      notes: "",
+      note: "",
       preferredDate: undefined,
     },
   });
@@ -360,12 +360,12 @@ export default function BookPage() {
 
                   {/* Additional Notes */}
                   <div className="space-y-2">
-                    <Label htmlFor="notes">{t("book.form.notes")}</Label>
+                    <Label htmlFor="note">{t("book.form.notes")}</Label>
                     <Textarea
-                      id="notes"
+                      id="note"
                       placeholder={t("book.form.notes_placeholder")}
                       rows={3}
-                      {...register("notes")}
+                      {...register("note")}
                     />
                   </div>
 

@@ -1,6 +1,5 @@
 import {
   getAllTickets,
-  getRatingForTicket,
   acceptTicket,
   cancelTicket,
   finishTicket,
@@ -15,15 +14,6 @@ export const useGetAllTickets = () => {
   });
 
   return { tickets: data?.data, isFetchingTickets };
-};
-
-export const useGetRatingForTicket = (id: string) => {
-  const { data, isPending: isFetchingRating } = useQuery({
-    queryKey: ["ticketRating", id],
-    queryFn: () => getRatingForTicket({ id }),
-  });
-
-  return { rating: data?.data, isFetchingRating };
 };
 
 export const useAcceptTicket = () => {

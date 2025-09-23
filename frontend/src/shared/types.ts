@@ -35,6 +35,7 @@ export interface Ticket {
 export interface Rating {
   id: string;
   created_at: Date;
+  user?: User;
   user_id: string;
   ticket_id: string;
   description: string;
