@@ -4,13 +4,7 @@ import { useForm, Controller } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
 import { Button } from "@/components/ui/button";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
@@ -29,20 +23,19 @@ import {
 import { Calendar } from "@/components/ui/calendar";
 import { format } from "date-fns";
 import {
-  CheckCircle,
   Car,
   MapPin,
   Navigation,
   Copy,
   Calendar as CalendarIcon,
 } from "lucide-react";
-import { Link } from "react-router-dom";
 import { useTranslation } from "react-i18next";
+import { toast } from "sonner";
+import { useAddTicket } from "@/hooks/useUser";
 
 export default function BookPage() {
+  const { addTicketMutation, isAddingTicket } = useAddTicket();
   const { t, i18n } = useTranslation();
-  const [isSubmitted, setIsSubmitted] = useState(false);
-  const [isSubmitting, setIsSubmitting] = useState(false);
   const [isLocating, setIsLocating] = useState(false);
   const [googleMapsLink, setGoogleMapsLink] = useState("");
 
@@ -50,9 +43,9 @@ export default function BookPage() {
 
   const bookingSchema = z.object({
     service: z.string().min(1, t("errors.service_required")),
-    address: z.string().min(5, t("errors.address_required")),
+    location: z.string().min(5, t("errors.address_required")),
     note: z.string().optional(),
-    preferredDate: z.date().optional(),
+    date: z.date().optional(),
   });
 
   type BookingFormData = z.infer<typeof bookingSchema>;
@@ -67,15 +60,15 @@ export default function BookPage() {
     resolver: zodResolver(bookingSchema),
     defaultValues: {
       service: "",
-      address: "",
+      location: "",
       note: "",
-      preferredDate: undefined,
+      date: undefined,
     },
   });
 
   const getCurrentLocation = () => {
     if (!navigator.geolocation) {
-      alert(t("errors.geolocation_not_supported"));
+      toast.error(t("errors.geolocation_not_supported"));
       return;
     }
 
@@ -89,38 +82,37 @@ export default function BookPage() {
           // Generate Google Maps link
           const mapsLink = `https://www.google.com/maps?q=${latitude},${longitude}`;
 
-          setValue("address", mapsLink, { shouldValidate: true });
+          setValue("location", mapsLink, { shouldValidate: true });
           setGoogleMapsLink(mapsLink);
         } catch (error) {
           console.error("Geolocation error:", error);
-          alert(t("errors.location_error"));
+          toast.error(t("errors.location_error"));
         } finally {
           setIsLocating(false);
         }
       },
       (error) => {
         setIsLocating(false);
-        console.error("Geolocation error:", error);
 
         switch (error.code) {
           case error.PERMISSION_DENIED:
-            alert(t("errors.location_permission_denied"));
+            toast.error(t("errors.location_permission_denied"));
             break;
           case error.POSITION_UNAVAILABLE:
-            alert(t("errors.location_unavailable"));
+            toast.error(t("errors.location_unavailable"));
             break;
           case error.TIMEOUT:
-            alert(t("errors.location_timeout"));
+            toast.error(t("errors.location_timeout"));
             break;
           default:
-            alert(t("errors.location_unknown"));
+            toast.error(t("errors.location_unknown"));
             break;
         }
       },
       {
         enableHighAccuracy: true,
         timeout: 10000,
-        maximumAge: 60000,
+        maximumAge: 0,
       }
     );
   };
@@ -130,57 +122,29 @@ export default function BookPage() {
       navigator.clipboard
         .writeText(googleMapsLink)
         .then(() => {
-          alert(t("book.form.link_copied"));
+          toast.success(t("book.form.link_copied"));
         })
         .catch((err) => {
-          console.error("Failed to copy: ", err);
+          console.error("Error copying to clipboard:", err);
+          toast.error(t("book.form.link_copy_error"));
         });
     }
   };
 
-  const onSubmit = async (data: BookingFormData) => {
-    setIsSubmitting(true);
-    await new Promise((resolve) => setTimeout(resolve, 2000));
-    console.log("Booking submitted:", data);
-    setIsSubmitted(true);
-    setIsSubmitting(false);
-  };
+  const onSubmit = (data: BookingFormData) => {
+    addTicketMutation({
+      service: data.service,
+      location: data.location,
+      note: data.note ?? undefined,
+      date: data.date ?? undefined,
+    });
 
-  if (isSubmitted) {
-    return (
-      <div className="min-h-screen bg-gradient-to-br from-background to-muted/20 flex items-center justify-center p-4">
-        <motion.div
-          initial={{ opacity: 0, scale: 0.9 }}
-          animate={{ opacity: 1, scale: 1 }}
-          className="max-w-md w-full"
-        >
-          <Card className="text-center">
-            <CardHeader>
-              <div className="mx-auto w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mb-4">
-                <CheckCircle className="w-8 h-8 text-green-600" />
-              </div>
-              <CardTitle className="text-2xl text-green-600">
-                {t("book.success.title")}
-              </CardTitle>
-              <CardDescription className="text-base">
-                {t("book.success.message")}
-              </CardDescription>
-            </CardHeader>
-            <CardContent className="space-y-4">
-              <div className="p-4 bg-muted rounded-lg">
-                <p className="font-medium text-sm text-muted-foreground">
-                  {t("book.success.status")}
-                </p>
-              </div>
-              <Button asChild className="w-full">
-                <Link to="/">{t("book.success.back")}</Link>
-              </Button>
-            </CardContent>
-          </Card>
-        </motion.div>
-      </div>
-    );
-  }
+    setValue("service", "");
+    setValue("location", "");
+    setValue("note", "");
+    setValue("date", undefined);
+    setGoogleMapsLink("");
+  };
 
   return (
     <>
@@ -245,10 +209,10 @@ export default function BookPage() {
                             <SelectItem value="polish">
                               {t("book.form.options.polish")}
                             </SelectItem>
-                            <SelectItem value="nano">
+                            <SelectItem value="nanoceramic">
                               {t("book.form.options.nano")}
                             </SelectItem>
-                            <SelectItem value="graphene">
+                            <SelectItem value="gravin">
                               {t("book.form.options.graphene")}
                             </SelectItem>
                           </SelectContent>
@@ -262,11 +226,11 @@ export default function BookPage() {
                     )}
                   </div>
 
-                  {/* Address */}
+                  {/* location */}
                   <div className="space-y-2">
                     <div className="flex items-center justify-between">
                       <Label
-                        htmlFor="address"
+                        htmlFor="location"
                         className="flex items-center gap-2"
                       >
                         <MapPin className="w-4 h-4" />
@@ -287,9 +251,9 @@ export default function BookPage() {
                     </div>
                     <div className="relative">
                       <Input
-                        id="address"
+                        id="location"
                         placeholder={t("book.form.address_placeholder")}
-                        {...register("address")}
+                        {...register("location")}
                       />
                       <Button
                         type="button"
@@ -308,21 +272,21 @@ export default function BookPage() {
                         />
                       </Button>
                     </div>
-                    {errors.address && (
+                    {errors.location && (
                       <p className="text-sm text-destructive">
-                        {errors.address.message}
+                        {errors.location.message}
                       </p>
                     )}
                   </div>
 
                   {/* Preferred Date */}
                   <div className="space-y-2">
-                    <Label htmlFor="preferredDate">
+                    <Label htmlFor="date">
                       {t("book.form.preferred_date")}
                     </Label>
                     <Controller
                       control={control}
-                      name="preferredDate"
+                      name="date"
                       render={({ field }) => (
                         <Popover>
                           <PopoverTrigger asChild>
@@ -351,9 +315,9 @@ export default function BookPage() {
                         </Popover>
                       )}
                     />
-                    {errors.preferredDate && (
+                    {errors.date && (
                       <p className="text-sm text-destructive">
-                        {errors.preferredDate.message}
+                        {errors.date.message}
                       </p>
                     )}
                   </div>
@@ -374,9 +338,9 @@ export default function BookPage() {
                     type="submit"
                     className="w-full"
                     size="lg"
-                    disabled={isSubmitting}
+                    disabled={isAddingTicket}
                   >
-                    {isSubmitting
+                    {isAddingTicket
                       ? t("book.form.submitting")
                       : t("book.form.submit")}
                   </Button>

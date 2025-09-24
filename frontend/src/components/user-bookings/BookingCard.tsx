@@ -28,7 +28,7 @@ export default function BookingCard({
   onRate,
 }: BookingCardProps) {
   return (
-    <Card className="bg-gradient-to-r from-background via-background to-muted/70 rounded-lg shadow-2xl">
+    <Card className="bg-muted/70 rounded-lg shadow-2xl">
       <CardHeader className="pb-3">
         <div className="flex justify-between items-start">
           <div>

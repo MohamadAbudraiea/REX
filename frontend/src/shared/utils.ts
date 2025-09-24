@@ -58,11 +58,6 @@ export const formatInterval = (interval: string) => {
   return `${formatTime(start)} - ${formatTime(end)}`;
 };
 
-export const formatDate = (dateString: string | null): string => {
-  if (!dateString) return "";
-  return new Date(dateString).toLocaleDateString();
-};
-
 export const months = [
   "January",
   "February",
@@ -79,7 +74,7 @@ export const months = [
 ];
 
 export function getDaysInMonth(year: number, month: number) {
-  return new Date(year, month + 1, 0).getDate(); // month is 0-based
+  return new Date(year, month + 1, 0).getDate();
 }
 
 export function getYears(startYear: number, endYear: number): number[] {
@@ -87,10 +82,9 @@ export function getYears(startYear: number, endYear: number): number[] {
   for (let year = startYear; year <= endYear; year++) {
     years.push(year);
   }
-  return years.reverse(); // Show most recent years first
+  return years.reverse();
 }
 
-// --- Colors ---
 export const statusColors: Record<string, string> = {
   Pending: "#3b82f6",
   Finished: "#22c55e",

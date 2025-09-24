@@ -52,7 +52,7 @@ export default function UserBookingsPage() {
     try {
       const newRating: Rating = {
         id: Math.random().toString(36).substr(2, 9),
-        created_at: new Date().toISOString(),
+        created_at: new Date(),
         user_id: "123",
         ticket_id: booking.id,
         rating_number: rating,
@@ -64,7 +64,7 @@ export default function UserBookingsPage() {
     }
   };
 
-  const getRatingForBooking = (bookingId: number) => {
+  const getRatingForBooking = (bookingId: string) => {
     return ratings.find((rating) => rating.ticket_id === bookingId);
   };
 
