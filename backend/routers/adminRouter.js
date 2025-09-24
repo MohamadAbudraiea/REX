@@ -21,7 +21,8 @@ router.get(
 
 //-------------------------------------------------
 //tickets get
-router.get("/ticket", ticketController.getAllTickets);
+router.get("/ticket/charts", ticketController.getBookingsForCharts);
+router.get("/ticket/filters", ticketController.getFilteredTickets);
 router.get("/ticket/:ticket_id", ticketController.getTicketByID);
 router.get("/ticket/type/requested", ticketController.getRequestedTickets);
 router.get("/ticket/type/pending", ticketController.getPendingTickets);

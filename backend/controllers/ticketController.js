@@ -1,3 +1,4 @@
+const { Op, Sequelize } = require("sequelize");
 const SQL = require("../Drivers/SQL_Driver");
 const initModels = require("../models/init-models");
 const models = initModels(SQL);
@@ -52,11 +53,174 @@ exports.getTicketByID = async (req, res) => {
     });
   }
 };
-// getTickets all and based on their status
-exports.getAllTickets = async (req, res) => {
+exports.getBookingsForCharts = async (req, res) => {
   try {
+    const { month, year } = req.query;
+
+    // Filter by month/year if provided
+    const where = {};
+    if (month && year) {
+      const startDate = new Date(year, month - 1, 1);
+      const endDate = new Date(year, month, 0, 23, 59, 59);
+      where.date = { [Op.between]: [startDate, endDate] };
+    }
+
     const tickets = await ticket.findAll({
+      where,
       order: [["status", "ASC"]],
+      include: [
+        { model: user, as: "user", attributes: ["name", "phone"] },
+        { model: user, as: "detailer", attributes: ["name"] },
+        { model: user, as: "secretary", attributes: ["name"] },
+      ],
+    });
+
+    // Aggregate by Status
+    const statusCount = {};
+    // Aggregate by Service
+    const serviceCount = {};
+    // Aggregate by day
+    const dayCount = {};
+
+    tickets.forEach((t) => {
+      // Status
+      if (t.status) statusCount[t.status] = (statusCount[t.status] || 0) + 1;
+
+      // Service
+      if (t.service)
+        serviceCount[t.service] = (serviceCount[t.service] || 0) + 1;
+
+      // Day
+      if (t.date) {
+        const date = new Date(t.date);
+        const day = date.getDate();
+        dayCount[day] = (dayCount[day] || 0) + 1;
+      }
+    });
+
+    const statusData = Object.keys(statusCount).map((status) => ({
+      name: status.charAt(0).toUpperCase() + status.slice(1),
+      value: statusCount[status],
+    }));
+
+    const serviceData = Object.keys(serviceCount).map((service) => ({
+      name: service,
+      value: serviceCount[service],
+    }));
+
+    const daysInMonth = month && year ? new Date(year, month, 0).getDate() : 31;
+    const lineData = Array.from({ length: daysInMonth }, (_, i) => {
+      const day = i + 1;
+      return { day, bookings: dayCount[day] || 0 };
+    });
+
+    res.status(200).json({
+      status: "success",
+      data: {
+        lineData,
+        statusData,
+        serviceData,
+      },
+    });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({
+      status: "error",
+      message: error.message || "Something went wrong",
+    });
+  }
+};
+
+exports.getFilteredTickets = async (req, res) => {
+  try {
+    const page = parseInt(req.query.page) || 1;
+    const limit = parseInt(req.query.limit) || 5;
+    const filter = req.query.filter || "All";
+    const filterMonth =
+      req.query.filterMonth === "null" ? null : req.query.filterMonth;
+    const filterDay =
+      req.query.filterDay === "null" ? null : req.query.filterDay;
+    const filterYear =
+      req.query.filterYear === "null" ? null : req.query.filterYear;
+
+    const offset = (page - 1) * limit;
+
+    // Build where clause based on filters
+    const whereClause = {};
+
+    if (filter !== "All") {
+      whereClause.status = filter;
+    }
+
+    // Use current year as default if no year is specified
+    const year = filterYear ? parseInt(filterYear) : new Date().getFullYear();
+
+    // Handle date filtering using date ranges (more reliable than Sequelize literals)
+    if (filterYear && filterYear !== "null") {
+      // Start with year filter as base
+      const startDate = new Date(year, 0, 1); // January 1st of the year
+      const endDate = new Date(year, 11, 31); // December 31st of the year
+
+      whereClause.date = {
+        [Op.between]: [startDate, endDate],
+      };
+
+      // If month is also specified, narrow down the range
+      if (filterMonth && filterMonth !== "null") {
+        const month = parseInt(filterMonth);
+        const monthStartDate = new Date(year, month - 1, 1);
+        const monthEndDate = new Date(year, month, 0); // Last day of the month
+
+        whereClause.date = {
+          [Op.between]: [monthStartDate, monthEndDate],
+        };
+
+        // If day is also specified, narrow down further
+        if (filterDay && filterDay !== "null") {
+          const day = parseInt(filterDay);
+          const specificDate = new Date(year, month - 1, day);
+          const nextDay = new Date(year, month - 1, day + 1);
+
+          whereClause.date = {
+            [Op.gte]: specificDate,
+            [Op.lt]: nextDay,
+          };
+        }
+      }
+    } else {
+      // If no year is specified, but month are specified
+      const currentYear = new Date().getFullYear();
+
+      if (filterMonth && filterMonth !== "null") {
+        const month = parseInt(filterMonth);
+        const monthStartDate = new Date(currentYear, month - 1, 1);
+        const monthEndDate = new Date(currentYear, month, 0);
+
+        whereClause.date = {
+          [Op.between]: [monthStartDate, monthEndDate],
+        };
+
+        if (filterDay && filterDay !== "null") {
+          const day = parseInt(filterDay);
+          const specificDate = new Date(currentYear, month - 1, day);
+          const nextDay = new Date(currentYear, month - 1, day + 1);
+
+          whereClause.date = {
+            [Op.gte]: specificDate,
+            [Op.lt]: nextDay,
+          };
+        }
+      }
+    }
+
+    const { count, rows: tickets } = await ticket.findAndCountAll({
+      where: Object.keys(whereClause).length > 0 ? whereClause : undefined,
+      order: [
+        ["status", "ASC"],
+        ["date", "ASC"],
+      ],
+      limit,
+      offset,
       include: [
         {
           model: user,
@@ -76,11 +240,22 @@ exports.getAllTickets = async (req, res) => {
       ],
     });
 
+    const totalPages = Math.ceil(count / limit);
+
     res.status(200).json({
       status: "success",
-      data: tickets,
+      data: {
+        tickets,
+        pagination: {
+          currentPage: page,
+          totalPages,
+          totalItems: count,
+          itemsPerPage: limit,
+        },
+      },
     });
   } catch (error) {
+    console.error("Error fetching tickets:", error);
     res.status(500).json({
       status: "error",
       message: error.message || "Something went wrong",

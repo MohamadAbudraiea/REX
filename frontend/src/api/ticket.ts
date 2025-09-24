@@ -1,7 +1,21 @@
 import { axiosInstance } from "@/api/axios";
 
-export async function getAllTickets() {
-  const res = await axiosInstance.get("/admin/ticket");
+export async function getChartsData({
+  month,
+  year,
+}: {
+  month: number | undefined;
+  year: number | undefined;
+}) {
+  const res = await axiosInstance.get("/admin/ticket/charts", {
+    params: { month, year },
+  });
+  return res.data;
+}
+
+export async function getFilteredTickets(params = {}) {
+  const queryString = new URLSearchParams(params).toString();
+  const res = await axiosInstance.get(`/admin/ticket/filters?${queryString}`);
   return res.data;
 }
 

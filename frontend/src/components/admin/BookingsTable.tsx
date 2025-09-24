@@ -17,67 +17,104 @@ import { BookingsTableRow } from "@/components/admin/booking/BookingsTableRow";
 import { PaginationControls } from "@/components/admin/booking/PaginationControls";
 import { CancelConfirmationDialog } from "@/components/admin/booking/CancelConfirmationDialog";
 import { useBookingStore } from "@/stores/useBookingStore";
-import { months, getDaysInMonth } from "@/shared/utils";
+import { months, getDaysInMonth, getYears } from "@/shared/utils";
+import { useGetFilteredTickets } from "@/hooks/useTicket";
+import { Button } from "../ui/button";
 
 export function BookingsTable({
-  bookings,
   detailers = [],
 }: {
-  bookings: Ticket[];
   detailers?: { id: string; name: string }[];
 }) {
   const {
     filter,
     filterMonth,
     filterDay,
+    filterYear,
     currentPage,
     itemsPerPage,
     cancelDialogOpen,
     setFilter,
     setFilterMonth,
     setFilterDay,
+    setFilterYear,
     setCurrentPage,
     setCancelDialogOpen,
     confirmCancel,
   } = useBookingStore();
 
+  // Build query params for the API call
+  const queryParams: Record<string, string | number> = {
+    page: currentPage,
+    limit: itemsPerPage,
+  };
+
+  // Only add filter if it's not "All"
+  if (filter !== "All") {
+    queryParams.filter = filter;
+  }
+
+  // Only add month/day/year filters if they have values
+  if (filterMonth) {
+    queryParams.filterMonth = filterMonth;
+  }
+
+  if (filterDay) {
+    queryParams.filterDay = filterDay;
+  }
+
+  if (filterYear) {
+    queryParams.filterYear = filterYear;
+  }
+
+  const { tickets, pagination, isFetchingTickets } =
+    useGetFilteredTickets(queryParams);
+
   // Get current date for default values
   const now = new Date();
   const currentYear = now.getFullYear();
 
-  // Calculate days in selected month
+  // Calculate days in selected month and year
+  const selectedYear = filterYear ? parseInt(filterYear) : currentYear;
   const daysInSelectedMonth = filterMonth
-    ? getDaysInMonth(currentYear, Number(filterMonth) - 1)
-    : 31; // Default to 31 if no month selected
+    ? getDaysInMonth(selectedYear, Number(filterMonth) - 1)
+    : 31;
 
-  const filteredBookings = bookings.filter((b) => {
-    const matchesStatus = filter === "All" || b.status === filter;
-
-    const bookingDate = b.date ? new Date(b.date) : null;
-    const bookingMonth = bookingDate
-      ? String(bookingDate.getMonth() + 1).padStart(2, "0")
-      : null;
-    const bookingDay = bookingDate
-      ? String(bookingDate.getDate()).padStart(2, "0")
-      : null;
-
-    const matchesMonth = !filterMonth || bookingMonth === filterMonth;
-    const matchesDay = !filterDay || bookingDay === filterDay;
-
-    return matchesStatus && matchesMonth && matchesDay;
-  });
-
-  const totalPages = Math.ceil(filteredBookings.length / itemsPerPage);
-  const startIndex = (currentPage - 1) * itemsPerPage;
-  const currentBookings = filteredBookings.slice(
-    startIndex,
-    startIndex + itemsPerPage
-  );
+  const years = getYears(2025, currentYear);
 
   const handlePageChange = (page: number) => {
     setCurrentPage(page);
     window.scrollTo({ top: 0, behavior: "smooth" });
   };
+
+  const handleFilterChange = (newFilter: string) => {
+    setFilter(newFilter);
+    setCurrentPage(1);
+  };
+
+  const handleMonthChange = (month: string | null) => {
+    setFilterMonth(month);
+    setFilterDay(null);
+    setCurrentPage(1);
+  };
+
+  const handleDayChange = (day: string | null) => {
+    setFilterDay(day);
+    setCurrentPage(1);
+  };
+
+  const handleYearChange = (year: string | null) => {
+    setFilterYear(year);
+    setCurrentPage(1);
+  };
+
+  if (isFetchingTickets) {
+    return (
+      <div className="flex justify-center items-center p-8">
+        <div className="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-primary"></div>
+      </div>
+    );
+  }
 
   return (
     <div>
@@ -86,13 +123,7 @@ export function BookingsTable({
         {/* Status Filter */}
         <div className="flex items-center gap-2">
           <span className="font-medium">Status:</span>
-          <Select
-            value={filter}
-            onValueChange={(value) => {
-              setFilter(value);
-              handlePageChange(1);
-            }}
-          >
+          <Select value={filter} onValueChange={handleFilterChange}>
             <SelectTrigger className="w-40 rounded-md border-muted-foreground bg-muted/50">
               <SelectValue placeholder="All" />
             </SelectTrigger>
@@ -106,13 +137,36 @@ export function BookingsTable({
           </Select>
         </div>
 
-        {/* Month Filter - Updated to use months array */}
+        {/* Year Filter */}
+        <div className="flex items-center gap-2">
+          <span className="font-medium">Year:</span>
+          <Select
+            value={filterYear ?? "all"}
+            onValueChange={(value) =>
+              handleYearChange(value === "all" ? null : value)
+            }
+          >
+            <SelectTrigger className="w-28 rounded-md border-muted-foreground bg-muted/50">
+              <SelectValue placeholder="All" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="all">All</SelectItem>
+              {years.map((year) => (
+                <SelectItem key={year} value={String(year)}>
+                  {year}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+        </div>
+
+        {/* Month Filter */}
         <div className="flex items-center gap-2">
           <span className="font-medium">Month:</span>
           <Select
             value={filterMonth ?? "all"}
             onValueChange={(value) =>
-              setFilterMonth(value === "all" ? null : value)
+              handleMonthChange(value === "all" ? null : value)
             }
           >
             <SelectTrigger className="w-28 rounded-md border-muted-foreground bg-muted/50">
@@ -132,14 +186,14 @@ export function BookingsTable({
           </Select>
         </div>
 
-        {/* Day Filter - Updated to use getDaysInMonth */}
+        {/* Day Filter */}
         <div className="flex items-center gap-2">
           <span className="font-medium">Day:</span>
           <Select
             disabled={filterMonth === "all" || !filterMonth}
             value={filterDay ?? "all"}
             onValueChange={(value) =>
-              setFilterDay(value === "all" ? null : value)
+              handleDayChange(value === "all" ? null : value)
             }
           >
             <SelectTrigger className="w-28 rounded-md border-muted-foreground bg-muted/50">
@@ -158,9 +212,28 @@ export function BookingsTable({
             </SelectContent>
           </Select>
         </div>
+
+        {/* Clear Filters */}
+        {(filterYear || filterMonth || filterDay || filter !== "All") && (
+          <div className="flex items-center gap-2">
+            <Button
+              variant="secondary"
+              size="sm"
+              onClick={() => {
+                setFilter("All");
+                setFilterYear(null);
+                setFilterMonth(null);
+                setFilterDay(null);
+                setCurrentPage(1);
+              }}
+            >
+              Clear Filters
+            </Button>
+          </div>
+        )}
       </div>
 
-      {/* Table */}
+      {/* Table and other components remain the same */}
       <Table className="text-center bg-muted/50">
         <TableHeader className="bg-muted/50 font-bold">
           <TableRow>
@@ -177,8 +250,8 @@ export function BookingsTable({
           </TableRow>
         </TableHeader>
         <TableBody>
-          {currentBookings.length > 0 ? (
-            currentBookings.map((ticket) => (
+          {tickets && tickets.length > 0 ? (
+            tickets.map((ticket: Ticket) => (
               <BookingsTableRow
                 key={ticket.id}
                 ticket={ticket}
@@ -187,20 +260,22 @@ export function BookingsTable({
             ))
           ) : (
             <TableRow className="">
-              <TableCell colSpan={9}>No bookings found.</TableCell>
+              <TableCell colSpan={10}>No bookings found.</TableCell>
             </TableRow>
           )}
         </TableBody>
       </Table>
 
       {/* Pagination */}
-      <div className="mt-4 flex justify-center">
-        <PaginationControls
-          currentPage={currentPage}
-          totalPages={totalPages}
-          onPageChange={handlePageChange}
-        />
-      </div>
+      {pagination && pagination.totalPages > 1 && (
+        <div className="mt-4 flex justify-center">
+          <PaginationControls
+            currentPage={pagination.currentPage}
+            totalPages={pagination.totalPages}
+            onPageChange={handlePageChange}
+          />
+        </div>
+      )}
 
       {/* Cancel confirmation dialog */}
       <CancelConfirmationDialog

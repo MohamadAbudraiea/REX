@@ -1,19 +1,39 @@
 import {
-  getAllTickets,
+  getFilteredTickets,
   acceptTicket,
   cancelTicket,
   finishTicket,
+  getChartsData,
 } from "@/api/ticket";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 
-export const useGetAllTickets = () => {
-  const { data, isPending: isFetchingTickets } = useQuery({
-    queryKey: ["tickets"],
-    queryFn: getAllTickets,
+export const useGetChartsData = (
+  month: number | undefined,
+  year: number | undefined
+) => {
+  const { data, isPending: isFetchingChartsData } = useQuery({
+    queryKey: ["charts", month, year],
+    queryFn: () => getChartsData({ month, year }),
   });
 
-  return { tickets: data?.data, isFetchingTickets };
+  return {
+    chartsData: data?.data,
+    isFetchingTickets: isFetchingChartsData,
+  };
+};
+
+export const useGetFilteredTickets = (params = {}) => {
+  const { data, isPending: isFetchingTickets } = useQuery({
+    queryKey: ["filteredTickets", params],
+    queryFn: () => getFilteredTickets(params),
+  });
+
+  return {
+    tickets: data?.data?.tickets,
+    pagination: data?.data?.pagination,
+    isFetchingTickets,
+  };
 };
 
 export const useAcceptTicket = () => {
@@ -23,7 +43,7 @@ export const useAcceptTicket = () => {
       mutationKey: ["acceptTicket"],
       mutationFn: acceptTicket,
       onSuccess: () => {
-        queryClient.invalidateQueries({ queryKey: ["tickets"] });
+        queryClient.invalidateQueries({ queryKey: ["filteredTickets"] });
         toast.success("Ticket accepted successfully");
       },
       onError: () => {
@@ -42,7 +62,7 @@ export const useCancelTicket = () => {
       mutationFn: ({ id, reason }: { id: string; reason: string }) =>
         cancelTicket({ id, reason }),
       onSuccess: () => {
-        queryClient.invalidateQueries({ queryKey: ["tickets"] });
+        queryClient.invalidateQueries({ queryKey: ["filteredTickets"] });
         toast.success("Ticket canceled successfully");
       },
       onError: () => {
@@ -60,7 +80,7 @@ export const useFinishTicket = () => {
       mutationKey: ["finishTicket"],
       mutationFn: finishTicket,
       onSuccess: () => {
-        queryClient.invalidateQueries({ queryKey: ["tickets"] });
+        queryClient.invalidateQueries({ queryKey: ["filteredTickets"] });
         toast.success("Ticket finished successfully");
       },
       onError: () => {

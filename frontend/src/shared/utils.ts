@@ -82,6 +82,14 @@ export function getDaysInMonth(year: number, month: number) {
   return new Date(year, month + 1, 0).getDate(); // month is 0-based
 }
 
+export function getYears(startYear: number, endYear: number): number[] {
+  const years = [];
+  for (let year = startYear; year <= endYear; year++) {
+    years.push(year);
+  }
+  return years.reverse(); // Show most recent years first
+}
+
 // --- Colors ---
 export const statusColors: Record<string, string> = {
   Pending: "#3b82f6",

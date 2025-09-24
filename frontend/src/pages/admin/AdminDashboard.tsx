@@ -6,13 +6,11 @@ import { DetailerForm } from "@/components/admin/DetailerForm";
 import { BookingsTable } from "@/components/admin/BookingsTable";
 import { BookingsChart } from "@/components/admin/BookingsChart";
 import { useGetUsers } from "@/hooks/useAdmin";
-import { useGetAllTickets } from "@/hooks/useTicket";
 
 export default function AdminDashboard() {
   const { users, isGettingUsers } = useGetUsers();
-  const { tickets, isFetchingTickets } = useGetAllTickets();
 
-  if (isGettingUsers || isFetchingTickets) {
+  if (isGettingUsers) {
     return (
       <div className="flex justify-center items-center h-screen">
         <div className="animate-spin rounded-full h-32 w-32 border-t-2 border-b-2 border-primary"></div>
@@ -80,7 +78,7 @@ export default function AdminDashboard() {
               <CardTitle>All Bookings</CardTitle>
             </CardHeader>
             <CardContent>
-              <BookingsTable bookings={tickets} detailers={users.detailers} />
+              <BookingsTable detailers={users.detailers} />
             </CardContent>
           </Card>
         </TabsContent>
@@ -92,7 +90,7 @@ export default function AdminDashboard() {
               <CardTitle>Booking Status Chart</CardTitle>
             </CardHeader>
             <CardContent>
-              <BookingsChart bookings={tickets} />
+              <BookingsChart />
             </CardContent>
           </Card>
         </TabsContent>

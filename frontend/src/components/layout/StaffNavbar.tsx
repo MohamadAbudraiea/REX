@@ -28,11 +28,13 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { ThemeSwitcher } from "@/components/ui/theme-switcher";
+import { useTheme } from "@/context/theme-provider";
 
 export default function StaffNavbar({ role }: { role: string }) {
   const { user } = useCheckAuth();
   const { logoutMutation, isLoggingOut } = useLogout();
   const [isOpen, setIsOpen] = useState(false);
+  const { theme } = useTheme();
 
   const handleLogout = () => {
     logoutMutation();
@@ -69,7 +71,7 @@ export default function StaffNavbar({ role }: { role: string }) {
           {/* Logo */}
           <Link to="/" className="flex items-center">
             <img
-              src="/dark-logo.png"
+              src={theme === "light" ? "/white-logo.png" : "/dark-logo.png"}
               alt="BLINK Logo"
               className="h-25 w-auto"
             />
