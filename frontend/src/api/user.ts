@@ -1,5 +1,10 @@
 import { axiosInstance } from "@/api/axios";
 
+export async function getUserTickets() {
+  const res = await axiosInstance.get("/user/ticket/all");
+  return res.data;
+}
+
 export async function addTicket({
   date,
   service,

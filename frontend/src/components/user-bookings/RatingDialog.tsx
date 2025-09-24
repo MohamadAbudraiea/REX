@@ -11,12 +11,12 @@ import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { Star } from "lucide-react";
-import type { Ticket } from "@/shared/types";
+import type { Booking } from "@/shared/types";
 import { useTranslation } from "react-i18next";
 
 interface RatingDialogProps {
-  booking: Ticket;
-  onRate: (booking: Ticket, rating: number, comment: string) => void;
+  booking: Booking;
+  onRate: (booking: Booking, rating: number, comment: string) => void;
 }
 
 export default function RatingDialog({ booking, onRate }: RatingDialogProps) {

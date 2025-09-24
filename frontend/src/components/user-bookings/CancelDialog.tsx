@@ -11,12 +11,12 @@ import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { X } from "lucide-react";
-import type { Ticket } from "@/shared/types";
+import type { Booking } from "@/shared/types";
 import { useTranslation } from "react-i18next";
 
 interface CancelDialogProps {
-  booking: Ticket;
-  onCancel: (booking: Ticket, reason: string) => void;
+  booking: Booking;
+  onCancel: (booking: Booking, reason: string) => void;
 }
 
 export default function CancelDialog({ booking, onCancel }: CancelDialogProps) {

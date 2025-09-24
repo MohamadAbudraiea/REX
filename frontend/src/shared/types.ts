@@ -65,3 +65,23 @@ export interface ScheduleItem {
   end: string;
   interval: string;
 }
+
+export interface Booking {
+  id: string;
+  created_at: string;
+  user_id: string;
+  date: string | null;
+  start_time: string | null;
+  end_time: string | null;
+  price: string | null;
+  service: ServiceType;
+  status: StatusType;
+  location: string;
+  secretary_id: string | null;
+  detailer_id: string | null;
+  cancel_reason: string | null;
+  note: string | null;
+  detailer: { name: string } | null;
+  secretary: { name: string } | null;
+  ratings: { rating_number: number; description: string | null }[] | null;
+}

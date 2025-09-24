@@ -1,51 +1,23 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { useTranslation } from "react-i18next";
-import type { Ticket, Rating } from "@/shared/types";
-import { MOCK_BOOKINGS } from "@/shared/constants";
+import type { Rating, Booking } from "@/shared/types";
 import BookingCard from "@/components/user-bookings/BookingCard";
+import { useGetUserTickets } from "@/hooks/useUser";
 
 export default function UserBookingsPage() {
+  const { tickets = [], isGettingUserTickets } = useGetUserTickets();
   const { t } = useTranslation();
-  const [bookings, setBookings] = useState<Ticket[]>([]);
   const [ratings, setRatings] = useState<Rating[]>([]);
-  const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
-    const fetchBookings = async () => {
-      try {
-        // Simulate API call
-        setTimeout(() => {
-          setBookings(MOCK_BOOKINGS);
-          setLoading(false);
-        }, 1000);
-      } catch (error) {
-        console.error("Error fetching bookings:", error);
-        setLoading(false);
-      }
-    };
-
-    fetchBookings();
-  }, []);
-
-  const handleCancelBooking = async (booking: Ticket, reason: string) => {
-    try {
-      setBookings(
-        bookings.map((b) =>
-          b.id === booking.id
-            ? { ...b, status: "canceled", cancel_reason: reason }
-            : b
-        )
-      );
-    } catch (error) {
-      console.error("Error canceling booking:", error);
-    }
+  const handleCancelBooking = async (booking: Booking, reason: string) => {
+    console.log(booking, reason);
   };
 
   const handleSubmitRating = async (
-    booking: Ticket,
+    booking: Booking,
     rating: number,
     comment: string
   ) => {
@@ -64,11 +36,7 @@ export default function UserBookingsPage() {
     }
   };
 
-  const getRatingForBooking = (bookingId: string) => {
-    return ratings.find((rating) => rating.ticket_id === bookingId);
-  };
-
-  if (loading) {
+  if (isGettingUserTickets) {
     return (
       <div className="min-h-screen flex items-center justify-center">
         <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary"></div>
@@ -92,7 +60,7 @@ export default function UserBookingsPage() {
           </p>
         </motion.div>
 
-        {bookings.length === 0 ? (
+        {tickets.length === 0 ? (
           <Card>
             <CardContent className="pt-6 text-center">
               <p className="text-muted-foreground mb-4">
@@ -105,16 +73,15 @@ export default function UserBookingsPage() {
           </Card>
         ) : (
           <div className="space-y-4">
-            {bookings.map((booking) => (
+            {tickets.map((ticket) => (
               <motion.div
-                key={booking.id}
+                key={ticket.id}
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.3 }}
               >
                 <BookingCard
-                  booking={booking}
-                  existingRating={getRatingForBooking(booking.id)}
+                  booking={ticket}
                   onCancel={handleCancelBooking}
                   onRate={handleSubmitRating}
                 />

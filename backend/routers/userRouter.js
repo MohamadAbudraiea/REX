@@ -11,4 +11,6 @@ router.post("/ticket/cancel/:ticket_id", ticketController.cancelticket);
 router.get("/ticket/rating/:ticket_id", ratingController.getTicketRating);
 router.post("/ticket/rating", ratingController.rateticket);
 //----------------------------------------------------------------------
+router.get("/ticket/all", ticketController.getUserTickets);
+
 module.exports = router;

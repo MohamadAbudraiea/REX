@@ -262,6 +262,59 @@ exports.getFilteredTickets = async (req, res) => {
     });
   }
 };
+
+exports.getUserTickets = async (req, res) => {
+  try {
+    const user_id = req.user.id;
+    const tickets = await ticket.findAll({
+      where: { user_id },
+      include: [
+        {
+          model: user,
+          as: "detailer",
+          attributes: ["name"],
+        },
+        {
+          model: user,
+          as: "secretary",
+          attributes: ["name"],
+        },
+        {
+          model: rating,
+          as: "ratings",
+          attributes: ["rating_number", "description"],
+        },
+      ],
+    });
+    res.status(200).json({
+      status: "success",
+      data: tickets,
+    });
+  } catch (error) {
+    console.log("Error fetching tickets:", error);
+    res.status(500).json({
+      status: "error",
+      message: error.message || "Something went wrong",
+    });
+  }
+};
+exports.getTicketsByStatus = async (req, res) => {
+  const status = req.params.status;
+  const tickets = await ticket.findAll({
+    where: { status },
+    include: [
+      {
+        model: user,
+        as: "user",
+        attributes: ["name", "phone"],
+      },
+    ],
+  });
+  res.status(200).json({
+    status: "success",
+    data: tickets,
+  });
+};
 exports.getRequestedTickets = async (req, res) => {
   try {
     const reqTickets = await ticket.findAll({
