@@ -130,7 +130,6 @@ exports.getBookingsForCharts = async (req, res) => {
     });
   }
 };
-
 exports.getFilteredTickets = async (req, res) => {
   try {
     const page = parseInt(req.query.page) || 1;
@@ -256,6 +255,65 @@ exports.getFilteredTickets = async (req, res) => {
     });
   } catch (error) {
     console.error("Error fetching tickets:", error);
+    res.status(500).json({
+      status: "error",
+      message: error.message || "Something went wrong",
+    });
+  }
+};
+exports.getCanceledTicketsForCharts = async (req, res) => {
+  try {
+    const { month, year } = req.query;
+
+    // Filter by month/year if provided
+    const where = { status: "canceled" };
+    if (month && year) {
+      const startDate = new Date(year, month - 1, 1);
+      const endDate = new Date(year, month, 0, 23, 59, 59);
+      where.date = { [Op.between]: [startDate, endDate] };
+    }
+
+    const tickets = await ticket.findAll({
+      where,
+      order: [["date", "ASC"]],
+      include: [
+        { model: user, as: "user", attributes: ["name", "phone"] },
+        { model: user, as: "detailer", attributes: ["name"] },
+        { model: user, as: "secretary", attributes: ["name"] },
+      ],
+    });
+
+    // Categories for cancellation
+    const cancelCategories = {
+      "High Price": 0,
+      "Not Suitable Time": 0,
+      Other: 0,
+    };
+
+    tickets.forEach((t) => {
+      const reason = t.cancel_reason?.trim() || "";
+      if (reason === "High Price") cancelCategories["High Price"] += 1;
+      else if (reason === "Not Suitable Time")
+        cancelCategories["Not Suitable Time"] += 1;
+      else cancelCategories["Other"] += 1;
+    });
+
+    // Prepare data for charts
+    const cancelData = Object.keys(cancelCategories).map((key) => ({
+      name: key,
+      value: cancelCategories[key],
+    }));
+
+    res.status(200).json({
+      status: "success",
+      data: {
+        totalCanceled: tickets.length,
+        cancelData,
+        tickets, // include all canceled tickets data
+      },
+    });
+  } catch (error) {
+    console.error(error);
     res.status(500).json({
       status: "error",
       message: error.message || "Something went wrong",
