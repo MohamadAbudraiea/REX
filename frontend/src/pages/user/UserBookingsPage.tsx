@@ -1,36 +1,13 @@
-import { useState } from "react";
 import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { useTranslation } from "react-i18next";
-import type { Rating, Booking } from "@/shared/types";
 import BookingCard from "@/components/user-bookings/BookingCard";
 import { useGetUserTickets } from "@/hooks/useUser";
 
 export default function UserBookingsPage() {
   const { tickets = [], isGettingUserTickets } = useGetUserTickets();
   const { t } = useTranslation();
-  const [ratings, setRatings] = useState<Rating[]>([]);
-
-  const handleSubmitRating = async (
-    booking: Booking,
-    rating: number,
-    comment: string
-  ) => {
-    try {
-      const newRating: Rating = {
-        id: Math.random().toString(36).substr(2, 9),
-        created_at: new Date(),
-        user_id: "123",
-        ticket_id: booking.id,
-        rating_number: rating,
-        description: comment,
-      };
-      setRatings([...ratings, newRating]);
-    } catch (error) {
-      console.error("Error submitting rating:", error);
-    }
-  };
 
   if (isGettingUserTickets) {
     return (
@@ -76,7 +53,7 @@ export default function UserBookingsPage() {
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.3 }}
               >
-                <BookingCard booking={ticket} onRate={handleSubmitRating} />
+                <BookingCard booking={ticket} />
               </motion.div>
             ))}
           </div>

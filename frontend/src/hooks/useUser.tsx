@@ -1,4 +1,9 @@
-import { getUserTickets, addTicket, cancelTicket } from "@/api/user";
+import {
+  getUserTickets,
+  addTicket,
+  cancelTicket,
+  rateTicket,
+} from "@/api/user";
 import type { Booking } from "@/shared/types";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
@@ -41,6 +46,7 @@ export const useUserCancelTicket = () => {
         cancelTicket({ id, reason }),
       onSuccess: () => {
         queryClient.invalidateQueries({ queryKey: ["filteredTickets"] });
+        queryClient.invalidateQueries({ queryKey: ["userTickets"] });
         toast.success("Ticket canceled successfully");
       },
       onError: () => {
@@ -49,4 +55,24 @@ export const useUserCancelTicket = () => {
     });
 
   return { cancelTicketMutation, isCancellingTicket };
+};
+
+export const useUserRateTicket = () => {
+  const queryClient = useQueryClient();
+  const { mutate: rateTicketMutation, isPending: isRatingTicket } = useMutation(
+    {
+      mutationKey: ["rateTicket"],
+      mutationFn: rateTicket,
+      onSuccess: () => {
+        toast.success("Ticket rated successfully");
+        queryClient.invalidateQueries({ queryKey: ["userTickets"] });
+        queryClient.invalidateQueries({ queryKey: ["filteredTickets"] });
+      },
+      onError: () => {
+        toast.error("Failed to rate ticket");
+      },
+    }
+  );
+
+  return { rateTicketMutation, isRatingTicket };
 };

@@ -316,7 +316,8 @@
       "comment": "تعليق",
       "comment_placeholder": "أخبرنا عن تجربتك...",
       "cancel": "الغاء",
-      "submit": "إرسال التقييم"
+      "submit": "إرسال التقييم",
+      "submitting": "جاري التقييم..."
     }
   },
 

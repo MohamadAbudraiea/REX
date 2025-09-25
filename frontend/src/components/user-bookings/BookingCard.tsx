@@ -22,7 +22,6 @@ import { useTranslation } from "react-i18next";
 
 interface BookingCardProps {
   booking: Booking;
-  onRate: (booking: Booking, rating: number, comment: string) => void;
 }
 
 const renderStars = (rating: number) => {
@@ -48,7 +47,7 @@ const renderStars = (rating: number) => {
   });
 };
 
-export default function BookingCard({ booking, onRate }: BookingCardProps) {
+export default function BookingCard({ booking }: BookingCardProps) {
   const existingRating = booking.ratings;
   const { t, i18n } = useTranslation();
 
@@ -201,7 +200,7 @@ export default function BookingCard({ booking, onRate }: BookingCardProps) {
               <CancelDialog ticket_id={booking.id} />
             )}
             {booking.status === "finished" && !existingRating![0] && (
-              <RatingDialog booking={booking} onRate={onRate} />
+              <RatingDialog ticket_id={booking.id} />
             )}
           </div>
         </CardFooter>

@@ -316,7 +316,8 @@
       "comment": "Comment",
       "comment_placeholder": "Tell us about your experience...",
       "cancel": "Cancel",
-      "submit": "Submit Rating"
+      "submit": "Submit Rating",
+      "submitting": "Submitting..."
     }
   },
 

@@ -37,3 +37,20 @@ export async function cancelTicket({
   });
   return res.data;
 }
+
+export async function rateTicket({
+  ticket_id,
+  rating_number,
+  description,
+}: {
+  ticket_id: string;
+  rating_number: number;
+  description: string;
+}) {
+  const res = await axiosInstance.post("/user/ticket/rating", {
+    ticket_id,
+    rating_number,
+    description,
+  });
+  return res.data;
+}

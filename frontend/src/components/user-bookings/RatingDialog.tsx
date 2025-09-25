@@ -11,15 +11,11 @@ import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { Star } from "lucide-react";
-import type { Booking } from "@/shared/types";
 import { useTranslation } from "react-i18next";
+import { useUserRateTicket } from "@/hooks/useUser";
 
-interface RatingDialogProps {
-  booking: Booking;
-  onRate: (booking: Booking, rating: number, comment: string) => void;
-}
-
-export default function RatingDialog({ booking, onRate }: RatingDialogProps) {
+export default function RatingDialog({ ticket_id }: { ticket_id: string }) {
+  const { isRatingTicket, rateTicketMutation } = useUserRateTicket();
   const { t, i18n } = useTranslation();
   const [isOpen, setIsOpen] = useState(false);
   const [ratingValue, setRatingValue] = useState(0);
@@ -27,7 +23,11 @@ export default function RatingDialog({ booking, onRate }: RatingDialogProps) {
   const [ratingComment, setRatingComment] = useState("");
 
   const handleSubmit = () => {
-    onRate(booking, ratingValue, ratingComment);
+    rateTicketMutation({
+      ticket_id,
+      rating_number: ratingValue,
+      description: ratingComment,
+    });
     setIsOpen(false);
     setRatingValue(0);
     setRatingComment("");
@@ -140,8 +140,11 @@ export default function RatingDialog({ booking, onRate }: RatingDialogProps) {
           <Button variant="outline" onClick={() => setIsOpen(false)}>
             {t("book.rate.cancel")}
           </Button>
-          <Button onClick={handleSubmit} disabled={ratingValue === 0}>
-            {t("book.rate.submit")}
+          <Button
+            onClick={handleSubmit}
+            disabled={ratingValue === 0 || isRatingTicket}
+          >
+            {isRatingTicket ? t("book.rate.submitting") : t("book.rate.submit")}
           </Button>
         </div>
       </DialogContent>
