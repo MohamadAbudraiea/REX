@@ -698,7 +698,6 @@ exports.acceptTicket = async (req, res) => {
 exports.cancelticket = async (req, res) => {
   try {
     const { ticket_id } = req.params;
-    console.log(ticket_id);
     const { cancel_reason } = req.body;
     const status = "canceled";
     const updatedTicket = await ticket.update(

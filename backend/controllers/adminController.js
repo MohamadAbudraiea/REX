@@ -84,7 +84,6 @@ exports.deleteUser = async (req, res) => {
     });
   }
 };
-
 exports.editUser = async (req, res) => {
   try {
     const { id, name, email, phone } = req.body;
