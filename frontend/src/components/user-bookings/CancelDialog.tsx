@@ -11,21 +11,21 @@ import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { X } from "lucide-react";
-import type { Booking } from "@/shared/types";
 import { useTranslation } from "react-i18next";
+import { useUserCancelTicket } from "@/hooks/useUser";
 
 interface CancelDialogProps {
-  booking: Booking;
-  onCancel: (booking: Booking, reason: string) => void;
+  ticket_id: string;
 }
 
-export default function CancelDialog({ booking, onCancel }: CancelDialogProps) {
+export default function CancelDialog({ ticket_id }: CancelDialogProps) {
+  const { cancelTicketMutation, isCancellingTicket } = useUserCancelTicket();
   const { t } = useTranslation();
   const [isOpen, setIsOpen] = useState(false);
   const [cancelReason, setCancelReason] = useState("");
 
   const handleCancel = () => {
-    onCancel(booking, cancelReason);
+    cancelTicketMutation({ id: ticket_id, reason: cancelReason });
     setIsOpen(false);
     setCancelReason("");
   };
@@ -61,9 +61,11 @@ export default function CancelDialog({ booking, onCancel }: CancelDialogProps) {
           <Button
             variant="destructive"
             onClick={handleCancel}
-            disabled={!cancelReason}
+            disabled={!cancelReason || isCancellingTicket}
           >
-            {t("book.cancel.yes")}
+            {isCancellingTicket
+              ? t("book.cancel.cancelling")
+              : t("book.cancel.yes")}
           </Button>
         </div>
       </DialogContent>

@@ -304,7 +304,9 @@
       "reason": "Cancellation Reason",
       "reason_placeholder": "Why are you canceling this service?",
       "no": "No, Keep Booking",
-      "yes": "Yes, Cancel Booking"
+      "yes": "Yes, Cancel Booking",
+      "cancelling": "Cancelling...",
+      "cancelled": "Booking cancelled successfully."
     },
     "rate": {
       "button": "Rate Service",
@@ -400,6 +402,7 @@
   "profile": {
     "title": "Profile Settings",
     "description": "Manage your account settings",
+    "joined_on": "Member since",
     "tabs": {
       "profile": "Profile Information",
       "security": "Security"
@@ -421,5 +424,16 @@
     "save": "Save Changes",
     "saving": "Saving",
     "saved": "Changes saved successfully"
+  },
+
+  "booking": {
+    "booked_on": "Booked on",
+    "service_date": "Service Date",
+    "time_slot": "Time Slot",
+    "total_cost": "Total Cost",
+    "detailer": "Detailer",
+    "view_location": "View Location on Maps",
+    "cancellation_reason": "Cancellation Reason",
+    "your_review": "Your Review"
   }
 }

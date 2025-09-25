@@ -1,15 +1,16 @@
+import { formatDate } from "date-fns";
 import type { ServiceType, StatusType } from "./types";
-import { t } from "i18next";
+import i18next, { t } from "i18next";
 
 export const getStatusBadgeConfig = (status: StatusType) => {
   const statusConfig = {
     requested: {
-      variant: "secondary",
-      icon: "Clock4",
+      variant: "warning",
+      icon: "AlertCircle",
       text: t("book.status.requested"),
     },
     pending: {
-      variant: "warning",
+      variant: "default",
       icon: "Clock",
       text: t("book.status.pending"),
     },
@@ -39,16 +40,51 @@ export const getServiceName = (service: ServiceType): string => {
   return serviceNames[service];
 };
 
+export const getBorderColorClass = (status: string) => {
+  switch (status) {
+    case "requested":
+      return "border-yellow-500 border-3";
+    case "pending":
+      return "border-primary border-3";
+    case "finished":
+      return "border-green-500 border-3";
+    case "canceled":
+      return "border-destructive border-3";
+    default:
+      return "border-border";
+  }
+};
+
+export const arabicDate = (date: string) => {
+  const arabicDigits = ["٠", "١", "٢", "٣", "٤", "٥", "٦", "٧", "٨", "٩"];
+  const formattedDate = formatDate(new Date(date), "dd/MM/yyyy");
+  return formattedDate.replace(/\d/g, (d) => arabicDigits[+d]);
+};
+
+export const englishDate = (date: string) => {
+  return formatDate(new Date(date), "dd/MM/yyyy");
+};
+
 export const formatTime = (time: string) => {
   const [hours, minutes, seconds] = time.split(":").map(Number);
   const date = new Date();
   date.setHours(hours, minutes, seconds || 0);
 
-  return date.toLocaleTimeString("en-US", {
+  return date.toLocaleTimeString(i18next.language, {
+    numberingSystem: i18next.language === "ar" ? "arab" : "latn",
     hour: "numeric",
     minute: "2-digit",
     hour12: true,
   });
+};
+
+export const formatCurrency = (amount: number) => {
+  return new Intl.NumberFormat(i18next.language, {
+    numberingSystem: i18next.language === "ar" ? "arab" : "latn",
+    maximumFractionDigits: 2,
+    style: "currency",
+    currency: "JOD",
+  }).format(amount);
 };
 
 export const formatInterval = (interval: string) => {
@@ -57,6 +93,18 @@ export const formatInterval = (interval: string) => {
 
   return `${formatTime(start)} - ${formatTime(end)}`;
 };
+
+export function getDaysInMonth(year: number, month: number) {
+  return new Date(year, month + 1, 0).getDate();
+}
+
+export function getYears(startYear: number, endYear: number): number[] {
+  const years = [];
+  for (let year = startYear; year <= endYear; year++) {
+    years.push(year);
+  }
+  return years.reverse();
+}
 
 export const months = [
   "January",
@@ -72,18 +120,6 @@ export const months = [
   "November",
   "December",
 ];
-
-export function getDaysInMonth(year: number, month: number) {
-  return new Date(year, month + 1, 0).getDate();
-}
-
-export function getYears(startYear: number, endYear: number): number[] {
-  const years = [];
-  for (let year = startYear; year <= endYear; year++) {
-    years.push(year);
-  }
-  return years.reverse();
-}
 
 export const statusColors: Record<string, string> = {
   Pending: "#3b82f6",

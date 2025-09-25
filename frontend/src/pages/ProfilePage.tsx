@@ -35,7 +35,7 @@ import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Separator } from "@/components/ui/separator";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useCheckAuth } from "@/hooks/useAuth";
-import { formatDate } from "date-fns";
+import { arabicDate, englishDate } from "@/shared/utils";
 
 export default function ProfilePage() {
   const { user } = useCheckAuth();
@@ -184,7 +184,10 @@ export default function ProfilePage() {
                 <div className="flex items-center text-sm text-muted-foreground">
                   <Mail className="h-4 w-4 mr-2" />
                   <span>
-                    Member since {formatDate(user.created_at, "dd/MM/yyyy")}
+                    {t("profile.joined_on")}{" "}
+                    {locale === "ar"
+                      ? arabicDate(user.created_at)
+                      : englishDate(user.created_at)}
                   </span>
                 </div>
               </div>
