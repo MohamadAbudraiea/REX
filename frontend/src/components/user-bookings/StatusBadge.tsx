@@ -1,5 +1,5 @@
 import { Badge } from "@/components/ui/badge";
-import { Clock, X, CheckCircle, Clock4 } from "lucide-react";
+import { X, CheckCircle, Clock, AlertCircle } from "lucide-react";
 import type { StatusType } from "@/shared/types";
 import { getStatusBadgeConfig } from "@/shared/utils";
 
@@ -8,10 +8,10 @@ interface StatusBadgeProps {
 }
 
 const iconComponents = {
-  Clock,
+  AlertCircle,
   X,
   CheckCircle,
-  Clock4,
+  Clock,
 };
 
 export default function StatusBadge({ status }: StatusBadgeProps) {
@@ -30,9 +30,10 @@ export default function StatusBadge({ status }: StatusBadgeProps) {
           | null
           | undefined
       }
-      className="flex items-center gap-1"
+      className="px-3 py-1.5 rounded-full text-sm font-semibold transition-all duration-300 hover:scale-105
+        flex items-center gap-2 "
     >
-      <IconComponent className="w-3 h-3" />
+      <IconComponent />
       {config.text}
     </Badge>
   );

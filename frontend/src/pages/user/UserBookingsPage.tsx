@@ -12,10 +12,6 @@ export default function UserBookingsPage() {
   const { t } = useTranslation();
   const [ratings, setRatings] = useState<Rating[]>([]);
 
-  const handleCancelBooking = async (booking: Booking, reason: string) => {
-    console.log(booking, reason);
-  };
-
   const handleSubmitRating = async (
     booking: Booking,
     rating: number,
@@ -80,11 +76,7 @@ export default function UserBookingsPage() {
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.3 }}
               >
-                <BookingCard
-                  booking={ticket}
-                  onCancel={handleCancelBooking}
-                  onRate={handleSubmitRating}
-                />
+                <BookingCard booking={ticket} onRate={handleSubmitRating} />
               </motion.div>
             ))}
           </div>

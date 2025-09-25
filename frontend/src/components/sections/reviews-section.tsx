@@ -5,8 +5,8 @@ import { Swiper, SwiperSlide } from "swiper/react";
 import { Autoplay } from "swiper/modules";
 import { useTranslation } from "react-i18next";
 import { useGetReviewsFoHome } from "@/hooks/useRating";
-import { format } from "date-fns";
 import "swiper/css";
+import { arabicDate, englishDate } from "@/shared/utils";
 
 export function ReviewsSection() {
   const { reviews, isFetchingReviews } = useGetReviewsFoHome();
@@ -66,10 +66,8 @@ export function ReviewsSection() {
           autoplay={{
             delay: 3000,
             disableOnInteraction: false,
-            reverseDirection: locale === "ar", // Reverse direction for Arabic
           }}
           speed={800}
-          dir={locale === "ar" ? "rtl" : "ltr"} // Set direction based on language
           key={locale} // Force re-render when language changes
           className={locale === "ar" ? "swiper-rtl" : ""}
         >
@@ -87,7 +85,9 @@ export function ReviewsSection() {
                         <Star className="h-4 w-4 text-gray-300" />
                       </div>
                       <span className="text-sm text-muted-foreground">
-                        {format(new Date(), "dd/MM/yyyy")}
+                        {locale === "ar"
+                          ? arabicDate(new Date().toString())
+                          : englishDate(new Date().toString())}
                       </span>
                     </div>
                     <p className="text-muted-foreground mb-4 text-sm leading-relaxed">
@@ -107,7 +107,7 @@ export function ReviewsSection() {
             ))}
           {reviews &&
             reviews.map((review) => (
-              <SwiperSlide key={review.id} className="!w-80">
+              <SwiperSlide key={review.id} className="!w-80" dir="ltr">
                 <motion.div
                   initial={{ opacity: 0, y: 20 }}
                   whileInView={{ opacity: 1, y: 0 }}
@@ -117,41 +117,26 @@ export function ReviewsSection() {
                   <Card className="h-full hover:shadow-lg transition-shadow duration-300">
                     <CardContent className="p-6">
                       <div
-                        className={`flex items-center justify-between mb-4 ${
-                          locale === "ar" ? "flex-row-reverse" : ""
-                        }`}
+                        className={`flex items-center justify-between mb-4 `}
                       >
-                        <div
-                          className={`flex ${
-                            locale === "ar"
-                              ? "space-x-reverse space-x-1"
-                              : "space-x-1"
-                          }`}
-                        >
+                        <div className={`flex space-x-1`}>
                           {renderStars(review.rating_number) || ""}
                         </div>
                         <span className="text-sm text-muted-foreground">
-                          {format(new Date(review.created_at), "dd/MM/yyyy") ||
-                            ""}
+                          {(locale === "ar"
+                            ? arabicDate(review.created_at.toString())
+                            : englishDate(review.created_at.toString())) || ""}
                         </span>
                       </div>
                       <p
-                        className={`text-muted-foreground mb-4 text-sm leading-relaxed ${
-                          locale === "ar" ? "text-right" : "text-left"
-                        }`}
+                        className={`text-muted-foreground mb-4 text-sm leading-relaxed text-left`}
                       >
                         {review.description ||
                           "Lorem ipsum dolor sit amet, consectetur adipiscing elit."}
                       </p>
-                      <div
-                        className={`flex items-center ${
-                          locale === "ar" ? "flex-row-reverse" : ""
-                        }`}
-                      >
+                      <div className={`flex items-center `}>
                         <div
-                          className={`w-10 h-10 bg-muted rounded-full flex items-center justify-center ${
-                            locale === "ar" ? "ml-3" : "mr-3"
-                          }`}
+                          className={`w-10 h-10 bg-muted rounded-full flex items-center justify-center`}
                         >
                           {/* ADD USER AVATAR */}
                           <span className="text-foreground font-semibold text-sm">
@@ -159,7 +144,7 @@ export function ReviewsSection() {
                           </span>
                         </div>
                         {/* ADD USER NAME */}
-                        <div className={locale === "ar" ? "text-right" : ""}>
+                        <div>
                           <p className="font-semibold text-foreground text-sm">
                             {review.user?.name || "Anonymous"}
                           </p>

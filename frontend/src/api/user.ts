@@ -24,3 +24,16 @@ export async function addTicket({
   });
   return res.data;
 }
+
+export async function cancelTicket({
+  id,
+  reason,
+}: {
+  id: string;
+  reason: string;
+}) {
+  const res = await axiosInstance.post(`/user/ticket/cancel/${id}`, {
+    cancel_reason: reason,
+  });
+  return res.data;
+}
