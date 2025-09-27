@@ -19,10 +19,24 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { Button } from "@/components/ui/button";
 import { useBookingStore } from "@/stores/useBookingStore";
 import { months, serviceThemeColors, statusColors } from "@/shared/utils";
 import { useTheme } from "@/context/theme-provider";
-import { useGetChartsData } from "@/hooks/useTicket";
+import {
+  useGetChartsData,
+  useGetCanceledTicketsForCharts,
+} from "@/hooks/useTicket";
+import { useState, useMemo } from "react";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "../ui/table";
+import { formatCurrency } from "@/shared/utils";
 
 interface LineData {
   day: number;
@@ -48,6 +62,9 @@ export function BookingsChart() {
     setFilterYear,
   } = useBookingStore();
 
+  const { canceledTickets, isFetchingCanceledTickets } =
+    useGetCanceledTicketsForCharts();
+
   const { chartsData, isFetchingTickets } = useGetChartsData(
     filterMonth ? Number(filterMonth) : undefined,
     filterYear ? Number(filterYear) : undefined
@@ -63,7 +80,45 @@ export function BookingsChart() {
   const now = new Date();
   const selectedMonth = filterMonth ? Number(filterMonth) - 1 : now.getMonth();
 
-  if (isFetchingTickets) {
+  // state for selected cancel reason
+  const [selectedCancelReason, setSelectedCancelReason] = useState<
+    string | null
+  >(null);
+
+  // group cancelData into "High Price", "Not Suitable Time", "Other"
+  const cancelData = useMemo(() => {
+    if (!canceledTickets) return [];
+    const grouped: Record<string, number> = {
+      "High Price": 0,
+      "Not Suitable Time": 0,
+      Other: 0,
+    };
+    canceledTickets.tickets.forEach((t) => {
+      if (t.cancel_reason === "High Price") grouped["High Price"]++;
+      else if (t.cancel_reason === "Not Suitable Time")
+        grouped["Not Suitable Time"]++;
+      else grouped["Other"]++;
+    });
+    return Object.entries(grouped)
+      .filter(([, v]) => v > 0)
+      .map(([name, value]) => ({ name, value }));
+  }, [canceledTickets]);
+
+  // tickets filtered by cancel reason
+  const filteredTickets = useMemo(() => {
+    if (!selectedCancelReason || !canceledTickets) return [];
+    return canceledTickets.tickets.filter((t) => {
+      if (selectedCancelReason === "Other") {
+        return (
+          t.cancel_reason !== "High Price" &&
+          t.cancel_reason !== "Not Suitable Time"
+        );
+      }
+      return t.cancel_reason === selectedCancelReason;
+    });
+  }, [selectedCancelReason, canceledTickets]);
+
+  if (isFetchingTickets || isFetchingCanceledTickets) {
     return (
       <div className="flex justify-center items-center p-8">
         <div className="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-primary"></div>
@@ -93,13 +148,21 @@ export function BookingsChart() {
     (_, i) => serviceThemeColors[i % serviceThemeColors.length]
   );
 
+  const cancelColors: Record<string, string> = {
+    "High Price": "#ef4444",
+    "Not Suitable Time": "#f59e0b",
+    Other: "#3b82f6",
+  };
+
   return (
     <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-      {/* Line Chart */}
-      <Card className="shadow-md rounded-2xl lg:col-span-3">
+      {/* Line Chart + Cancel Tickets beside it */}
+      {/* Total Bookings + Peak Day + Line Chart */}
+      <Card className="shadow-md rounded-2xl">
         <CardHeader className="flex flex-col md:flex-row md:items-center md:justify-between">
           <CardTitle className="text-lg font-bold">Bookings per Day</CardTitle>
           <div className="flex gap-2 mt-2 md:mt-0">
+            {/* Month Select */}
             <Select
               value={filterMonth ?? String(now.getMonth() + 1).padStart(2, "0")}
               onValueChange={(val) => {
@@ -122,6 +185,7 @@ export function BookingsChart() {
               </SelectContent>
             </Select>
 
+            {/* Year Select */}
             <Select
               value={filterYear ?? String(now.getFullYear())}
               onValueChange={(val) => setFilterYear(val === "all" ? null : val)}
@@ -142,7 +206,7 @@ export function BookingsChart() {
           </div>
         </CardHeader>
 
-        <div className="grid grid-cols-2 gap-4 px-6 pb-4">
+        <div className="grid grid-cols-2 gap-4 mb-4 px-6">
           <div className="text-center">
             <p className="text-sm text-muted-foreground">Total Bookings</p>
             <p className="text-lg font-semibold">{totalBookings}</p>
@@ -155,7 +219,7 @@ export function BookingsChart() {
           </div>
         </div>
 
-        <CardContent className="h-96">
+        <CardContent className="h-96 px-6">
           <ResponsiveContainer width="100%" height="100%">
             <LineChart data={lineData}>
               <ReferenceLine y={0} stroke="#9ca3af" />
@@ -178,6 +242,105 @@ export function BookingsChart() {
             </LineChart>
           </ResponsiveContainer>
         </CardContent>
+      </Card>
+
+      {/* Canceled Tickets Pie Chart */}
+      <Card className="shadow-md rounded-2xl">
+        <CardHeader className="flex items-center justify-between">
+          <CardTitle className="text-md font-semibold">
+            Canceled Tickets
+          </CardTitle>
+          {selectedCancelReason && (
+            <Button
+              size="sm"
+              variant="warning"
+              onClick={() => setSelectedCancelReason(null)}
+            >
+              Clear Selection
+            </Button>
+          )}
+        </CardHeader>
+
+        <CardContent className="h-64">
+          {cancelData.length > 0 ? (
+            <ResponsiveContainer width="100%" height="100%">
+              <PieChart>
+                <Pie
+                  data={cancelData}
+                  cx="50%"
+                  cy="50%"
+                  outerRadius={90}
+                  innerRadius={50}
+                  dataKey="value"
+                  label={({ name, value }) => `${name} (${value})`}
+                  onClick={(data) => setSelectedCancelReason(data.name)}
+                >
+                  {cancelData.map((entry) => (
+                    <Cell
+                      key={entry.name}
+                      fill={cancelColors[entry.name] || "#9ca3af"}
+                      cursor="pointer"
+                    />
+                  ))}
+                </Pie>
+                <Tooltip />
+                <Legend verticalAlign="bottom" iconType="circle" />
+              </PieChart>
+            </ResponsiveContainer>
+          ) : (
+            <p className="text-center text-muted-foreground">
+              No canceled tickets.
+            </p>
+          )}
+        </CardContent>
+
+        {/* Tickets Table */}
+        {selectedCancelReason && (
+          <div className="mt-4 overflow-x-auto px-6 pb-4">
+            {filteredTickets.length > 0 ? (
+              <div className="max-h-64 overflow-y-auto rounded-md border">
+                <Table>
+                  <TableHeader className="sticky top-0 bg-background z-10">
+                    <TableRow>
+                      <TableHead className="text-primary">User</TableHead>
+                      <TableHead className="text-primary">Service</TableHead>
+                      <TableHead className="text-primary">Date</TableHead>
+                      <TableHead className="text-primary">Price</TableHead>
+                      <TableHead className="text-primary">Reason</TableHead>
+                    </TableRow>
+                  </TableHeader>
+                  <TableBody>
+                    {filteredTickets.map((t) => (
+                      <TableRow key={t.id} className="hover:bg-muted/50">
+                        <TableCell className="font-medium">
+                          {t.user?.name || "N/A"}
+                        </TableCell>
+                        <TableCell>{t.service}</TableCell>
+                        <TableCell className="text-muted-foreground">
+                          {t.date}
+                        </TableCell>
+                        <TableCell>
+                          {t.price ? (
+                            formatCurrency(t.price)
+                          ) : (
+                            <span className="text-muted-foreground">N/A</span>
+                          )}
+                        </TableCell>
+                        <TableCell className="text-destructive">
+                          {t.cancel_reason}
+                        </TableCell>
+                      </TableRow>
+                    ))}
+                  </TableBody>
+                </Table>
+              </div>
+            ) : (
+              <p className="text-center text-muted-foreground">
+                No tickets found for {selectedCancelReason}.
+              </p>
+            )}
+          </div>
+        )}
       </Card>
 
       {/* Status Pie Chart */}

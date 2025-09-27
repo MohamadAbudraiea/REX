@@ -4,7 +4,9 @@ import {
   cancelTicket,
   finishTicket,
   getChartsData,
+  getCanceledTicketsForCharts,
 } from "@/api/ticket";
+import type { Ticket } from "@/shared/types";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 
@@ -20,6 +22,21 @@ export const useGetChartsData = (
   return {
     chartsData: data?.data,
     isFetchingTickets: isFetchingChartsData,
+  };
+};
+
+export const useGetCanceledTicketsForCharts = (): {
+  canceledTickets: { tickets: Ticket[] } | undefined;
+  isFetchingCanceledTickets: boolean;
+} => {
+  const { data, isPending: isFetchingCanceledTickets } = useQuery({
+    queryKey: ["canceledTickets"],
+    queryFn: getCanceledTicketsForCharts,
+  });
+
+  return {
+    canceledTickets: data?.data,
+    isFetchingCanceledTickets,
   };
 };
 

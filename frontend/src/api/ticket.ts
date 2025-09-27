@@ -13,6 +13,11 @@ export async function getChartsData({
   return res.data;
 }
 
+export async function getCanceledTicketsForCharts() {
+  const res = await axiosInstance.get("/admin/ticket/charts/canceled");
+  return res.data;
+}
+
 export async function getFilteredTickets(params = {}) {
   const queryString = new URLSearchParams(params).toString();
   const res = await axiosInstance.get(`/admin/ticket/filters?${queryString}`);
