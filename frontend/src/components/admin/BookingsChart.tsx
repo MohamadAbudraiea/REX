@@ -272,7 +272,6 @@ export function BookingsChart() {
                   outerRadius={90}
                   innerRadius={50}
                   dataKey="value"
-                  label={({ name, value }) => `${name} (${value})`}
                   onClick={(data) => setSelectedCancelReason(data.name)}
                 >
                   {cancelData.map((entry) => (
@@ -284,7 +283,17 @@ export function BookingsChart() {
                   ))}
                 </Pie>
                 <Tooltip />
-                <Legend verticalAlign="bottom" iconType="circle" />
+                <Legend
+                  layout="horizontal"
+                  verticalAlign="bottom"
+                  align="center"
+                  wrapperStyle={{
+                    display: "flex",
+                    flexWrap: "wrap",
+                    justifyContent: "center",
+                  }}
+                  iconType="circle"
+                />
               </PieChart>
             </ResponsiveContainer>
           ) : (
