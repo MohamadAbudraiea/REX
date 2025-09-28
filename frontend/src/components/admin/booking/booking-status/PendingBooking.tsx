@@ -1,4 +1,4 @@
-import type { Ticket } from "@/shared/types";
+import type { Ticket, UseCancelTicketHook } from "@/shared/types";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import {
@@ -8,18 +8,32 @@ import {
 } from "@/components/ui/dialog";
 import { CancelReasonSelector } from "../CancelReasonSelector";
 import { useBookingStore } from "@/stores/useBookingStore";
-import { useCancelTicket, useFinishTicket } from "@/hooks/useTicket";
+import type { UseMutateFunction } from "@tanstack/react-query";
 
 interface PendingBookingProps {
   ticket: Ticket;
+  useFinishTicketHook: () => {
+    finishTicketMutation: UseMutateFunction<
+      void,
+      Error,
+      { id: string },
+      unknown
+    >;
+    isFinishingTicket: boolean;
+  };
+  useCancelTicketHook: () => UseCancelTicketHook;
 }
 
-export function PendingBooking({ ticket }: PendingBookingProps) {
+export function PendingBooking({
+  ticket,
+  useFinishTicketHook,
+  useCancelTicketHook,
+}: PendingBookingProps) {
   const { cancelReason, customReason, setCancelDialogOpen, selectedTicket } =
     useBookingStore();
 
-  const { cancelTicketMutation, isCancellingTicket } = useCancelTicket();
-  const { finishTicketMutation, isFinishingTicket } = useFinishTicket();
+  const { cancelTicketMutation, isCancellingTicket } = useCancelTicketHook();
+  const { finishTicketMutation, isFinishingTicket } = useFinishTicketHook();
 
   const handleFinishOrder = () => {
     finishTicketMutation({ id: ticket.id });

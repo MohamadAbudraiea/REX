@@ -1,11 +1,15 @@
-import { getRatingForTicket, getReviewsFoHome } from "@/api/rating";
+import {
+  getTicketRating,
+  getReviewsFoHome,
+  getTicketRatingForSecretary,
+} from "@/api/rating";
 import type { Rating } from "@/shared/types";
 import { useQuery } from "@tanstack/react-query";
 
 export const useGetRatingForTicket = (id: string) => {
   const { data, isPending: isFetchingRating } = useQuery({
     queryKey: ["ticketRating", id],
-    queryFn: () => getRatingForTicket({ id }),
+    queryFn: () => getTicketRating({ id }),
   });
 
   return { rating: data?.data, isFetchingRating };
@@ -21,4 +25,13 @@ export const useGetReviewsFoHome = (): {
   });
 
   return { reviews: data?.data, isFetchingReviews };
+};
+
+export const useGetRatingForTicketForSecretary = (id: string) => {
+  const { data, isPending: isFetchingRating } = useQuery({
+    queryKey: ["ticketRatingForSecretary", id],
+    queryFn: () => getTicketRatingForSecretary({ id }),
+  });
+
+  return { rating: data?.data, isFetchingRating };
 };

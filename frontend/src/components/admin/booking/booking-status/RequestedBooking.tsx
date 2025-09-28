@@ -27,18 +27,30 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { useBookingStore } from "@/stores/useBookingStore";
-import { useGetDetailerScheduleByDate } from "@/hooks/useAdmin";
 import { Badge } from "@/components/ui/badge";
-import { useAcceptTicket, useCancelTicket } from "@/hooks/useTicket";
+import { formatInterval } from "@/shared/utils";
+import type { UseAcceptTicketHook, UseCancelTicketHook } from "@/shared/types";
 
 interface RequestedBookingProps {
   ticket: Ticket;
   detailers?: { id: string; name: string }[];
+  useScheduleHook: (
+    detailerId: string | undefined,
+    date: Date | undefined
+  ) => {
+    schedule: ScheduleItem[];
+    isGettingDetailerSchedule: boolean;
+  };
+  useAcceptTicketHook: () => UseAcceptTicketHook;
+  useCancelTicketHook: () => UseCancelTicketHook;
 }
 
 export function RequestedBooking({
   ticket,
   detailers = [],
+  useScheduleHook,
+  useAcceptTicketHook,
+  useCancelTicketHook,
 }: RequestedBookingProps) {
   const {
     cancelReason,
@@ -60,10 +72,12 @@ export function RequestedBooking({
   const [price, setPrice] = useState(ticket.price);
   const [location, setLocation] = useState(ticket.location || "");
 
-  const { acceptTicketMutation, isAcceptingTicket } = useAcceptTicket();
-  const { cancelTicketMutation, isCancellingTicket } = useCancelTicket();
+  // Use the provided hooks
+  const { acceptTicketMutation, isAcceptingTicket } = useAcceptTicketHook();
+  const { cancelTicketMutation, isCancellingTicket } = useCancelTicketHook();
 
-  const { schedule, isGettingDetailerSchedule } = useGetDetailerScheduleByDate(
+  // Use the provided schedule hook
+  const { schedule, isGettingDetailerSchedule } = useScheduleHook(
     selectedDetailerId || undefined,
     selectedDate
   );
@@ -218,7 +232,9 @@ export function RequestedBooking({
                       key={slot.ticket_id}
                       className="flex items-center justify-between text-sm"
                     >
-                      <span className="font-medium">{slot.interval}</span>
+                      <span className="font-medium">
+                        {formatInterval(slot.interval)}
+                      </span>
                       <Badge variant="outline">Booking #{slot.ticket_id}</Badge>
                     </div>
                   ))}

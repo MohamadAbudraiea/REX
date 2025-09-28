@@ -18,9 +18,11 @@ const statusColors: Record<
 export function BookingsTableRow({
   ticket,
   detailers = [],
+  role = "admin",
 }: {
   ticket: Ticket;
   detailers?: { id: string; name: string }[];
+  role?: "admin" | "secretary";
 }) {
   const { handleDialogOpen } = useBookingStore();
 
@@ -41,7 +43,7 @@ export function BookingsTableRow({
             </Button>
           </DialogTrigger>
           <DialogContent className="sm:max-w-md max-h-screen overflow-y-auto">
-            <BookingDialog ticket={ticket} detailers={detailers} />
+            <BookingDialog role={role} ticket={ticket} detailers={detailers} />
           </DialogContent>
         </Dialog>
       </TableCell>

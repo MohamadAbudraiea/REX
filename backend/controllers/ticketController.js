@@ -356,6 +356,113 @@ exports.getUserTickets = async (req, res) => {
     });
   }
 };
+exports.getTicketsForStaff = async (req, res) => {
+  try {
+    const page = parseInt(req.query.page) || 1;
+    const limit = parseInt(req.query.limit) || 5;
+    const filter = req.query.filter || "All";
+    const filterMonth =
+      req.query.filterMonth === "null" ? null : req.query.filterMonth;
+    const filterDay =
+      req.query.filterDay === "null" ? null : req.query.filterDay;
+    const filterYear =
+      req.query.filterYear === "null" ? null : req.query.filterYear;
+
+    const offset = (page - 1) * limit;
+
+    const whereClause = {};
+
+    if (filter !== "All") {
+      whereClause.status = filter;
+    }
+
+    const year = filterYear ? parseInt(filterYear) : new Date().getFullYear();
+
+    if (filterYear && filterYear !== "null") {
+      const startDate = new Date(year, 0, 1);
+      const endDate = new Date(year, 11, 31);
+      whereClause.date = { [Op.between]: [startDate, endDate] };
+
+      if (filterMonth && filterMonth !== "null") {
+        const month = parseInt(filterMonth);
+        const monthStart = new Date(year, month - 1, 1);
+        const monthEnd = new Date(year, month, 0);
+        whereClause.date = { [Op.between]: [monthStart, monthEnd] };
+
+        if (filterDay && filterDay !== "null") {
+          const day = parseInt(filterDay);
+          const specificDate = new Date(year, month - 1, day);
+          const nextDay = new Date(year, month - 1, day + 1);
+          whereClause.date = { [Op.gte]: specificDate, [Op.lt]: nextDay };
+        }
+      }
+    } else if (filterMonth && filterMonth !== "null") {
+      const currentYear = new Date().getFullYear();
+      const month = parseInt(filterMonth);
+      const monthStart = new Date(currentYear, month - 1, 1);
+      const monthEnd = new Date(currentYear, month, 0);
+      whereClause.date = { [Op.between]: [monthStart, monthEnd] };
+
+      if (filterDay && filterDay !== "null") {
+        const day = parseInt(filterDay);
+        const specificDate = new Date(currentYear, month - 1, day);
+        const nextDay = new Date(currentYear, month - 1, day + 1);
+        whereClause.date = { [Op.gte]: specificDate, [Op.lt]: nextDay };
+      }
+    }
+
+    if (req.user.role === "secretary") {
+      whereClause[Op.or] = [
+        {
+          secretary_id: req.user.id,
+          status: { [Op.in]: ["pending", "finished", "canceled"] },
+        },
+        { status: "requested" },
+      ];
+    } else if (req.user.role === "detailer") {
+      whereClause.detailer_id = req.user.id;
+      whereClause.status = { [Op.in]: ["pending", "finished"] };
+    }
+
+    // Fetch with pagination
+    const { count, rows: tickets } = await ticket.findAndCountAll({
+      where: whereClause,
+      order: [
+        ["status", "ASC"],
+        ["date", "ASC"],
+      ],
+      limit,
+      offset,
+      include: [
+        { model: user, as: "user", attributes: ["name", "phone"] },
+        { model: user, as: "detailer", attributes: ["name"] },
+        { model: user, as: "secretary", attributes: ["name"] },
+      ],
+    });
+
+    const totalPages = Math.ceil(count / limit);
+
+    res.status(200).json({
+      status: "success",
+      data: {
+        tickets,
+        pagination: {
+          currentPage: page,
+          totalPages,
+          totalItems: count,
+          itemsPerPage: limit,
+        },
+      },
+    });
+  } catch (error) {
+    console.error("Error fetching staff tickets:", error);
+    res.status(500).json({
+      status: "error",
+      message: error.message || "Something went wrong",
+    });
+  }
+};
+
 exports.getTicketsByStatus = async (req, res) => {
   const status = req.params.status;
   const tickets = await ticket.findAll({

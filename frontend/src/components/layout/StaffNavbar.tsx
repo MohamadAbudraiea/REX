@@ -45,9 +45,9 @@ export default function StaffNavbar({ role }: { role: string }) {
     role === "admin"
       ? "/blink-admin-dashboard"
       : role === "secretary"
-      ? "/secretary-dashboard"
+      ? "/blink-secretary-dashboard"
       : role === "detailer"
-      ? "/detailer-dashboard"
+      ? "/blink-detailer-dashboard"
       : "/";
 
   const profileLink = "/profile";

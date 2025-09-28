@@ -21,6 +21,8 @@ const authRouter = require("./routers/authRouter");
 const adminRouter = require("./routers/adminRouter");
 const userRouter = require("./routers/userRouter");
 const sharedRouter = require("./routers/shared");
+const secretaryRouter = require("./routers/secretaryRouter");
+const detailerRouter = require("./routers/detilaerRouter");
 // routing
 app.use("/auth", authRouter);
 // authinticate then authorize then enter the router
@@ -35,6 +37,18 @@ app.use(
   authenticateUser,
   autharizationMiddleware.authorizeUser,
   userRouter
+);
+app.use(
+  "/detailer",
+  authenticateUser,
+  autharizationMiddleware.authorizeDetailer,
+  detailerRouter
+);
+app.use(
+  "/secretary",
+  authenticateUser,
+  autharizationMiddleware.authorizeSecretary,
+  secretaryRouter
 );
 app.use("/shared", sharedRouter);
 module.exports = app;

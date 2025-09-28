@@ -85,3 +85,28 @@ export interface Booking {
   secretary: { name: string } | null;
   ratings: { rating_number: number; description: string | null }[] | null;
 }
+
+export interface AcceptTicketParams {
+  id: string;
+  detailer_id: string;
+  date: string;
+  start_time: string;
+  end_time: string;
+  price: number;
+  location: string;
+}
+
+export interface CancelTicketParams {
+  id: string;
+  reason: string;
+}
+
+export interface UseAcceptTicketHook {
+  acceptTicketMutation: (params: AcceptTicketParams) => void;
+  isAcceptingTicket: boolean;
+}
+
+export interface UseCancelTicketHook {
+  cancelTicketMutation: (params: CancelTicketParams) => void;
+  isCancellingTicket: boolean;
+}

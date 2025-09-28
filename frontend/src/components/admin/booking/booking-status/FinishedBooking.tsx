@@ -1,18 +1,24 @@
-import type { Ticket } from "@/shared/types";
+import type { Rating, Ticket } from "@/shared/types";
 import {
   DialogHeader,
   DialogTitle,
   DialogDescription,
 } from "@/components/ui/dialog";
 import { Star } from "lucide-react";
-import { useGetRatingForTicket } from "@/hooks/useRating";
 
 interface FinishedBookingProps {
   ticket: Ticket;
+  useGetRatingHook: (id: string) => {
+    rating: Rating;
+    isFetchingRating: boolean;
+  };
 }
 
-export function FinishedBooking({ ticket }: FinishedBookingProps) {
-  const { rating, isFetchingRating } = useGetRatingForTicket(ticket.id);
+export function FinishedBooking({
+  ticket,
+  useGetRatingHook,
+}: FinishedBookingProps) {
+  const { rating, isFetchingRating } = useGetRatingHook(ticket.id);
   return (
     <>
       <DialogHeader>

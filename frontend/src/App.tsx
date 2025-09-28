@@ -22,6 +22,8 @@ import NotFoundPage from "./pages/NotFoundPage";
 import ForgotPasswordPage from "./pages/ForgotPasswordPage";
 import ProfilePage from "./pages/ProfilePage";
 import ProtectedAdminRoute from "./components/auth/ProtectedAdminRoute";
+import SecretaryDashboard from "./pages/secretary/SecretaryDashboard";
+import ProtectedSecretaryRoute from "./components/auth/ProtectedSecretaryRoute";
 
 function App() {
   const { isAuthenticated } = useCheckAuth();
@@ -99,6 +101,15 @@ function App() {
               <ProtectedAdminRoute>
                 <AdminDashboard />
               </ProtectedAdminRoute>
+            }
+          />
+
+          <Route
+            path="/blink-secretary-dashboard"
+            element={
+              <ProtectedSecretaryRoute>
+                <SecretaryDashboard />
+              </ProtectedSecretaryRoute>
             }
           />
 

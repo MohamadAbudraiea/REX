@@ -6,9 +6,43 @@ import { DetailerForm } from "@/components/admin/DetailerForm";
 import { BookingsTable } from "@/components/admin/BookingsTable";
 import { BookingsChart } from "@/components/admin/BookingsChart";
 import { useGetUsers } from "@/hooks/useAdmin";
+import { useGetFilteredTickets } from "@/hooks/useTicket";
+import { useBookingStore } from "@/stores/useBookingStore";
 
 export default function AdminDashboard() {
   const { users, isGettingUsers } = useGetUsers();
+  const {
+    filter,
+    filterMonth,
+    filterDay,
+    filterYear,
+    currentPage,
+    itemsPerPage,
+  } = useBookingStore();
+
+  const queryParams: Record<string, string | number> = {
+    page: currentPage,
+    limit: itemsPerPage,
+  };
+
+  if (filter !== "All") {
+    queryParams.filter = filter;
+  }
+
+  if (filterMonth) {
+    queryParams.filterMonth = filterMonth;
+  }
+
+  if (filterDay) {
+    queryParams.filterDay = filterDay;
+  }
+
+  if (filterYear) {
+    queryParams.filterYear = filterYear;
+  }
+
+  const { tickets, pagination, isFetchingTickets } =
+    useGetFilteredTickets(queryParams);
 
   if (isGettingUsers) {
     return (
@@ -17,6 +51,14 @@ export default function AdminDashboard() {
       </div>
     );
   }
+
+  const selectItems: Record<string, string> = {
+    All: "All",
+    requested: "Requested",
+    pending: "Pending",
+    canceled: "Cancelled",
+    finished: "Finished",
+  };
 
   return (
     <div className="p-6 space-y-6">
@@ -74,11 +116,15 @@ export default function AdminDashboard() {
         {/* Bookings list */}
         <TabsContent value="bookings">
           <Card>
-            <CardHeader>
-              <CardTitle>All Bookings</CardTitle>
-            </CardHeader>
             <CardContent>
-              <BookingsTable detailers={users.detailers} />
+              <BookingsTable
+                tickets={tickets}
+                selectItems={selectItems}
+                pagination={pagination}
+                isFetchingTickets={isFetchingTickets}
+                detailers={users.detailers}
+                role="admin"
+              />
             </CardContent>
           </Card>
         </TabsContent>

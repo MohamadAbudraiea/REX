@@ -2,10 +2,9 @@ const express = require("express");
 const router = express.Router();
 const ticketController = require("../controllers/ticketController");
 const detailerController = require("../controllers/detailerController.js");
+const ratingController = require("../controllers/ratingController");
 // get tickets then get schedules
-router.get("/ticket/requested", ticketController.getRequestedTickets);
-router.get("/tickets/pending", ticketController.getPendingTickets);
-router.get("/tickets/finished", ticketController.getFinishedTickets);
+router.get("/tickets/filters", ticketController.getTicketsForStaff);
 
 router.get("/ticket/:ticket_id", ticketController.getTicketByID);
 //get rating
@@ -20,9 +19,10 @@ router.get(
   detailerController.getDetailerScheduleByDate
 );
 //--------------------------------------------------------------
-// accept ticket or cancel it
+// accept, cancel and finish ticket
 router.post("/ticket/accept/:ticket_id", ticketController.acceptTicket);
 router.post("/ticket/cancel/:ticket_id", ticketController.cancelticket);
+router.post("/ticket/finish/:ticket_id", ticketController.finishTicket);
 //---------------------------------------------------------------
 
 module.exports = router;
