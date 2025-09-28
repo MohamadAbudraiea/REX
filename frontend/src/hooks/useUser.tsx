@@ -8,16 +8,28 @@ import type { Booking } from "@/shared/types";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 
-export const useGetUserTickets = (): {
+export const useGetUserTickets = (
+  params = {}
+): {
   tickets: Booking[];
+  pagination: {
+    currentPage: number;
+    totalPages: number;
+    totalItems: number;
+    itemsPerPage: number;
+  };
   isGettingUserTickets: boolean;
 } => {
   const { data, isPending: isGettingUserTickets } = useQuery({
-    queryKey: ["userTickets"],
-    queryFn: getUserTickets,
+    queryKey: ["userTickets", params],
+    queryFn: () => getUserTickets(params),
   });
 
-  return { tickets: data?.data, isGettingUserTickets };
+  return {
+    tickets: data?.data?.tickets,
+    pagination: data?.data?.pagination,
+    isGettingUserTickets,
+  };
 };
 
 export const useAddTicket = () => {

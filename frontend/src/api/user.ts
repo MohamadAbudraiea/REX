@@ -1,7 +1,8 @@
 import { axiosInstance } from "@/api/axios";
 
-export async function getUserTickets() {
-  const res = await axiosInstance.get("/user/ticket/all");
+export async function getUserTickets(params = {}) {
+  const queryString = new URLSearchParams(params).toString();
+  const res = await axiosInstance.get(`/user/ticket/filters?${queryString}`);
   return res.data;
 }
 

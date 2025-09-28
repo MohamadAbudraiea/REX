@@ -121,6 +121,21 @@ export const months = [
   "December",
 ];
 
+export const monthsArabic = [
+  "يناير",
+  "فبراير",
+  "مارس",
+  "أبريل",
+  "مايو",
+  "يونيو",
+  "يوليو",
+  "أغسطس",
+  "سبتمبر",
+  "أكتوبر",
+  "نوفمبر",
+  "ديسمبر",
+];
+
 export const statusColors: Record<string, string> = {
   Pending: "#3b82f6",
   Finished: "#22c55e",
