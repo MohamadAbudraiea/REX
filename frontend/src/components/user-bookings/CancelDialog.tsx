@@ -29,7 +29,6 @@ export default function CancelDialog({ ticket_id }: CancelDialogProps) {
   const { cancelTicketMutation, isCancellingTicket } = useUserCancelTicket();
   const { t } = useTranslation();
   const [isOpen, setIsOpen] = useState(false);
-  const [, setCancelReason] = useState("");
   const [customReason, setCustomReason] = useState("");
   const [selectedReason, setSelectedReason] = useState("");
 
@@ -39,7 +38,6 @@ export default function CancelDialog({ ticket_id }: CancelDialogProps) {
       selectedReason === "other" ? customReason : selectedReason;
     cancelTicketMutation({ id: ticket_id, reason: finalReason });
     setIsOpen(false);
-    setCancelReason("");
     setCustomReason("");
     setSelectedReason("");
   };
@@ -47,7 +45,6 @@ export default function CancelDialog({ ticket_id }: CancelDialogProps) {
   const handleOpenChange = (open: boolean) => {
     setIsOpen(open);
     if (!open) {
-      setCancelReason("");
       setCustomReason("");
       setSelectedReason("");
     }
