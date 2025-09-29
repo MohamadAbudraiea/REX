@@ -421,7 +421,7 @@ exports.getTicketsForStaff = async (req, res) => {
       ];
     } else if (req.user.role === "detailer") {
       whereClause.detailer_id = req.user.id;
-      whereClause.status = { [Op.in]: ["pending", "finished"] };
+      whereClause.status = { [Op.in]: ["pending", "finished", "canceled"] };
     }
 
     // Fetch with pagination
