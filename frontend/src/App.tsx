@@ -12,15 +12,17 @@ const ContactPage = lazy(() => import("@/pages/shared/ContactPage"));
 const ServicesPage = lazy(() => import("@/pages/shared/ServicesPage"));
 const NotFoundPage = lazy(() => import("@/pages/shared/NotFoundPage"));
 
-const WashServicePage = lazy(() => import("@/pages/services/WashServicePage"));
+const WashServicePage = lazy(
+  () => import("@/pages/shared/services/WashServicePage")
+);
 const DryCleanServicePage = lazy(
-  () => import("@/pages/services/DryCleanServicePage")
+  () => import("@/pages/shared/services/DryCleanServicePage")
 );
 const PolishServicePage = lazy(
-  () => import("@/pages/services/PolishServicePage")
+  () => import("@/pages/shared/services/PolishServicePage")
 );
 const NanoCeramicServicePage = lazy(
-  () => import("@/pages/services/NanoCeramicServicePage")
+  () => import("@/pages/shared/services/NanoCeramicServicePage")
 );
 
 const BookingPage = lazy(() => import("@/pages/user/BookingPage"));
