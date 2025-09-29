@@ -68,7 +68,7 @@ export function ReviewsSection() {
             disableOnInteraction: false,
           }}
           speed={800}
-          key={locale} // Force re-render when language changes
+          key={locale}
           className={locale === "ar" ? "swiper-rtl" : ""}
         >
           {isFetchingReviews &&

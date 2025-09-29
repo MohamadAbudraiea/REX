@@ -81,11 +81,11 @@ function NanoCeramicServicePage() {
                 <Shield className="h-8 w-8 text-primary" />
               </div>
               <h2 className="text-3xl sm:text-4xl font-bold text-foreground">
-                {t("services.graphene.title")}
+                {t("services.items.graphene.title")}
               </h2>
             </div>
             <p className="text-xl text-muted-foreground mb-8 leading-relaxed">
-              {t("services.graphene.description")}
+              {t("services.items.graphene.description")}
             </p>
             <Link
               to="/booking"
