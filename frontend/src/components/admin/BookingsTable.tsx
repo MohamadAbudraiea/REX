@@ -33,7 +33,7 @@ export function BookingsTable({
     totalPages: number;
     totalItems: number;
   };
-  role?: "admin" | "secretary";
+  role?: "admin" | "secretary" | "detailer";
 }) {
   const {
     cancelDialogOpen,

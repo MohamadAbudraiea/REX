@@ -22,7 +22,7 @@ export function BookingsTableRow({
 }: {
   ticket: Ticket;
   detailers?: { id: string; name: string }[];
-  role?: "admin" | "secretary";
+  role?: "admin" | "secretary" | "detailer";
 }) {
   const { handleDialogOpen } = useBookingStore();
 
