@@ -1,5 +1,5 @@
 import { Card, CardContent } from "@/components/ui/card";
-import { BookingsTable } from "@/components/admin/BookingsTable";
+import { BookingsTable } from "@/components/booking/BookingsTable";
 import { useBookingStore } from "@/stores/useBookingStore";
 import { useGetTicketsForDetailer } from "@/hooks/usedetailer";
 

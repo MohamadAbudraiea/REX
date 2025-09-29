@@ -6,11 +6,11 @@ import {
   TableRow,
   TableCell,
 } from "@/components/ui/table";
-import { BookingsTableRow } from "@/components/admin/booking/BookingsTableRow";
-import { PaginationControls } from "@/components/admin/booking/PaginationControls";
-import { CancelConfirmationDialog } from "@/components/admin/booking/CancelConfirmationDialog";
+import { BookingsTableRow } from "@/components/booking/BookingsTableRow";
+import { PaginationControls } from "@/components/booking/PaginationControls";
+import { CancelConfirmationDialog } from "@/components/booking/CancelConfirmationDialog";
 import { useBookingStore } from "@/stores/useBookingStore";
-import BookingFilters from "./booking/BookingFilters";
+import BookingFilters from "./BookingFilters";
 
 export function BookingsTable({
   detailers = [],

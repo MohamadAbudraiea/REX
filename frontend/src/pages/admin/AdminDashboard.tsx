@@ -3,7 +3,7 @@ import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { DataTable } from "@/components/admin/DataTable";
 import { SecretaryForm } from "@/components/admin/SecretaryForm";
 import { DetailerForm } from "@/components/admin/DetailerForm";
-import { BookingsTable } from "@/components/admin/BookingsTable";
+import { BookingsTable } from "@/components/booking/BookingsTable";
 import { BookingsChart } from "@/components/admin/BookingsChart";
 import { useGetUsers } from "@/hooks/useAdmin";
 import { useGetFilteredTickets } from "@/hooks/useTicket";

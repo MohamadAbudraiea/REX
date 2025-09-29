@@ -5,8 +5,8 @@ import { useTranslation } from "react-i18next";
 import BookingCard from "@/components/user-bookings/BookingCard";
 import { useGetUserTickets } from "@/hooks/useUser";
 import { useBookingStore } from "@/stores/useBookingStore";
-import BookingFilters from "@/components/admin/booking/BookingFilters";
-import { PaginationControls } from "@/components/admin/booking/PaginationControls";
+import BookingFilters from "@/components/booking/BookingFilters";
+import { PaginationControls } from "@/components/booking/PaginationControls";
 import { useEffect } from "react";
 
 export default function UserBookingsPage() {
