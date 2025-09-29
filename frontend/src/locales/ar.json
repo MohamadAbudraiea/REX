@@ -298,15 +298,21 @@
       "canceled": "ملغي"
     },
     "cancel": {
-      "button": "إلغاء",
+      "button": "إلغاء الحجز",
       "title": "إلغاء الحجز",
-      "description": "هل أنت متأكد أنك تريد إلغاء هذا الحجز؟ يرجى تقديم سبب الإلغاء.",
+      "description": "هل أنت متأكد أنك تريد إلغاء هذا الحجز؟ لا يمكن التراجع عن هذا الإجراء.",
       "reason": "سبب الإلغاء",
-      "reason_placeholder": "لماذا تقوم بإلغاء هذه الخدمة؟",
+      "reason_placeholder": "اختر سبب الإلغاء",
+      "custom_reason": "سبب مخصص",
+      "custom_reason_placeholder": "يرجى تحديد سببك",
+      "reasons": {
+        "high_price": "السعر مرتفع",
+        "not_suitable_time": "الوقت غير مناسب",
+        "other": "أخرى"
+      },
       "no": "لا، احتفظ بالحجز",
-      "yes": "نعم، إلغاء الحجز",
-      "cancelling": "جاري الغاء الحجز...",
-      "cancelled": "تم الغاء الحجز بنجاح."
+      "yes": "نعم، ألغِ الحجز",
+      "cancelling": "جاري الإلغاء..."
     },
     "rate": {
       "button": "تقييم الخدمة",
@@ -435,6 +441,16 @@
     "detailer": "الفني",
     "view_location": "عرض الموقع على الخريطة",
     "cancellation_reason": "سبب الإلغاء",
-    "your_review": "تقييمك"
+    "your_review": "تقييمك",
+    "service_details": "تفاصيل الخدمة"
+  },
+
+  "booking_filters": {
+    "status": "الحالة",
+    "year": "السنة",
+    "month": "الشهر",
+    "day": "اليوم",
+    "all": "الكل",
+    "clear_filters": "مسح الفلاتر"
   }
 }

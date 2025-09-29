@@ -10,6 +10,13 @@ import {
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { X } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import { useUserCancelTicket } from "@/hooks/useUser";
@@ -22,16 +29,34 @@ export default function CancelDialog({ ticket_id }: CancelDialogProps) {
   const { cancelTicketMutation, isCancellingTicket } = useUserCancelTicket();
   const { t } = useTranslation();
   const [isOpen, setIsOpen] = useState(false);
-  const [cancelReason, setCancelReason] = useState("");
+  const [customReason, setCustomReason] = useState("");
+  const [selectedReason, setSelectedReason] = useState("");
 
   const handleCancel = () => {
-    cancelTicketMutation({ id: ticket_id, reason: cancelReason });
+    // Use the selected reason or custom reason
+    const finalReason =
+      selectedReason === "other" ? customReason : selectedReason;
+    cancelTicketMutation({ id: ticket_id, reason: finalReason });
     setIsOpen(false);
-    setCancelReason("");
+    setCustomReason("");
+    setSelectedReason("");
   };
 
+  const handleOpenChange = (open: boolean) => {
+    setIsOpen(open);
+    if (!open) {
+      setCustomReason("");
+      setSelectedReason("");
+    }
+  };
+
+  const isCancelDisabled =
+    !selectedReason ||
+    (selectedReason === "other" && !customReason.trim()) ||
+    isCancellingTicket;
+
   return (
-    <Dialog open={isOpen} onOpenChange={setIsOpen}>
+    <Dialog open={isOpen} onOpenChange={handleOpenChange}>
       <DialogTrigger asChild>
         <Button variant="outline" size="sm">
           <X className="w-4 h-4 mr-1" />
@@ -46,13 +71,38 @@ export default function CancelDialog({ ticket_id }: CancelDialogProps) {
         <div className="space-y-4 py-4">
           <div className="space-y-2">
             <Label htmlFor="cancelReason">{t("book.cancel.reason")}</Label>
-            <Textarea
-              id="cancelReason"
-              placeholder={t("book.cancel.reason_placeholder")}
-              value={cancelReason}
-              onChange={(e) => setCancelReason(e.target.value)}
-            />
+            <Select value={selectedReason} onValueChange={setSelectedReason}>
+              <SelectTrigger>
+                <SelectValue
+                  placeholder={t("book.cancel.reason_placeholder")}
+                />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="High Price">
+                  {t("book.cancel.reasons.high_price")}
+                </SelectItem>
+                <SelectItem value="Not Suitable Time">
+                  {t("book.cancel.reasons.not_suitable_time")}
+                </SelectItem>
+                <SelectItem value="other">
+                  {t("book.cancel.reasons.other")}
+                </SelectItem>
+              </SelectContent>
+            </Select>
           </div>
+          {selectedReason === "other" && (
+            <div className="space-y-2">
+              <Label htmlFor="customReason">
+                {t("book.cancel.custom_reason")}
+              </Label>
+              <Textarea
+                id="customReason"
+                placeholder={t("book.cancel.custom_reason_placeholder")}
+                value={customReason}
+                onChange={(e) => setCustomReason(e.target.value)}
+              />
+            </div>
+          )}
         </div>
         <div className="flex gap-2 justify-end">
           <Button variant="outline" onClick={() => setIsOpen(false)}>
@@ -61,7 +111,7 @@ export default function CancelDialog({ ticket_id }: CancelDialogProps) {
           <Button
             variant="destructive"
             onClick={handleCancel}
-            disabled={!cancelReason || isCancellingTicket}
+            disabled={isCancelDisabled}
           >
             {isCancellingTicket
               ? t("book.cancel.cancelling")

@@ -7,3 +7,8 @@ export async function getTicketsForDetailer(params = {}) {
   );
   return res.data;
 }
+
+export async function finishTicket({ id }: { id: string }) {
+  const res = await axiosInstance.post(`/detailer/ticket/finish/${id}`);
+  return res.data;
+}

@@ -21,11 +21,13 @@ interface PendingBookingProps {
     >;
     isFinishingTicket: boolean;
   };
+  role: "admin" | "secretary" | "detailer";
   useCancelTicketHook: () => UseCancelTicketHook;
 }
 
 export function PendingBooking({
   ticket,
+  role,
   useFinishTicketHook,
   useCancelTicketHook,
 }: PendingBookingProps) {
@@ -77,22 +79,26 @@ export function PendingBooking({
           {isFinishingTicket ? "Finishing..." : "Finish Order"}
         </Button>
 
-        <Separator className="mt-4 bg-muted-foreground" />
-
-        <CancelReasonSelector />
+        {(role === "admin" || role === "secretary") && (
+          <>
+            <Separator className="mt-4 bg-muted-foreground" />
+            <CancelReasonSelector />
+          </>
+        )}
       </div>
-
-      <Button
-        variant="destructive"
-        onClick={handleCancelOrder}
-        disabled={
-          !cancelReason ||
-          (cancelReason === "other" && !customReason) ||
-          isCancellingTicket
-        }
-      >
-        {isCancellingTicket ? "Canceling..." : "Cancel Order"}
-      </Button>
+      {(role === "admin" || role === "secretary") && (
+        <Button
+          variant="destructive"
+          onClick={handleCancelOrder}
+          disabled={
+            !cancelReason ||
+            (cancelReason === "other" && !customReason) ||
+            isCancellingTicket
+          }
+        >
+          {isCancellingTicket ? "Canceling..." : "Cancel Order"}
+        </Button>
+      )}
     </>
   );
 }

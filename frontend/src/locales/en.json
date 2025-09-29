@@ -298,15 +298,21 @@
       "canceled": "Canceled"
     },
     "cancel": {
-      "button": "Cancel",
+      "button": "Cancel Booking",
       "title": "Cancel Booking",
-      "description": "Are you sure you want to cancel this booking? Please provide a reason for cancellation.",
-      "reason": "Cancellation Reason",
-      "reason_placeholder": "Why are you canceling this service?",
+      "description": "Are you sure you want to cancel this booking? This action cannot be undone.",
+      "reason": "Reason for cancellation",
+      "reason_placeholder": "Select a reason",
+      "custom_reason": "Custom reason",
+      "custom_reason_placeholder": "Please specify your reason",
+      "reasons": {
+        "high_price": "High Price",
+        "not_suitable_time": "Not Suitable Time",
+        "other": "Other"
+      },
       "no": "No, Keep Booking",
-      "yes": "Yes, Cancel Booking",
-      "cancelling": "Cancelling...",
-      "cancelled": "Booking cancelled successfully."
+      "yes": "Yes, Cancel",
+      "cancelling": "Cancelling..."
     },
     "rate": {
       "button": "Rate Service",
@@ -435,6 +441,16 @@
     "detailer": "Detailer",
     "view_location": "View Location on Maps",
     "cancellation_reason": "Cancellation Reason",
-    "your_review": "Your Review"
+    "your_review": "Your Review",
+    "service_details": "Service Details"
+  },
+
+  "booking_filters": {
+    "status": "Status",
+    "year": "Year",
+    "month": "Month",
+    "day": "Day",
+    "all": "All",
+    "clear_filters": "Clear Filters"
   }
 }

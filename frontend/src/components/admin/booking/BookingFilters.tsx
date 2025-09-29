@@ -6,13 +6,16 @@ import {
   SelectItem,
 } from "@/components/ui/select";
 import { Button } from "@/components/ui/button";
-import { months, getDaysInMonth, getYears } from "@/shared/utils";
+import { months, monthsArabic, getDaysInMonth, getYears } from "@/shared/utils";
 import { useBookingStore } from "@/stores/useBookingStore";
+import { useTranslation } from "react-i18next";
+
 function BookingFilters({
   selectItems,
 }: {
   selectItems: Record<string, string>;
 }) {
+  const { t, i18n } = useTranslation();
   const {
     filter,
     filterMonth,
@@ -24,6 +27,7 @@ function BookingFilters({
     setFilterYear,
     setCurrentPage,
   } = useBookingStore();
+
   // Get current date for default values
   const now = new Date();
   const currentYear = now.getFullYear();
@@ -35,6 +39,9 @@ function BookingFilters({
     : 31;
 
   const years = getYears(2025, currentYear);
+
+  // Use appropriate months array based on language
+  const currentMonths = i18n.language === "ar" ? monthsArabic : months;
 
   const handleFilterChange = (newFilter: string) => {
     setFilter(newFilter);
@@ -57,14 +64,29 @@ function BookingFilters({
     setCurrentPage(1);
   };
 
+  const arabicSelectItems = {
+    requested: "مطلوبة",
+    pending: "قيد الانتظار",
+    canceled: "ملغاة",
+    finished: "مكتملة",
+    All: "الكل",
+  };
+
+  if (i18n.language === "ar") {
+    selectItems = arabicSelectItems;
+  }
+
   return (
-    <div className="mb-4 flex flex-wrap items-center gap-4">
+    <div
+      className="mb-4 flex flex-wrap items-center gap-4"
+      dir={i18n.language === "ar" ? "rtl" : "ltr"}
+    >
       {/* Status Filter */}
       <div className="flex items-center gap-2">
-        <span className="font-medium">Status:</span>
+        <span className="font-medium">{t("booking_filters.status")}:</span>
         <Select value={filter} onValueChange={handleFilterChange}>
           <SelectTrigger className="w-40 rounded-md border-muted-foreground bg-muted/50">
-            <SelectValue placeholder="All" />
+            <SelectValue placeholder={t("booking_filters.all")} />
           </SelectTrigger>
           <SelectContent>
             {Object.entries(selectItems).map(([key, value]) => (
@@ -78,7 +100,7 @@ function BookingFilters({
 
       {/* Year Filter */}
       <div className="flex items-center gap-2">
-        <span className="font-medium">Year:</span>
+        <span className="font-medium">{t("booking_filters.year")}:</span>
         <Select
           value={filterYear ?? "all"}
           onValueChange={(value) =>
@@ -86,10 +108,10 @@ function BookingFilters({
           }
         >
           <SelectTrigger className="w-28 rounded-md border-muted-foreground bg-muted/50">
-            <SelectValue placeholder="All" />
+            <SelectValue placeholder={t("booking_filters.all")} />
           </SelectTrigger>
           <SelectContent>
-            <SelectItem value="all">All</SelectItem>
+            <SelectItem value="all">{t("booking_filters.all")}</SelectItem>
             {years.map((year) => (
               <SelectItem key={year} value={String(year)}>
                 {year}
@@ -101,7 +123,7 @@ function BookingFilters({
 
       {/* Month Filter */}
       <div className="flex items-center gap-2">
-        <span className="font-medium">Month:</span>
+        <span className="font-medium">{t("booking_filters.month")}:</span>
         <Select
           value={filterMonth ?? "all"}
           onValueChange={(value) =>
@@ -109,11 +131,11 @@ function BookingFilters({
           }
         >
           <SelectTrigger className="w-28 rounded-md border-muted-foreground bg-muted/50">
-            <SelectValue placeholder="All" />
+            <SelectValue placeholder={t("booking_filters.all")} />
           </SelectTrigger>
           <SelectContent>
-            <SelectItem value="all">All</SelectItem>
-            {months.map((monthName, i) => {
+            <SelectItem value="all">{t("booking_filters.all")}</SelectItem>
+            {currentMonths.map((monthName, i) => {
               const monthValue = String(i + 1).padStart(2, "0");
               return (
                 <SelectItem key={monthValue} value={monthValue}>
@@ -127,7 +149,7 @@ function BookingFilters({
 
       {/* Day Filter */}
       <div className="flex items-center gap-2">
-        <span className="font-medium">Day:</span>
+        <span className="font-medium">{t("booking_filters.day")}:</span>
         <Select
           disabled={filterMonth === "all" || !filterMonth}
           value={filterDay ?? "all"}
@@ -136,10 +158,10 @@ function BookingFilters({
           }
         >
           <SelectTrigger className="w-28 rounded-md border-muted-foreground bg-muted/50">
-            <SelectValue placeholder="All" />
+            <SelectValue placeholder={t("booking_filters.all")} />
           </SelectTrigger>
           <SelectContent>
-            <SelectItem value="all">All</SelectItem>
+            <SelectItem value="all">{t("booking_filters.all")}</SelectItem>
             {Array.from({ length: daysInSelectedMonth }, (_, i) => {
               const day = String(i + 1).padStart(2, "0");
               return (
@@ -166,7 +188,7 @@ function BookingFilters({
               setCurrentPage(1);
             }}
           >
-            Clear Filters
+            {t("booking_filters.clear_filters")}
           </Button>
         </div>
       )}

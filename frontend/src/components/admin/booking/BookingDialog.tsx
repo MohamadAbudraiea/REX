@@ -17,8 +17,10 @@ import {
 } from "@/hooks/useSecretary";
 import {
   useGetRatingForTicket,
+  useGetRatingForTicketForDetailer,
   useGetRatingForTicketForSecretary,
 } from "@/hooks/useRating";
+import { useFinishTicketForDetailer } from "@/hooks/usedetailer";
 
 export function BookingDialog({
   ticket,
@@ -27,9 +29,8 @@ export function BookingDialog({
 }: {
   ticket: Ticket;
   detailers?: { id: string; name: string }[];
-  role?: "admin" | "secretary";
+  role?: "admin" | "secretary" | "detailer";
 }) {
-  // Choose the appropriate hooks based on role
   const useScheduleHook =
     role === "admin"
       ? useGetDetailerScheduleByDate
@@ -42,12 +43,18 @@ export function BookingDialog({
     role === "admin" ? useCancelTicket : useCancelTicketForSecretary;
 
   const useFinishTicketHook =
-    role === "admin" ? useFinishTicket : useFinishTicketForSecretary;
+    role === "admin"
+      ? useFinishTicket
+      : role === "secretary"
+      ? useFinishTicketForSecretary
+      : useFinishTicketForDetailer;
 
   const useGetRatingHook =
     role === "admin"
       ? useGetRatingForTicket
-      : useGetRatingForTicketForSecretary;
+      : role === "secretary"
+      ? useGetRatingForTicketForSecretary
+      : useGetRatingForTicketForDetailer;
 
   switch (ticket.status) {
     case "requested":
@@ -66,6 +73,7 @@ export function BookingDialog({
           useFinishTicketHook={useFinishTicketHook}
           useCancelTicketHook={useCancelTicketHook}
           ticket={ticket}
+          role={role}
         />
       );
     case "finished":
