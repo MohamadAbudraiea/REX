@@ -14,4 +14,6 @@ router.post("/otp/changepassword", otpController.changePassword);
 
 //--------------------------------------------------------------
 router.get("/ticket/all/ratings", ratingController.getRatingsWithTickets);
+//--------------------------------------------------------------
+router.get("/sendmessage", sharedController.sendMessage);
 module.exports = router;

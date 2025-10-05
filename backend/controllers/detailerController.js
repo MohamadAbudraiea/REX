@@ -103,7 +103,7 @@ exports.getDetailerStock = async (req, res) => {
     }
 
     // Base filter
-    const where = { detailer_id, status: "finished" };
+    const where = { detailer_id, status: "finished", payment_method: "cash" };
 
     // Filter by month/year if provided
     if (month && year) {

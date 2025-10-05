@@ -53,6 +53,11 @@ module.exports = function (sequelize, DataTypes) {
         type: DataTypes.ENUM("Blink", "Elite", "Premium"),
         allowNull: true,
       },
+      payment_method: {
+        type: DataTypes.ENUM("cash", "online"),
+        allowNull: false,
+        default: "cash",
+      },
       status: {
         type: DataTypes.ENUM("requested", "pending", "finished", "canceled"),
         allowNull: false,

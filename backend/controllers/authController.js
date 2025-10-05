@@ -120,7 +120,7 @@ exports.userSignup = async (req, res) => {
       newUser.email,
       `Welcome ${newUser.name}`,
       `<body style="font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; margin: 0; padding: 40px 0; background-color: #0a0a0a; color: #e5e5e5;">
-  <div style="max-width: 600px; margin: 0 auto; background-color: #111; border: 1px solid #1f1f1f; border-radius: 12px; overflow: hidden;">
+     <div style="max-width: 600px; margin: 0 auto; background-color: #111; border: 1px solid #1f1f1f; border-radius: 12px; overflow: hidden;">
 
     <!-- Header / Logo -->
     <div style="background: linear-gradient(90deg, #3B82F6, #2563EB); padding: 24px; text-align: center;">

@@ -3,6 +3,7 @@ const initModels = require("../models/init-models");
 const models = initModels(SQL);
 const { user } = models;
 const bcrypt = require("bcrypt");
+const { sendEmail } = require("../Drivers/mailer");
 
 exports.changePassword = async (req, res) => {
   try {
@@ -185,6 +186,30 @@ exports.updateProfile = async (req, res) => {
     res.status(500).json({
       status: "error",
       message: error.message,
+    });
+  }
+};
+exports.sendMessage = async (req, res) => {
+  try {
+    const { name, email, subject, message } = req.body;
+    await sendEmail(
+      "blinktechnical2025@gmail.com",
+      subject,
+      `
+      Message From ${name}.
+      ${message}
+      contact:
+      <a href="mailto:${email}">${email} </a>
+      `
+    );
+    res.status(200).json({
+      status: "success",
+      message: "Email sent successfully",
+    });
+  } catch (error) {
+    res.status(500).json({
+      status: "error",
+      message: error.message || "sth went wrong",
     });
   }
 };

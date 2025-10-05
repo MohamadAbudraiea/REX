@@ -962,9 +962,16 @@ exports.cancelticket = async (req, res) => {
 exports.finishTicket = async (req, res) => {
   try {
     const { ticket_id } = req.params;
+    const { payment_method } = req.body;
+    if (!payment_method)
+      return res.status(400).json({
+        status: "failed",
+        message: "Please Select Payment method",
+      });
     const updatedTicket = await ticket.update(
       {
         status: "finished",
+        payment_method,
       },
       {
         where: { id: ticket_id },
