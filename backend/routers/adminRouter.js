@@ -45,7 +45,7 @@ router.post("/ticket/finish/:ticket_id", ticketController.finishTicket);
 //get rating
 router.get("/ticket/rating/:ticket_id", ratingController.getTicketRating);
 //publish rating
-router.get("/ticket/rating/:ticket_id/publish", ratingController.publishTicket);
+router.post("/ticket/rating/toggle", ratingController.togglePublishTicket);
 // accept or cancel ticket
 router.post("/ticket/accept/:ticket_id", ticketController.acceptTicket);
 router.post("/ticket/cancel/:ticket_id", ticketController.cancelticket);

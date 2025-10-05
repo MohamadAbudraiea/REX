@@ -9,6 +9,7 @@ import {
   useAcceptTicket,
   useCancelTicket,
   useFinishTicket,
+  useTogglePublishTicket,
 } from "@/hooks/useTicket";
 import {
   useAcceptTicketForSecretary,
@@ -56,6 +57,8 @@ export function BookingDialog({
       ? useGetRatingForTicketForSecretary
       : useGetRatingForTicketForDetailer;
 
+  const useTogglePublishTicketHook = useTogglePublishTicket;
+
   switch (ticket.status) {
     case "requested":
       return (
@@ -78,7 +81,12 @@ export function BookingDialog({
       );
     case "finished":
       return (
-        <FinishedBooking useGetRatingHook={useGetRatingHook} ticket={ticket} />
+        <FinishedBooking
+          role={role}
+          useTogglePublishTicketHook={useTogglePublishTicketHook}
+          useGetRatingHook={useGetRatingHook}
+          ticket={ticket}
+        />
       );
     case "canceled":
       return <CanceledBooking ticket={ticket} />;

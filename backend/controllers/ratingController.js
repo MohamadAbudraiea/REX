@@ -91,19 +91,32 @@ exports.getRatingsWithTickets = async (req, res) => {
     });
   }
 };
-exports.publishTicket = async (req, res) => {
+exports.togglePublishTicket = async (req, res) => {
   try {
-    const { ticket_id } = req.body;
-    await rating.update({
-      where: { ticket_id },
-      isPublished: true,
+    const { id } = req.body;
+
+    const isPublished = await rating.findOne({
+      where: { id },
+      attributes: ["isPublished"],
     });
+
+    const published = isPublished.isPublished;
+
+    await rating.update(
+      {
+        isPublished: !published,
+      },
+      {
+        where: { id },
+      }
+    );
 
     res.status(201).json({
       status: "success",
       message: "Ticket Has Been Published",
     });
   } catch (error) {
+    console.log("error:", error.message);
     res.status(500).json({
       status: "error",
       message: error.message,
