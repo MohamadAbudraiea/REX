@@ -5,6 +5,8 @@ import {
   logout,
   resetPassword,
   signUp,
+  changePassword,
+  updateProfile,
 } from "@/api/auth";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useTranslation } from "react-i18next";
@@ -83,10 +85,10 @@ export const useCheckAuth = () => {
     staleTime: 1000 * 60 * 5, // 5 minutes
   });
 
-  const isAdmin = data?.data?.role === "admin";
-  const isSecretary = data?.data?.role === "secretary";
-  const isDetailer = data?.data?.role === "detailer";
-  const isUser = data?.data?.role === "user";
+  const isAdmin = data?.data?.type === "admin";
+  const isSecretary = data?.data?.type === "secretary";
+  const isDetailer = data?.data?.type === "detailer";
+  const isUser = data?.data?.type === "user";
 
   return {
     isAuthenticated: data?.status === "success",
@@ -135,4 +137,44 @@ export const useResetPassword = () => {
     });
 
   return { resetPasswordMutation, isResetPassword };
+};
+
+export const useChangePassword = () => {
+  const { t } = useTranslation();
+  const queryClient = useQueryClient();
+
+  const { mutate: changePasswordMutation, isPending: isChangingPassword } =
+    useMutation({
+      mutationKey: ["changePassword"],
+      mutationFn: changePassword,
+      onSuccess: () => {
+        toast.success(t("profile.saved"));
+        queryClient.invalidateQueries({ queryKey: ["auth"] });
+      },
+      onError: () => {
+        toast.error(t("profile.error"));
+      },
+    });
+
+  return { changePasswordMutation, isChangingPassword };
+};
+
+export const useUpdateProfile = () => {
+  const { t } = useTranslation();
+  const queryClient = useQueryClient();
+
+  const { mutate: updateProfileMutation, isPending: isUpdatingProfile } =
+    useMutation({
+      mutationKey: ["updateProfile"],
+      mutationFn: updateProfile,
+      onSuccess: () => {
+        toast.success(t("profile.saved"));
+        queryClient.invalidateQueries({ queryKey: ["auth"] });
+      },
+      onError: () => {
+        toast.error(t("profile.error"));
+      },
+    });
+
+  return { updateProfileMutation, isUpdatingProfile };
 };

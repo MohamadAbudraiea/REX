@@ -5,6 +5,7 @@ import {
   finishTicket,
   getChartsData,
   getCanceledTicketsForCharts,
+  togglePublishTicket,
 } from "@/api/ticket";
 import type { Ticket } from "@/shared/types";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
@@ -106,4 +107,23 @@ export const useFinishTicket = () => {
     });
 
   return { finishTicketMutation, isFinishingTicket };
+};
+
+export const useTogglePublishTicket = () => {
+  const queryClient = useQueryClient();
+  const { mutate: togglePublishTicketMutation, isPending: isPublishingTicket } =
+    useMutation({
+      mutationKey: ["togglePublishTicket"],
+      mutationFn: togglePublishTicket,
+      onSuccess: () => {
+        queryClient.invalidateQueries({ queryKey: ["filteredTickets"] });
+        queryClient.invalidateQueries({ queryKey: ["reviewsFoHome"] });
+        toast.success("Ticket visibility toggled successfully");
+      },
+      onError: () => {
+        toast.error("Failed to toggle ticket visibility");
+      },
+    });
+
+  return { togglePublishTicketMutation, isPublishingTicket };
 };

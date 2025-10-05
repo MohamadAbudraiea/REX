@@ -80,11 +80,11 @@ export default function StaffNavbar({ role }: { role: string }) {
           {/* Navigation Links - Hidden on mobile */}
           <div className="hidden md:flex items-center justify-center absolute left-1/2 transform -translate-x-1/2">
             <div className="flex items-center space-x-8">
-              {navItems.map((item) => (
+              {navItems.map((item, index) => (
                 <Link
-                  key={item.path}
+                  key={index}
                   to={item.path}
-                  className="flex items-center text-sm font-medium text-foreground/80 hover:text-foreground transition-colors"
+                  className="flex items-center text-sm font-medium text-foreground/80 hover:text-primary transition-colors"
                 >
                   <item.icon className="h-4 w-4 mr-2" />
                   {item.label}

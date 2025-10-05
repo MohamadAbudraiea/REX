@@ -4,21 +4,35 @@ import {
   DialogTitle,
   DialogDescription,
 } from "@/components/ui/dialog";
-import { Star } from "lucide-react";
+import { EyeOff, Globe, Loader2, Star } from "lucide-react";
+import { Button } from "@/components/ui/button";
 
 interface FinishedBookingProps {
   ticket: Ticket;
+  role: "admin" | "secretary" | "detailer";
   useGetRatingHook: (id: string) => {
     rating: Rating;
     isFetchingRating: boolean;
   };
+  useTogglePublishTicketHook: () => UseTogglePublishTicketHook;
+}
+
+interface UseTogglePublishTicketHook {
+  togglePublishTicketMutation: (params: { id: string }) => void;
+  isPublishingTicket: boolean;
 }
 
 export function FinishedBooking({
   ticket,
   useGetRatingHook,
+  useTogglePublishTicketHook,
+  role,
 }: FinishedBookingProps) {
   const { rating, isFetchingRating } = useGetRatingHook(ticket.id);
+
+  const { togglePublishTicketMutation, isPublishingTicket } =
+    useTogglePublishTicketHook();
+
   return (
     <>
       <DialogHeader>
@@ -53,6 +67,36 @@ export function FinishedBooking({
                 {rating.description || "No description"}
               </span>
             </p>
+            {role === "admin" && (
+              <Button
+                disabled={isPublishingTicket}
+                onClick={() => togglePublishTicketMutation({ id: rating.id })}
+                variant={rating.isPublished ? "destructive" : "default"}
+                className={`w-full mt-3 flex items-center justify-center gap-2 font-medium transition-all duration-300
+                          ${
+                            isPublishingTicket
+                              ? "opacity-80 cursor-not-allowed"
+                              : "hover:scale-[1.02]"
+                          }`}
+              >
+                {isPublishingTicket ? (
+                  <>
+                    <Loader2 className="h-4 w-4 animate-spin" />
+                    <span>Publishing...</span>
+                  </>
+                ) : rating.isPublished ? (
+                  <>
+                    <EyeOff className="h-4 w-4" />
+                    <span>Unpublish</span>
+                  </>
+                ) : (
+                  <>
+                    <Globe className="h-4 w-4" />
+                    <span>Publish</span>
+                  </>
+                )}
+              </Button>
+            )}
           </div>
         ) : (
           <p>No rating available.</p>

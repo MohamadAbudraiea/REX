@@ -40,6 +40,7 @@ export interface Rating {
   ticket_id: string;
   description: string;
   rating_number: number;
+  isPublished?: boolean;
 }
 
 export type AddUser = {

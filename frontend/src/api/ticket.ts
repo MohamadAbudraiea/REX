@@ -69,3 +69,10 @@ export async function finishTicket({ id }: { id: string }) {
   const res = await axiosInstance.post(`/admin/ticket/finish/${id}`);
   return res.data;
 }
+
+export async function togglePublishTicket({ id }: { id: string }) {
+  const res = await axiosInstance.post("/admin/ticket/rating/toggle", {
+    id,
+  });
+  return res.data;
+}

@@ -121,7 +121,11 @@ export function BookingsChart() {
   if (isFetchingTickets || isFetchingCanceledTickets) {
     return (
       <div className="flex justify-center items-center p-8">
-        <div className="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-primary"></div>
+        <img
+          src="/public/icon-logo.png"
+          alt="Loading"
+          className="h-32 w-32 transform animate-spin"
+        />
       </div>
     );
   }

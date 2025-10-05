@@ -62,3 +62,34 @@ export async function resetPassword({
   });
   return res.data;
 }
+
+export async function changePassword({
+  oldPassword,
+  newPassword,
+}: {
+  oldPassword: string;
+  newPassword: string;
+}) {
+  const res = await axiosInstance.patch("/auth/change/password", {
+    oldPassword,
+    newPassword,
+  });
+  return res.data;
+}
+
+export async function updateProfile({
+  name,
+  phone,
+  email,
+}: {
+  name: string;
+  phone: string;
+  email: string;
+}) {
+  const res = await axiosInstance.patch("/auth/change/profile", {
+    name,
+    phone,
+    email,
+  });
+  return res.data;
+}

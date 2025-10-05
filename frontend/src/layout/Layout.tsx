@@ -11,7 +11,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
     <div className="min-h-screen flex flex-col ">
       {/* Navbar */}
       {(isAdmin || isSecretary || isDetailer) && (
-        <StaffNavbar role={user?.role} />
+        <StaffNavbar role={user?.type} />
       )}
       {isUser && <UserNavbar />}
       {!isAdmin && !isSecretary && !isDetailer && !isUser && <HomeNavbar />}

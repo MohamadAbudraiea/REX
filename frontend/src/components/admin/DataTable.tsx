@@ -73,7 +73,11 @@ export function DataTable({
   if (isEditingUser || isDeletingUser) {
     return (
       <div className="flex justify-center items-center py-4">
-        <div className="animate-spin rounded-full h-16 w-16 border-t-2 border-b-2 border-primary"></div>
+        <img
+          src="/public/icon-logo.png"
+          alt="Loading"
+          className="h-32 w-32 transform animate-spin"
+        />
       </div>
     );
   }
@@ -194,7 +198,11 @@ export function DataTable({
                       <div className="space-y-4 max-h-[60vh] overflow-y-auto">
                         {isGettingDetailerSchedule ? (
                           <div className="flex justify-center items-center py-6">
-                            <div className="animate-spin rounded-full h-10 w-10 border-t-2 border-b-2 border-primary"></div>
+                            <img
+                              src="/public/icon-logo.png"
+                              alt="Loading"
+                              className="h-32 w-32 transform animate-spin"
+                            />
                           </div>
                         ) : Array.isArray(schedule) && schedule.length > 0 ? (
                           <div className="space-y-2">
