@@ -273,7 +273,7 @@
       "phone": "Phone Number",
       "phone_placeholder": "Enter your phone number",
       "address": "Vehicle Location",
-      "address_placeholder": "Enter pickup address",
+      "address_placeholder": "Enter your address",
       "notes": "Additional Notes (optional)",
       "notes_placeholder": "Any special requests or notes",
       "submit": "Book Service",
@@ -329,7 +329,11 @@
 
   "errors": {
     "service_required": "Please select a service",
-    "address_required": "Please enter a valid address"
+    "address_required": "Please enter a valid address",
+    "location_permission_denied": "Location permission denied",
+    "location_unavailable": "Location unavailable",
+    "location_timeout": "Location request timed out",
+    "location_unknown": "Unknown error occurred while getting location"
   },
 
   "footer": {

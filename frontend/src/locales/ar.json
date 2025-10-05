@@ -273,7 +273,7 @@
       "phone": "رقم الهاتف",
       "phone_placeholder": "أدخل رقم هاتفك",
       "address": "موقع المركبة",
-      "address_placeholder": "أدخل عنوان الاستلام",
+      "address_placeholder": "أدخل عنوانك",
       "notes": "ملاحظات إضافية (اختياري)",
       "notes_placeholder": "أي طلبات خاصة أو ملاحظات",
       "submit": "احجز الخدمة",
@@ -329,7 +329,11 @@
 
   "errors": {
     "service_required": "الرجاء تحديد خدمة",
-    "address_required": "الرجاء إدخال عنوان صالح"
+    "address_required": "الرجاء إدخال عنوان صالح",
+    "location_permission_denied": "تم رفض إذن الموقع",
+    "location_unavailable": "الموقع غير متوفر",
+    "location_timeout": "انتهت مهلة طلب الموقع",
+    "location_unknown": "حدث خطأ غير معروف أثناء الحصول على الموقع"
   },
 
   "footer": {
