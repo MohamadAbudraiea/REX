@@ -10,4 +10,16 @@ router.post("/signup", authController.userSignup);
 router.post("/logout", authController.logout);
 //--------------------------------------------
 router.get("/check", authenticateUser, authController.check);
+
+//--------------------------------------------
+router.patch(
+  "/change/password",
+  authenticateUser,
+  sharedController.changePassword
+);
+router.patch(
+  "/change/profile",
+  authenticateUser,
+  sharedController.updateProfile
+);
 module.exports = router;

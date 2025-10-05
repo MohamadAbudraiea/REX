@@ -434,7 +434,8 @@
     },
     "save": "Save Changes",
     "saving": "Saving",
-    "saved": "Changes saved successfully"
+    "saved": "Changes saved successfully",
+    "error": "Failed to save changes"
   },
 
   "booking": {

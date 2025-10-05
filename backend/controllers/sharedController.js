@@ -43,140 +43,20 @@ exports.changePassword = async (req, res) => {
     });
   }
 };
-exports.changePhone = async (req, res) => {
-  try {
-    const user_id = req.user.id;
-    const { phone, oldPassword } = req.body;
 
-    if (!phone || !oldPassword) {
-      return res.status(400).json({
-        status: "failed",
-        message: "phone and password are required",
-      });
-    }
-
-    const existUser = await user.findOne({ where: { id: user_id } });
-    if (!existUser) {
-      return res
-        .status(404)
-        .json({ status: "failed", message: "user not found" });
-    }
-
-    const validPassword = await bcrypt.compare(oldPassword, existUser.password);
-    if (!validPassword) {
-      return res
-        .status(400)
-        .json({ status: "failed", message: "wrong password" });
-    }
-
-    await user.update({ phone: phone }, { where: { id: user_id } });
-
-    return res.status(200).json({
-      status: "success",
-      message: "phone updated successfully",
-    });
-  } catch (error) {
-    res.status(500).json({
-      status: "error",
-      message: error.message || "something went wrong",
-    });
-  }
-};
-exports.changeEmail = async (req, res) => {
-  try {
-    const user_id = req.user.id;
-    const { email, oldPassword } = req.body;
-
-    if (!email || !oldPassword) {
-      return res.status(400).json({
-        status: "failed",
-        message: "email and password are required",
-      });
-    }
-
-    const existUser = await user.findOne({ where: { id: user_id } });
-    if (!existUser) {
-      return res
-        .status(404)
-        .json({ status: "failed", message: "user not found" });
-    }
-
-    const validPassword = await bcrypt.compare(oldPassword, existUser.password);
-    if (!validPassword) {
-      return res
-        .status(400)
-        .json({ status: "failed", message: "wrong password" });
-    }
-
-    await user.update({ email: email }, { where: { id: user_id } });
-
-    return res.status(200).json({
-      status: "success",
-      message: "email updated successfully",
-    });
-  } catch (error) {
-    res.status(500).json({
-      status: "error",
-      message: error.message || "something went wrong",
-    });
-  }
-};
-exports.changeName = async (req, res) => {
-  try {
-    const user_id = req.user.id;
-    const { name, oldPassword } = req.body;
-
-    if (!name || !oldPassword) {
-      return res.status(400).json({
-        status: "failed",
-        message: "name and password are required",
-      });
-    }
-
-    const existUser = await user.findOne({ where: { id: user_id } });
-    if (!existUser) {
-      return res
-        .status(404)
-        .json({ status: "failed", message: "user not found" });
-    }
-
-    const validPassword = await bcrypt.compare(oldPassword, existUser.password);
-    if (!validPassword) {
-      return res
-        .status(400)
-        .json({ status: "failed", message: "wrong password" });
-    }
-
-    await user.update({ name: name }, { where: { id: user_id } });
-
-    return res.status(200).json({
-      status: "success",
-      message: "name updated successfully",
-    });
-  } catch (error) {
-    res.status(500).json({
-      status: "error",
-      message: error.message || "something went wrong",
-    });
-  }
-};
 exports.updateProfile = async (req, res) => {
   try {
-    const { name, phone, email } = req.body || null;
-    if (name == null || phone == null || email == null)
+    const { name, phone, email } = req.body;
+    if (!name || !phone || !email) {
       return res.status(400).json({
         status: "failed",
         message: "please enter all the data",
       });
+    }
+    const user_id = req.user.id;
 
-    const user_id = req.user_id;
+    await user.update({ name, phone, email }, { where: { id: user_id } });
 
-    await user.update({
-      where: { id: user_id },
-      name,
-      phone,
-      email,
-    });
     res.status(204).json({
       status: "success",
       message: "User Profile Updated Successfully",

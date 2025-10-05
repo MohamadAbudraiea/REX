@@ -54,7 +54,7 @@ export default function HomeNavbar() {
                 <Link
                   key={item.path}
                   to={item.path}
-                  className="flex items-center text-sm font-medium text-foreground/80 hover:text-foreground transition-colors"
+                  className="flex items-center text-sm font-medium text-foreground/80 hover:text-primary transition-colors"
                 >
                   <item.icon className={`h-4 w-4 ${isRTL ? "ml-2" : "mr-2"}`} />
                   {item.label}

@@ -199,22 +199,24 @@ exports.logout = (req, res) => {
   }
 };
 
-exports.check = (req, res) => {
+exports.check = async (req, res) => {
   try {
-    if (!req.user)
-      return res.status(403).json({
-        status: "failed",
-        message: "unauthnticated",
-      });
-    else
-      return res.status(200).json({
-        status: "success",
-        data: req.user,
-      });
-  } catch (error) {
-    res.send(500).json({
-      status: "failed",
-      message: "Internal server error",
+    const userData = await user.findOne({
+      where: { id: req.user.id },
+      attributes: ["id", "name", "email", "phone", "type", "created_at"],
     });
+
+    if (!userData) {
+      return res
+        .status(404)
+        .json({ status: "failed", message: "User not found" });
+    }
+
+    res.status(200).json({
+      status: "success",
+      data: userData,
+    });
+  } catch (error) {
+    res.status(500).json({ status: "error", message: error.message });
   }
 };

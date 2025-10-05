@@ -21,33 +21,29 @@ import {
 import { Input } from "@/components/ui/input";
 import { motion, AnimatePresence } from "framer-motion";
 import { useTranslation } from "react-i18next";
-import {
-  User,
-  Mail,
-  Phone,
-  Lock,
-  Eye,
-  EyeOff,
-  CheckCircle,
-  Save,
-} from "lucide-react";
+import { User, Mail, Phone, Lock, Eye, EyeOff, Save } from "lucide-react";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Separator } from "@/components/ui/separator";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useCheckAuth } from "@/hooks/useAuth";
 import { arabicDate, englishDate } from "@/shared/utils";
+import { useChangePassword, useUpdateProfile } from "@/hooks/useAuth";
 
 export default function ProfilePage() {
   const { user } = useCheckAuth();
   const { t, i18n } = useTranslation();
   const locale = i18n.language;
-  const [isSubmitting, setIsSubmitting] = useState(false);
+
+  const { changePasswordMutation, isChangingPassword } = useChangePassword();
+  const { updateProfileMutation, isUpdatingProfile } = useUpdateProfile();
+
   const [showCurrentPassword, setShowCurrentPassword] = useState(false);
   const [showNewPassword, setShowNewPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [activeTab, setActiveTab] = useState("profile");
-  const [isSaved, setIsSaved] = useState(false);
   const firstRender = useRef(true);
+
+  const isSubmitting = isChangingPassword || isUpdatingProfile;
 
   // User profile schema
   const profileSchema = z
@@ -96,9 +92,9 @@ export default function ProfilePage() {
   const form = useForm<ProfileFormValues>({
     resolver: zodResolver(profileSchema),
     defaultValues: {
-      name: user.name || "",
-      email: user.email || "",
-      phone: user.phone || "",
+      name: user?.name || "",
+      email: user?.email || "",
+      phone: user?.phone || "",
       currentPassword: "",
       newPassword: "",
       confirmPassword: "",
@@ -113,27 +109,43 @@ export default function ProfilePage() {
     form.trigger();
   }, [locale, form]);
 
-  const onSubmit = async (data: ProfileFormValues) => {
-    setIsSubmitting(true);
-    try {
-      // Simulate API call to update profile
-      await new Promise((resolve) => setTimeout(resolve, 1000));
-      console.log("Profile updated successfully:", data);
+  // Reset form when user data changes
+  useEffect(() => {
+    if (user) {
+      form.reset({
+        name: user.name || "",
+        email: user.email || "",
+        phone: user.phone || "",
+        currentPassword: "",
+        newPassword: "",
+        confirmPassword: "",
+      });
+    }
+  }, [user, form]);
 
-      // Show success state
-      setIsSaved(true);
-      setTimeout(() => setIsSaved(false), 3000);
+  const onSubmit = (data: ProfileFormValues) => {
+    if (activeTab === "profile") {
+      // Update profile only
+      updateProfileMutation({
+        name: data.name,
+        phone: data.phone,
+        email: data.email,
+      });
+    } else if (
+      activeTab === "security" &&
+      data.currentPassword &&
+      data.newPassword
+    ) {
+      // Change password
+      changePasswordMutation({
+        oldPassword: data.currentPassword,
+        newPassword: data.newPassword,
+      });
 
-      // Reset password fields
-      if (data.newPassword) {
-        form.resetField("currentPassword");
-        form.resetField("newPassword");
-        form.resetField("confirmPassword");
-      }
-    } catch (error) {
-      console.error("Error updating profile:", error);
-    } finally {
-      setIsSubmitting(false);
+      // Reset password fields on success
+      form.resetField("currentPassword");
+      form.resetField("newPassword");
+      form.resetField("confirmPassword");
     }
   };
 
@@ -148,6 +160,11 @@ export default function ProfilePage() {
   const toggleConfirmPasswordVisibility = () => {
     setShowConfirmPassword((prev) => !prev);
   };
+
+  // Make sure user exists before rendering
+  if (!user) {
+    return <div>Loading...</div>;
+  }
 
   return (
     <div className="container mx-auto py-8 px-4 sm:px-6 lg:px-8">
@@ -164,7 +181,7 @@ export default function ProfilePage() {
               <Avatar className="h-24 w-24 justify-self-center">
                 <AvatarFallback className="text-2xl font-semibold uppercase bg-muted-foreground text-background">
                   {user.name
-                    .split(" ")
+                    ?.split(" ")
                     .map((n: string) => n[0])
                     .join("")}
                 </AvatarFallback>
@@ -331,7 +348,7 @@ export default function ProfilePage() {
                                           ? "text"
                                           : "password"
                                       }
-                                      autoComplete="current-password webauthn"
+                                      autoComplete="current-password"
                                       placeholder={t(
                                         "profile.form.currentPasswordPlaceholder"
                                       )}
@@ -445,20 +462,10 @@ export default function ProfilePage() {
 
                     <div className="flex justify-end">
                       <AnimatePresence mode="wait">
-                        {isSaved ? (
-                          <motion.div
-                            initial={{ opacity: 0, scale: 0.8 }}
-                            animate={{ opacity: 1, scale: 1 }}
-                            exit={{ opacity: 0, scale: 0.8 }}
-                            className="flex items-center text-green-600"
-                          >
-                            <CheckCircle className="h-5 w-5 mr-2" />
-                            <span>{t("profile.saved")}</span>
-                          </motion.div>
-                        ) : (
+                        {
                           <Button
                             type="submit"
-                            disabled={isSubmitting}
+                            disabled={isSubmitting || !form.formState.isValid}
                             className="min-w-24"
                           >
                             {isSubmitting ? (
@@ -470,7 +477,7 @@ export default function ProfilePage() {
                               </>
                             )}
                           </Button>
-                        )}
+                        }
                       </AnimatePresence>
                     </div>
                   </form>
