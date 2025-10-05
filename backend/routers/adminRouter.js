@@ -18,6 +18,10 @@ router.get(
   "/detailer/:detailer_id/:date",
   detailerController.getDetailerScheduleByDate
 );
+router.get(
+  "/detailer/:detailer_id/:date/stock",
+  detailerController.getDetailerStock
+);
 
 //-------------------------------------------------
 //tickets get
@@ -40,8 +44,10 @@ router.post("/ticket/finish/:ticket_id", ticketController.finishTicket);
 
 //get rating
 router.get("/ticket/rating/:ticket_id", ratingController.getTicketRating);
-
+//publish rating
+router.get("/ticket/rating/:ticket_id/publish", ratingController.publishTicket);
 // accept or cancel ticket
 router.post("/ticket/accept/:ticket_id", ticketController.acceptTicket);
 router.post("/ticket/cancel/:ticket_id", ticketController.cancelticket);
+
 module.exports = router;

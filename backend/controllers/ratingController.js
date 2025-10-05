@@ -63,7 +63,7 @@ exports.getRatingsWithTickets = async (req, res) => {
   try {
     const ratingsWithTickets = await rating.findAll({
       where: {
-        rating_number: { [Op.gte]: 3 },
+        isPublished: true,
       },
       include: [
         {
@@ -88,6 +88,25 @@ exports.getRatingsWithTickets = async (req, res) => {
   } catch (error) {
     res.status(500).json({
       error: error.message,
+    });
+  }
+};
+exports.publishTicket = async (req, res) => {
+  try {
+    const { ticket_id } = req.body;
+    await rating.update({
+      where: { ticket_id },
+      isPublished: true,
+    });
+
+    res.status(201).json({
+      status: "success",
+      message: "Ticket Has Been Published",
+    });
+  } catch (error) {
+    res.status(500).json({
+      status: "error",
+      message: error.message,
     });
   }
 };

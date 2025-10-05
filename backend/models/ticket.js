@@ -49,6 +49,10 @@ module.exports = function (sequelize, DataTypes) {
         ),
         allowNull: false,
       },
+      typeOfService: {
+        type: DataTypes.ENUM("Blink", "Elite", "Premium"),
+        allowNull: true,
+      },
       status: {
         type: DataTypes.ENUM("requested", "pending", "finished", "canceled"),
         allowNull: false,
@@ -56,7 +60,8 @@ module.exports = function (sequelize, DataTypes) {
       },
       location: {
         type: DataTypes.TEXT,
-        allowNull: false,
+        allowNull: true,
+        default: "blink",
       },
       secretary_id: {
         type: DataTypes.UUID,

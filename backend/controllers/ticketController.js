@@ -7,7 +7,7 @@ const bcrypt = require("bcrypt");
 
 exports.addticket = async (req, res) => {
   try {
-    const { date, service, location, note } = req.body || {};
+    const { date, service, location, note, typeOfService } = req.body || {};
     const user_id = req.user.id;
     const status = "requested";
 
@@ -18,6 +18,7 @@ exports.addticket = async (req, res) => {
       service,
       location,
       status,
+      typeOfService,
       ...(note ? { note } : {}), // only add note if it exists
     };
 
@@ -430,7 +431,6 @@ exports.getUserTickets = async (req, res) => {
     });
   }
 };
-
 exports.getTicketsForStaff = async (req, res) => {
   try {
     const page = parseInt(req.query.page) || 1;
@@ -537,7 +537,6 @@ exports.getTicketsForStaff = async (req, res) => {
     });
   }
 };
-
 exports.getTicketsByStatus = async (req, res) => {
   const status = req.params.status;
   const tickets = await ticket.findAll({

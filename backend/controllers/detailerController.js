@@ -90,3 +90,66 @@ exports.getDetailerScheduleByDate = async (req, res) => {
     });
   }
 };
+
+exports.getDetailerStock = async (req, res) => {
+  try {
+    const { detailer_id, month, year } = req.query;
+
+    if (!detailer_id) {
+      return res.status(400).json({
+        status: "error",
+        message: "detailer_id is required",
+      });
+    }
+
+    // Base filter
+    const where = { detailer_id, status: "finished" };
+
+    // Filter by month/year if provided
+    if (month && year) {
+      const startDate = new Date(year, month - 1, 1);
+      const endDate = new Date(year, month, 0, 23, 59, 59);
+      where.date = { [Op.between]: [startDate, endDate] };
+    }
+
+    // Fetch finished tickets for that detailer
+    const tickets = await ticket.findAll({
+      where,
+      attributes: ["id", "price", "date"],
+      order: [["date", "ASC"]],
+      include: [
+        { model: user, as: "detailer", attributes: ["name"] },
+        { model: user, as: "secretary", attributes: ["name"] },
+        { model: user, as: "user", attributes: ["name", "phone"] },
+      ],
+    });
+
+    // Calculate total stock
+    const overallStock = tickets.reduce(
+      (sum, t) => sum + (parseFloat(t.price) || 0),
+      0
+    );
+
+    // Prepare data for response
+    const ticketData = tickets.map((t) => ({
+      ticket_id: t.id,
+      price: parseFloat(t.price) || 0,
+      date: t.date,
+    }));
+
+    res.status(200).json({
+      status: "success",
+      data: {
+        overallStock,
+        totalTickets: tickets.length,
+        tickets: ticketData,
+      },
+    });
+  } catch (error) {
+    console.error("Error in getDetailerStock:", error);
+    res.status(500).json({
+      status: "error",
+      message: error.message || "Something went wrong",
+    });
+  }
+};

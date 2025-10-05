@@ -82,7 +82,6 @@ exports.changePhone = async (req, res) => {
     });
   }
 };
-
 exports.changeEmail = async (req, res) => {
   try {
     const user_id = req.user.id;
@@ -122,7 +121,6 @@ exports.changeEmail = async (req, res) => {
     });
   }
 };
-
 exports.changeName = async (req, res) => {
   try {
     const user_id = req.user.id;
@@ -159,6 +157,34 @@ exports.changeName = async (req, res) => {
     res.status(500).json({
       status: "error",
       message: error.message || "something went wrong",
+    });
+  }
+};
+exports.updateProfile = async (req, res) => {
+  try {
+    const { name, phone, email } = req.body || null;
+    if (name == null || phone == null || email == null)
+      return res.status(400).json({
+        status: "failed",
+        message: "please enter all the data",
+      });
+
+    const user_id = req.user_id;
+
+    await user.update({
+      where: { id: user_id },
+      name,
+      phone,
+      email,
+    });
+    res.status(204).json({
+      status: "success",
+      message: "User Profile Updated Successfully",
+    });
+  } catch (error) {
+    res.status(500).json({
+      status: "error",
+      message: error.message,
     });
   }
 };
