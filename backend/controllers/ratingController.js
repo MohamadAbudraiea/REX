@@ -116,7 +116,6 @@ exports.togglePublishTicket = async (req, res) => {
       message: "Ticket Has Been Published",
     });
   } catch (error) {
-    console.log("error:", error.message);
     res.status(500).json({
       status: "error",
       message: error.message,
