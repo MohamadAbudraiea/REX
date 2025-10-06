@@ -73,7 +73,7 @@ exports.sendMessage = async (req, res) => {
   try {
     const { name, email, subject, message } = req.body;
     await sendEmail(
-      "karamarandas03@gmail.com", // blinktechnical2025@gmail.com
+      "blinktechnical2025@gmail.com",
       subject,
       `
       Message From ${name}.
