@@ -1,17 +1,60 @@
-import { useState } from "react";
+import { useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import { Label } from "@/components/ui/label";
 import { motion } from "framer-motion";
 import { useTranslation } from "react-i18next";
-import { Mail, Phone, Send, CheckCircle, User } from "lucide-react";
+import { Loader2, Mail, Phone, Send, User } from "lucide-react";
+import { useCheckAuth } from "@/hooks/useAuth";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import * as z from "zod";
+import { useSendMessage } from "@/hooks/useUser";
+import {
+  Form,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormControl,
+} from "@/components/ui/form";
 
 function ContactInfoSection() {
   const { t, i18n } = useTranslation();
+  const { user } = useCheckAuth();
   const locale = i18n.language;
-  const [isSubmitted, setIsSubmitted] = useState(false);
+  const { isSendingMessage, sendMessageMutation } = useSendMessage();
+
+  const formSchema = z
+    .object({
+      name: z.string().min(2, t("validations.name.min")),
+      email: z.string().email(t("validations.email")),
+      subject: z.string().min(3, t("validations.subject.min")),
+      message: z.string().min(5, t("validations.message.min")),
+    })
+    .required();
+
+  type FormData = z.infer<typeof formSchema>;
+
+  const form = useForm<FormData>({
+    resolver: zodResolver(formSchema),
+    defaultValues: {
+      name: user?.name || "",
+      email: user?.email || "",
+      subject: "",
+      message: "",
+    },
+  });
+
+  useEffect(() => {
+    if (Object.keys(form.formState.errors).length > 0) {
+      form.trigger();
+    }
+  }, [t, form]);
+
+  const onSubmit = (data: FormData) => {
+    sendMessageMutation(data);
+  };
 
   const contactInfo = [
     {
@@ -30,12 +73,6 @@ function ContactInfoSection() {
     },
   ];
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    // Form submission logic would go here
-    setIsSubmitted(true);
-    setTimeout(() => setIsSubmitted(false), 3000);
-  };
   return (
     <section className="py-16 bg-background">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
@@ -113,108 +150,163 @@ function ContactInfoSection() {
             className="lg:col-span-3"
           >
             <Card className="shadow-lg border-0 overflow-hidden rounded-lg bg-muted/50 py-0">
+              {/* Title */}
               <div className="bg-gradient-to-r from-primary to-primary/80 p-6 text-primary-foreground rounded-t-lg ">
-                <h2 className="text-2xl font-bold flex items-center">
+                <h2 className="text-2xl font-bold flex items-center text-foreground">
                   <Send className="h-5 w-5 mr-2" />
                   {t("contact.form.title")}
                 </h2>
               </div>
 
+              {/* Form */}
               <CardContent className="p-6">
-                {isSubmitted ? (
-                  <motion.div
-                    initial={{ opacity: 0, scale: 0.8 }}
-                    animate={{ opacity: 1, scale: 1 }}
-                    className="flex flex-col items-center justify-center py-12 text-center"
+                <Form {...form}>
+                  <form
+                    onSubmit={form.handleSubmit(onSubmit)}
+                    className="space-y-6"
                   >
-                    <div className="relative">
-                      <CheckCircle className="h-16 w-16 text-green-500 mb-4" />
-                      <div className="absolute inset-0 bg-green-500/20 rounded-full animate-ping"></div>
-                    </div>
-                    <h3 className="text-xl font-semibold text-foreground mb-2">
-                      {t("contact.form.success.title")}
-                    </h3>
-                    <p className="text-muted-foreground">
-                      {t("contact.form.success.message")}
-                    </p>
-                  </motion.div>
-                ) : (
-                  <form onSubmit={handleSubmit} className="space-y-6">
+                    {/* Name and Email */}
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                      <div className="space-y-2">
-                        <Label
-                          htmlFor="name"
-                          className="text-foreground flex items-center"
-                        >
-                          <User className="h-4 w-4 mr-1" />
-                          {t("contact.form.name")}
-                        </Label>
-                        <Input
-                          id="name"
-                          type="text"
-                          placeholder={t("contact.form.name_placeholder")}
-                          required
-                          className="h-12"
-                        />
-                      </div>
-                      <div className="space-y-2">
-                        <Label
-                          htmlFor="email"
-                          className="text-foreground flex items-center"
-                        >
-                          <Mail className="h-4 w-4 mr-1" />
-                          {t("contact.form.email")}
-                        </Label>
-                        <Input
-                          id="email"
-                          type="email"
-                          placeholder={t("contact.form.email_placeholder")}
-                          required
-                          className="h-12"
-                        />
-                      </div>
-                    </div>
-
-                    <div className="space-y-2">
-                      <Label htmlFor="subject" className="text-foreground">
-                        {t("contact.form.subject")}
-                      </Label>
-                      <Input
-                        id="subject"
-                        type="text"
-                        placeholder={t("contact.form.subject_placeholder")}
-                        required
-                        className="h-12"
+                      {/* Name */}
+                      <FormField
+                        control={form.control}
+                        name="name"
+                        render={({ field, fieldState }) => (
+                          <FormItem>
+                            <FormLabel className="text-foreground flex items-center">
+                              <User className="h-4 w-4 mr-1" />
+                              {t("contact.form.name")}
+                            </FormLabel>
+                            <FormControl>
+                              <Input
+                                id="name"
+                                type="text"
+                                placeholder={t("contact.form.name_placeholder")}
+                                required
+                                className="h-12"
+                                {...field}
+                              />
+                            </FormControl>
+                            {fieldState.error && (
+                              <p className="text-sm font-medium text-destructive">
+                                {fieldState.error.message}
+                              </p>
+                            )}
+                          </FormItem>
+                        )}
+                      />
+                      {/* Email */}
+                      <FormField
+                        control={form.control}
+                        name="email"
+                        render={({ field, fieldState }) => (
+                          <FormItem>
+                            <FormLabel className="text-foreground flex items-center">
+                              <Mail className="h-4 w-4 mr-1" />
+                              {t("contact.form.email")}
+                            </FormLabel>
+                            <FormControl>
+                              <Input
+                                id="email"
+                                type="email"
+                                placeholder={t(
+                                  "contact.form.email_placeholder"
+                                )}
+                                required
+                                className="h-12"
+                                {...field}
+                              />
+                            </FormControl>
+                            {fieldState.error && (
+                              <p className="text-sm font-medium text-destructive">
+                                {fieldState.error.message}
+                              </p>
+                            )}
+                          </FormItem>
+                        )}
                       />
                     </div>
 
+                    {/* Subject */}
                     <div className="space-y-2">
-                      <Label htmlFor="message" className="text-foreground">
-                        {t("contact.form.message")}
-                      </Label>
-                      <Textarea
-                        id="message"
-                        placeholder={t("contact.form.message_placeholder")}
-                        rows={5}
-                        required
+                      <FormField
+                        control={form.control}
+                        name="subject"
+                        render={({ field, fieldState }) => (
+                          <FormItem>
+                            <FormLabel className="text-foreground">
+                              {t("contact.form.subject")}
+                            </FormLabel>
+                            <FormControl>
+                              <Input
+                                id="subject"
+                                type="text"
+                                placeholder={t(
+                                  "contact.form.subject_placeholder"
+                                )}
+                                required
+                                className="h-12"
+                                {...field}
+                              />
+                            </FormControl>
+                            {fieldState.error && (
+                              <p className="text-sm font-medium text-destructive">
+                                {fieldState.error.message}
+                              </p>
+                            )}
+                          </FormItem>
+                        )}
                       />
                     </div>
 
-                    <motion.div
-                      whileHover={{ scale: 1.01 }}
-                      whileTap={{ scale: 0.99 }}
-                    >
+                    {/* Message */}
+                    <div className="space-y-2">
+                      <FormField
+                        control={form.control}
+                        name="message"
+                        render={({ field, fieldState }) => (
+                          <FormItem>
+                            <FormLabel className="text-foreground">
+                              {t("contact.form.message")}
+                            </FormLabel>
+                            <FormControl>
+                              <Textarea
+                                id="message"
+                                placeholder={t(
+                                  "contact.form.message_placeholder"
+                                )}
+                                required
+                                className="h-32"
+                                {...field}
+                              />
+                            </FormControl>
+                            {fieldState.error && (
+                              <p className="text-sm font-medium text-destructive">
+                                {fieldState.error.message}
+                              </p>
+                            )}
+                          </FormItem>
+                        )}
+                      />
+                    </div>
+
+                    <div>
                       <Button
                         type="submit"
-                        className="w-full h-12 bg-primary hover:bg-primary/90 text-primary-foreground font-semibold transition-all duration-200"
+                        className="w-full h-12 text-foreground bg-primary hover:bg-primary/90 transition-all duration-200"
                         size="lg"
+                        disabled={isSendingMessage}
                       >
-                        <Send className="h-4 w-4 mr-2" />
+                        {isSendingMessage ? (
+                          <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                        ) : (
+                          <Send className="mr-2 h-4 w-4" />
+                        )}
                         {t("contact.form.submit")}
                       </Button>
-                    </motion.div>
+                    </div>
                   </form>
-                )}
+                </Form>
               </CardContent>
             </Card>
           </motion.div>

@@ -3,6 +3,7 @@ import {
   addTicket,
   cancelTicket,
   rateTicket,
+  sendMessage,
 } from "@/api/user";
 import type { Booking } from "@/shared/types";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
@@ -87,4 +88,23 @@ export const useUserRateTicket = () => {
   );
 
   return { rateTicketMutation, isRatingTicket };
+};
+
+export const useSendMessage = () => {
+  const queryClient = useQueryClient();
+  const { mutate: sendMessageMutation, isPending: isSendingMessage } =
+    useMutation({
+      mutationKey: ["sendMessage"],
+      mutationFn: sendMessage,
+      onSuccess: () => {
+        toast.success("Message sent successfully");
+        queryClient.invalidateQueries({ queryKey: ["userTickets"] });
+        queryClient.invalidateQueries({ queryKey: ["filteredTickets"] });
+      },
+      onError: () => {
+        toast.error("Failed to send message");
+      },
+    });
+
+  return { sendMessageMutation, isSendingMessage };
 };

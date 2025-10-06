@@ -67,7 +67,15 @@ export async function cancelTicket({
   });
   return res.data;
 }
-export async function finishTicket({ id }: { id: string }) {
-  const res = await axiosInstance.post(`/secretary/ticket/finish/${id}`);
+export async function finishTicket({
+  id,
+  payment_method,
+}: {
+  id: string;
+  payment_method: string;
+}) {
+  const res = await axiosInstance.post(`/secretary/ticket/finish/${id}`, {
+    payment_method,
+  });
   return res.data;
 }

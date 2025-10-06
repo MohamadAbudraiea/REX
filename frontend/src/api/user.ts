@@ -55,3 +55,23 @@ export async function rateTicket({
   });
   return res.data;
 }
+
+export async function sendMessage({
+  name,
+  email,
+  subject,
+  message,
+}: {
+  name: string;
+  email: string;
+  subject: string;
+  message: string;
+}) {
+  const res = await axiosInstance.post("/shared/sendmessage", {
+    name,
+    email,
+    subject,
+    message,
+  });
+  return res.data;
+}

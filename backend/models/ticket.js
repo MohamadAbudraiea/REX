@@ -55,7 +55,7 @@ module.exports = function (sequelize, DataTypes) {
       },
       payment_method: {
         type: DataTypes.ENUM("cash", "online"),
-        allowNull: false,
+        allowNull: true,
         default: "cash",
       },
       status: {
