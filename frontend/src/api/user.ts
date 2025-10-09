@@ -9,18 +9,21 @@ export async function getUserTickets(params = {}) {
 export async function addTicket({
   date,
   service,
+  typeOfService,
   location,
   note,
 }: {
-  date: Date | undefined;
+  typeOfService: string;
   service: string;
   location: string;
+  date: Date | undefined;
   note: string | undefined;
 }) {
   const res = await axiosInstance.post("/user/ticket", {
-    date,
     service,
+    typeOfService,
     location,
+    date,
     note,
   });
   return res.data;

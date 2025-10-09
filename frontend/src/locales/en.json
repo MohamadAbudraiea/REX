@@ -50,7 +50,7 @@
   "logout": {
     "cta": "Logout",
     "success": "Logged out successfully, see you soon.",
-    "error": "FaiFailed to logout, please try again."
+    "error": "Failed to logout, please try again."
   },
 
   "validations": {
@@ -262,6 +262,7 @@
       "title": "Service Booking",
       "service": "Select Service",
       "service_placeholder": "Choose a service",
+      "service_type": "Service Type",
       "copy_link": "Copy Link",
       "preferred_date": "Preferred Date (optional)",
       "date_placeholder": "Pick a date",
@@ -285,6 +286,49 @@
       "submit": "Book Service",
       "submitting": "Booking..."
     },
+    "serviceTypes": {
+      "wash": {
+        "premium": { "label": "Premium", "desc": "Standard quality wash" },
+        "elite": { "label": "Elite", "desc": "Superior wash experience" },
+        "blink": { "label": "Blink", "desc": "Ultimate premium service" }
+      },
+      "dryclean": {
+        "option1": { "label": "Option 1", "desc": "Basic dry cleaning" },
+        "option2": { "label": "Option 2", "desc": "Advanced dry cleaning" },
+        "option3": {
+          "label": "Option 3",
+          "desc": "Premium dry cleaning service"
+        }
+      },
+      "polish": {
+        "option4": { "label": "Option 4", "desc": "Standard polish finish" },
+        "option5": { "label": "Option 5", "desc": "Enhanced polish treatment" },
+        "option6": {
+          "label": "Option 6",
+          "desc": "Professional polish excellence"
+        }
+      },
+      "nanoceramic": {
+        "option7": {
+          "label": "Option 7",
+          "desc": "Basic nano ceramic coating"
+        },
+        "option8": {
+          "label": "Option 8",
+          "desc": "Advanced ceramic protection"
+        },
+        "option9": { "label": "Option 9", "desc": "Maximum ceramic shield" }
+      },
+      "graphene": {
+        "option10": { "label": "Option 10", "desc": "Entry graphene coating" },
+        "option11": { "label": "Option 11", "desc": "Enhanced graphene layer" },
+        "option12": {
+          "label": "Option 12",
+          "desc": "Elite graphene protection"
+        }
+      }
+    },
+
     "success": {
       "title": "Booking Submitted!",
       "message": "Your service request has been submitted successfully. Our team will contact you within 24 hours to confirm your appointment.",
@@ -335,6 +379,7 @@
 
   "errors": {
     "service_required": "Please select a service",
+    "service_type_required": "Please select a service type",
     "address_required": "Please enter a valid address",
     "location_permission_denied": "Location permission denied",
     "location_unavailable": "Location unavailable",

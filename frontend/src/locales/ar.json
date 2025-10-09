@@ -262,6 +262,7 @@
       "title": "حجز الخدمة",
       "service": "اختر الخدمة",
       "service_placeholder": "اختر خدمة",
+      "service_type": "نوع الخدمة",
       "copy_link": "نسخ الرابط",
       "preferred_date": "التاريخ المفضل (اختياري)",
       "date_placeholder": "اختر التاريخ",
@@ -284,6 +285,36 @@
       "notes_placeholder": "أي طلبات خاصة أو ملاحظات",
       "submit": "احجز الخدمة",
       "submitting": "جاري الحجز..."
+    },
+    "serviceTypes": {
+      "wash": {
+        "premium": { "label": "بريميوم", "desc": "غسيل بجودة قياسية" },
+        "elite": { "label": "إيليت", "desc": "تجربة غسيل فاخرة" },
+        "blink": { "label": "بلينك", "desc": "خدمة الغسيل الفائقة المتميزة" }
+      },
+      "dryclean": {
+        "option1": { "label": "الخيار 1", "desc": "تنظيف جاف أساسي" },
+        "option2": { "label": "الخيار 2", "desc": "تنظيف جاف متقدم" },
+        "option3": { "label": "الخيار 3", "desc": "خدمة تنظيف جاف فاخرة" }
+      },
+      "polish": {
+        "option4": { "label": "الخيار 4", "desc": "تشطيب تلميع قياسي" },
+        "option5": { "label": "الخيار 5", "desc": "معالجة تلميع محسّنة" },
+        "option6": { "label": "الخيار 6", "desc": "تلميع احترافي فائق الجودة" }
+      },
+      "nanoceramic": {
+        "option7": { "label": "الخيار 7", "desc": "طلاء نانو سيراميك أساسي" },
+        "option8": { "label": "الخيار 8", "desc": "حماية سيراميكية متقدمة" },
+        "option9": {
+          "label": "الخيار 9",
+          "desc": "درع سيراميكي بأعلى مستوى حماية"
+        }
+      },
+      "graphene": {
+        "option10": { "label": "الخيار 10", "desc": "طلاء جرافين مبدئي" },
+        "option11": { "label": "الخيار 11", "desc": "طبقة جرافين محسّنة" },
+        "option12": { "label": "الخيار 12", "desc": "حماية جرافين فاخرة" }
+      }
     },
     "success": {
       "title": "تم إرسال الحجز!",
@@ -335,11 +366,14 @@
 
   "errors": {
     "service_required": "الرجاء تحديد خدمة",
+    "service_type_required": "الرجاء تحديد نوع الخدمة",
     "address_required": "الرجاء إدخال عنوان صالح",
     "location_permission_denied": "تم رفض إذن الموقع",
     "location_unavailable": "الموقع غير متوفر",
     "location_timeout": "انتهت مهلة طلب الموقع",
-    "location_unknown": "حدث خطأ غير معروف أثناء الحصول على الموقع"
+    "location_unknown": "حدث خطأ غير معروف أثناء الحصول على الموقع",
+    "geolocation_not_supported": "المتصفح لا يدعم تحديد الموقع الجغرافي",
+    "location_error": "فشل في الحصول على موقعك"
   },
 
   "footer": {

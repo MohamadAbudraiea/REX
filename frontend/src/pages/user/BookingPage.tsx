@@ -28,10 +28,103 @@ import {
   Navigation,
   Copy,
   Calendar as CalendarIcon,
+  Sparkles,
+  Star,
+  Zap,
+  Shield,
+  Crown,
+  Award,
+  Check,
 } from "lucide-react";
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { useTranslation } from "react-i18next";
 import { toast } from "sonner";
 import { useAddTicket } from "@/hooks/useUser";
+
+const serviceTypeOptions: Record<
+  string,
+  {
+    value: string;
+    icon: React.ElementType;
+    isBest?: boolean;
+  }[]
+> = {
+  wash: [
+    {
+      value: "premium",
+      icon: Shield,
+    },
+    {
+      value: "elite",
+      icon: Crown,
+    },
+    {
+      value: "blink",
+      icon: Sparkles,
+      isBest: true,
+    },
+  ],
+  dryclean: [
+    {
+      value: "option1",
+      icon: Check,
+    },
+    {
+      value: "option2",
+      icon: Star,
+    },
+    {
+      value: "option3",
+      icon: Award,
+      isBest: true,
+    },
+  ],
+  polish: [
+    {
+      value: "option4",
+      icon: Check,
+    },
+    {
+      value: "option5",
+      icon: Star,
+    },
+    {
+      value: "option6",
+      icon: Zap,
+      isBest: true,
+    },
+  ],
+  nanoceramic: [
+    {
+      value: "option7",
+      icon: Shield,
+    },
+    {
+      value: "option8",
+      icon: Star,
+    },
+    {
+      value: "option9",
+      icon: Crown,
+      isBest: true,
+    },
+  ],
+  graphene: [
+    {
+      value: "option10",
+      icon: Shield,
+    },
+    {
+      value: "option11",
+      icon: Star,
+    },
+    {
+      value: "option12",
+      icon: Sparkles,
+      isBest: true,
+    },
+  ],
+};
 
 export default function BookPage() {
   const { addTicketMutation, isAddingTicket } = useAddTicket();
@@ -43,6 +136,7 @@ export default function BookPage() {
 
   const bookingSchema = z.object({
     service: z.string().min(1, t("errors.service_required")),
+    typeOfService: z.string().min(1, t("errors.service_type_required")),
     location: z.string().min(5, t("errors.address_required")),
     note: z.string().optional(),
     date: z.date().optional(),
@@ -55,16 +149,20 @@ export default function BookPage() {
     handleSubmit,
     control,
     setValue,
+    watch,
     formState: { errors },
   } = useForm<BookingFormData>({
     resolver: zodResolver(bookingSchema),
     defaultValues: {
       service: "",
+      typeOfService: "",
       location: "",
       note: "",
       date: undefined,
     },
   });
+
+  const selectedService = watch("service");
 
   const getCurrentLocation = () => {
     if (!navigator.geolocation) {
@@ -134,12 +232,14 @@ export default function BookPage() {
   const onSubmit = (data: BookingFormData) => {
     addTicketMutation({
       service: data.service,
+      typeOfService: data.typeOfService,
       location: data.location,
       note: data.note ?? undefined,
       date: data.date ?? undefined,
     });
 
     setValue("service", "");
+    setValue("typeOfService", "");
     setValue("location", "");
     setValue("note", "");
     setValue("date", undefined);
@@ -191,7 +291,11 @@ export default function BookPage() {
                       name="service"
                       render={({ field }) => (
                         <Select
-                          onValueChange={field.onChange}
+                          onValueChange={(value) => {
+                            field.onChange(value);
+                            // Reset type of service when service changes
+                            setValue("typeOfService", "");
+                          }}
                           value={field.value}
                         >
                           <SelectTrigger className="w-full">
@@ -212,7 +316,7 @@ export default function BookPage() {
                             <SelectItem value="nanoceramic">
                               {t("book.form.options.nano")}
                             </SelectItem>
-                            <SelectItem value="gravin">
+                            <SelectItem value="graphene">
                               {t("book.form.options.graphene")}
                             </SelectItem>
                           </SelectContent>
@@ -225,6 +329,87 @@ export default function BookPage() {
                       </p>
                     )}
                   </div>
+
+                  {/* Type of Service Selection - Dynamic based on service */}
+                  {selectedService && serviceTypeOptions[selectedService] && (
+                    <div className="space-y-3">
+                      <Label htmlFor="typeOfService">
+                        {t("book.form.service_type")}
+                      </Label>
+                      <Controller
+                        control={control}
+                        name="typeOfService"
+                        render={({ field }) => (
+                          <RadioGroup
+                            onValueChange={field.onChange}
+                            value={field.value}
+                            className="flex flex-col sm:flex-row gap-3 "
+                          >
+                            {serviceTypeOptions[selectedService].map(
+                              (option) => {
+                                const Icon = option.icon;
+                                return (
+                                  <label
+                                    key={option.value}
+                                    htmlFor={option.value}
+                                    className={`relative flex gap-3 py-2 rounded-lg border-2 cursor-pointer transition-all ${
+                                      field.value === option.value
+                                        ? "border-primary bg-primary/5"
+                                        : "border-border bg-card hover:border-primary/50"
+                                    } ${
+                                      option.isBest
+                                        ? "ring-2 ring-primary/20"
+                                        : ""
+                                    }`}
+                                  >
+                                    {option.isBest && (
+                                      <div className="absolute -top-2 -right-2 bg-primary text-primary-foreground text-xs font-bold px-2 py-1 rounded-full flex items-center gap-1 shadow-md">
+                                        <Star className="w-3 h-3 fill-current" />
+                                        BEST
+                                      </div>
+                                    )}
+                                    <RadioGroupItem
+                                      value={option.value}
+                                      id={option.value}
+                                      className="mt-5"
+                                    />
+                                    <div className="flex items-center gap-3">
+                                      <div
+                                        className={`p-2 rounded-lg ${
+                                          field.value === option.value
+                                            ? "bg-primary text-primary-foreground"
+                                            : "bg-muted text-muted-foreground"
+                                        }`}
+                                      >
+                                        <Icon className="w-5 h-5" />
+                                      </div>
+                                      <div className="flex-1">
+                                        <div className="font-semibold text-sm mb-1">
+                                          {t(
+                                            `book.serviceTypes.${selectedService}.${option.value}.label`
+                                          )}
+                                        </div>
+                                        <div className="text-xs text-muted-foreground">
+                                          {t(
+                                            `book.serviceTypes.${selectedService}.${option.value}.desc`
+                                          )}
+                                        </div>
+                                      </div>
+                                    </div>
+                                  </label>
+                                );
+                              }
+                            )}
+                          </RadioGroup>
+                        )}
+                      />
+                      {errors.typeOfService && (
+                        <p className="text-sm text-destructive">
+                          {errors.typeOfService.message}
+                        </p>
+                      )}
+                    </div>
+                  )}
 
                   {/* location */}
                   <div className="space-y-2">

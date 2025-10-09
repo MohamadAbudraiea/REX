@@ -7,7 +7,16 @@ import {
 } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { motion } from "framer-motion";
-import { Car, Sparkles, Shield, Zap } from "lucide-react";
+import {
+  // Car,
+  Sparkles,
+  // Shield,
+  // Zap,
+  Droplets,
+  // Shirt,
+  Star,
+  ShieldCheck,
+} from "lucide-react";
 import { useTranslation } from "react-i18next";
 
 export function ServicesSection() {
@@ -16,25 +25,25 @@ export function ServicesSection() {
 
   const services = [
     {
-      icon: Car,
+      icon: Droplets, // WashingMachine, Car
       titleKey: "home.services.items.wash.title",
       descriptionKey: "home.services.items.wash.description",
       href: "/services/wash",
     },
     {
-      icon: Sparkles,
+      icon: Sparkles, // Shirt
       titleKey: "home.services.items.dryclean.title",
       descriptionKey: "home.services.items.dryclean.description",
       href: "/services/dryclean",
     },
     {
-      icon: Shield,
+      icon: Star, // Shield
       titleKey: "home.services.items.polish.title",
       descriptionKey: "home.services.items.polish.description",
       href: "/services/polish",
     },
     {
-      icon: Zap,
+      icon: ShieldCheck, // Zap
       titleKey: "home.services.items.nano.title",
       descriptionKey: "home.services.items.nano.description",
       href: "/services/nano-ceramic",
@@ -42,7 +51,7 @@ export function ServicesSection() {
   ];
 
   return (
-    <section className="py-16 bg-muted/30">
+    <section className="py-16 bg-muted/50">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         <motion.div
           initial={{ opacity: 0, y: 20 }}

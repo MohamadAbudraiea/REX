@@ -1,6 +1,7 @@
 import { motion } from "framer-motion";
 import { useTranslation } from "react-i18next";
 import { Link } from "react-router-dom";
+import { Zap } from "lucide-react";
 
 export function HeroSection() {
   const { t } = useTranslation();
@@ -36,14 +37,17 @@ export function HeroSection() {
                     >
                       {/* Flash icon above the letter I */}
                       {part.letter === "I" && (
-                        <motion.img
-                          src="/flash.png"
-                          alt="Flash"
-                          className="absolute left-1/2 -translate-x-1/2 -top-6 w-10 h-10"
+                        <motion.div
+                          className="absolute left-11.5 -translate-x-1/2 -top-5 w-10 h-10"
                           initial={{ scale: 0, rotate: -180 }}
                           animate={{ scale: 1, rotate: 0 }}
                           transition={{ duration: 0.7, delay: 0.5 }}
-                        />
+                        >
+                          <Zap
+                            className="h-5 w-5 text-primary"
+                            fill="currentColor"
+                          />
+                        </motion.div>
                       )}
                       <span className="text-primary text-6xl sm:text-7xl lg:text-8xl">
                         {part.letter}
@@ -67,7 +71,7 @@ export function HeroSection() {
             <div className="flex flex-col sm:flex-row gap-4 justify-center items-center pt-6">
               <Link
                 to="/booking"
-                className="bg-primary hover:bg-primary/90 text-primary-foreground px-8 py-3 rounded-full text-lg font-semibold transition-colors duration-300"
+                className="bg-primary hover:bg-primary/90 text-foreground px-8 py-3 rounded-full text-lg font-semibold transition-colors duration-300"
               >
                 {t("home.hero.cta")}
               </Link>
