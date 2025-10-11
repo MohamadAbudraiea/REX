@@ -16,7 +16,7 @@ export async function addTicket({
   typeOfService: string;
   service: string;
   location: string;
-  date: Date | undefined;
+  date: string | undefined;
   note: string | undefined;
 }) {
   const res = await axiosInstance.post("/user/ticket", {

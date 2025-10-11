@@ -57,7 +57,6 @@ export const useLogin = () => {
 
 export const useLogout = () => {
   const queryClient = useQueryClient();
-  const navigate = useNavigate();
 
   const { mutate: logoutMutation, isPending: isLoggingOut } = useMutation({
     mutationKey: ["logout"],
@@ -67,7 +66,7 @@ export const useLogout = () => {
       queryClient.removeQueries({ queryKey: ["auth"] });
 
       toast.success("Logged out successfully, see you soon.");
-      navigate("/login");
+      window.location.href = "/";
     },
     onError: () => {
       toast.error("Failed to logout, please try again.");

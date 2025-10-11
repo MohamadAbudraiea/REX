@@ -230,12 +230,16 @@ export default function BookPage() {
   };
 
   const onSubmit = (data: BookingFormData) => {
+    const localISO = new Date(
+      data.date!.getTime() - data.date!.getTimezoneOffset() * 60000
+    ).toISOString();
+
     addTicketMutation({
       service: data.service,
       typeOfService: data.typeOfService,
       location: data.location,
       note: data.note ?? undefined,
-      date: data.date ?? undefined,
+      date: localISO || undefined,
     });
 
     setValue("service", "");

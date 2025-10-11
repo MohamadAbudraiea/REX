@@ -47,11 +47,13 @@ exports.userLogin = async (req, res) => {
         process.env.JWT_SECRET
       );
       // cookie response
-      const cook = res.cookie("token", token, {
+      const isProduction = process.env.NODE_ENV === "production";
+      res.cookie("token", token, {
+        maxAge: 1000 * 60 * 60 * 2,
         httpOnly: true,
-        sameSite: process.env.NODE_ENV === "development" ? "lax" : "none",
-        secure: process.env.NODE_ENV !== "development", // true in prod, false in dev
-        maxAge: 1000 * 60 * 60 * 2, // 120 minutes
+        sameSite: isProduction ? "none" : "lax",
+        secure: isProduction,
+        domain: isProduction ? undefined : undefined, // Let browser handle domain for cross-origin
       });
       //user data
       req.user = {
@@ -185,8 +187,14 @@ exports.userSignup = async (req, res) => {
 };
 // User logout
 exports.logout = (req, res) => {
-  res.clearCookie("token");
   try {
+    const isProduction = process.env.NODE_ENV === "production";
+    res.clearCookie("token", {
+      httpOnly: true,
+      sameSite: isProduction ? "none" : "lax",
+      secure: isProduction,
+      maxAge: 0,
+    });
     return res.json({
       status: "success",
       message: "Logged out successfully",
